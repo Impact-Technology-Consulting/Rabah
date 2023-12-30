@@ -22,7 +22,6 @@ WantedBy=multi-user.target
 
 sudo nano /etc/nginx/sites-available/Rabah
 
-
 # Nginx Configuration
 server {
     listen 80;

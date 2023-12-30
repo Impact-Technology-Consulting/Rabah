@@ -45,6 +45,9 @@ class RabahSignupView(View):
                 user = User.objects.create(email=email, last_name=last_name, first_name=first_name)
                 user.set_password(password)
                 user.save()
+                if not user:
+                    return render(request, "account/signup.html", {"form": form})
+
                 organisation = Organisation.objects.create(name=organisation_name, owner=user)
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect("rabah_dashboard:dashboard")

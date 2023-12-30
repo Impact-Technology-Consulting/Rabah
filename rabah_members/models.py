@@ -72,7 +72,7 @@ def post_save_create_member(sender, instance, *args, **kwargs):
     if instance:
         member = Member.objects.filter(organisation=instance, user=instance.owner).first()
         if not member:
-            name = f"{member.user.last_name} Family"
+            name = f"{instance.owner.last_name} Family"
             family = Family.objects.create(name=name)
             Member.objects.create(user=instance.owner, organisation=instance, is_admin_member=True, is_active=True,
                                   is_owner=True, family=family)
