@@ -1,0 +1,161 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% load crispy_forms_field %}
+{% load crispy_forms_filters %}
+{% load custom_filters %}
+
+{% block css %}
+    <style>
+
+        .table-container {
+            height: 80vh; /* Set the desired height */
+            overflow-y: scroll; /* Enable vertical scrolling */
+            scrollbar-width: thin; /* Set the width of the scrollbar */
+            scrollbar-color: #888888 #f0f0f0; /* Set the color of the scrollbar */
+        }
+
+
+    </style>
+{% endblock %}
+
+
+{% block title %}
+    User Profile | Rabah
+{% endblock %}
+{% block content %}
+
+    <div class="col-12">
+        <div class="card card-default card-md mb-4">
+            <div class="card-header  py-20">
+                <h6>Profile</h6>
+            </div>
+            <div class="card-body">
+                <div class="tab-wrapper">
+                    <div class="dm-tab tab-horizontal">
+                        <ul class="nav nav-tabs vertical-tabs" role="tablist">
+
+                            <li class="nav-item">
+                                <a class="nav-link active "
+                                   id="tab-v-personal-info-tab" data-bs-toggle="tab"
+                                   href="#tab-v-personal-info" role="tab"
+                                   aria-selected="true">
+                                    Personal Information
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link  "
+                                   id="tab-v-change-password-tab" data-bs-toggle="tab"
+                                   href="#tab-v-change-password" role="tab"
+                                   aria-selected="false">
+                                    Change Password
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade  show active "
+                                 id="tab-v-personal-info" role="tabpanel"
+                                 aria-labelledby="tab-v-personal-info-tab">
+                                <form action="." method="post" enctype="multipart/form-data"
+                                      class="d-flex justify-content-start  flex-column p-5">
+                                    <div class="user-tab-info-title mb-sm-40 mb-20 text-capitalize">
+                                        <h5 class="fw-500">Personal Information</h5>
+                                    </div>
+
+                                    {% csrf_token %}
+                                    <img class="ap-img__main rounded-circle wh-120 bg-lighter d-flex"
+                                            {% if request.user.user_profile.profileImageURL %}
+                                         src="{{ request.user.user_profile.profileImageURL }}"
+                                            {% else %}
+                                         src="{% static 'img/favicon.ico' %}"
+                                            {% endif %}
+
+                                         alt="profile">
+                                    <div class="col-12 col-lg-6 ">
+                                        <div class="form-group">
+                                            {{ form.first_name|as_crispy_field }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 ">
+                                        <div class="form-group">
+                                            {{ form.last_name|as_crispy_field }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 ">
+                                        <div class="form-group">
+                                            {{ form.email|as_crispy_field }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 ">
+                                        <div class="form-group">
+                                            {{ form.gender|as_crispy_field }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 ">
+                                        <div class="form-group">
+                                            {{ form.date_of_birth|as_crispy_field }}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 ">
+                                        <div class="form-group">
+                                            {{ form.address|as_crispy_field }}
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-lg-6 ">
+                                        <div class="form-group">
+                                            {{ form.profile_image|as_crispy_field }}
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-lg-6 d-flex pt-sm-25 justify-content-md-end justify-content-start">
+
+                                        <button class="btn btn-primary btn-default btn-squared text-capitalize radius-md shadow2 btn-sm"
+                                                style="background-color: #9D2154;color: white">
+                                            Save
+                                        </button>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="tab-pane fade  show  "
+                                 id="tab-v-change-password" role="tabpanel"
+                                 aria-labelledby="tab-v-change-password-tab">
+                                <form action="{% url "change_user_password" %}" method="post"
+                                      enctype="multipart/form-data"
+                                      class="d-flex justify-content-start  flex-column p-5">
+                                    <div class="user-tab-info-title mb-sm-40 mb-20 text-capitalize">
+                                        <h5 class="fw-500">Change Password</h5>
+                                    </div>
+
+                                    {% csrf_token %}
+
+                                    <div class="col-12 col-lg-6 ">
+                                        <div class="form-group">
+                                            {{ change_form|crispy }}
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-lg-6 d-flex pt-sm-25 justify-content-md-end justify-content-start">
+
+                                        <button class="btn btn-primary btn-default btn-squared text-capitalize radius-md shadow2 btn-sm"
+                                                style="background-color: #9D2154;color: white">
+                                            Save
+                                        </button>
+                                    </div>
+
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}
+

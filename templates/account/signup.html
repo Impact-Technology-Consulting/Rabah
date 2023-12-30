@@ -1,0 +1,73 @@
+{% extends "account/base.html" %}
+{% load static %}
+{% load socialaccount %}
+{% load crispy_forms_filters %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+    <div class="card border-0">
+        <div class="card-header">
+            <div class="edit-profile__title">
+                <h6>Sign Up </h6>
+            </div>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'account_signup' %}">
+                {% csrf_token %}
+                <div class="edit-profile__body">
+                    <div class="edit-profile__body">
+                        <input type="hidden" name="{{ redirect_field_name }}" value="/"/>
+                        {{ form|crispy }}
+
+                        <div class="admin-condition">
+                            <div class="checkbox-theme-default custom-checkbox ">
+                                <input class="checkbox" type="checkbox" id="admin-1">
+                                <label for="admin-1">
+                    <span class="checkbox-text">Creating an account means you’re okay
+                    with our <a href="#" class="color-primary">Terms of
+                    Service</a> and <a href="#" class="color-primary">Privacy
+                    Policy</a>
+                    my preference</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="admin__button-group button-group d-flex pt-1 justify-content-md-start justify-content-center">
+                            <button class="btn btn-primary btn-default w-100 btn-squared text-capitalize lh-normal px-50 signIn-createBtn ">
+                                Create Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="px-20">
+            <p class="social-connector social-connector__admin text-center">
+                <span>Or</span>
+            </p>
+            <div class="button-group d-flex align-items-center justify-content-center">
+                <ul class="admin-socialBtn">
+                    <li>
+                        <button class=" radius-md wh-48 content-center facebook">
+                            <a href="{% provider_login_url 'google' %}" class=" text-dark google">
+                                <img class="svg" src="{% static "img/google.png" %}" alt="img"/>
+                            </a>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="admin-topbar">
+            <p class="mb-0">
+                Don't have an account?
+                <a href="{% url 'account_login' %}" class="color-primary">
+                    Sign In
+                </a>
+            </p>
+        </div>
+    </div>
+
+{% endblock %}
+
+

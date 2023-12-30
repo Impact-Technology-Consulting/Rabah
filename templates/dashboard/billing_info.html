@@ -1,0 +1,87 @@
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block title %}
+  Billing Info  | Rabah
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shop-breadcrumb">
+                    <div class="breadcrumb-main">
+                        <h4 class="text-capitalize breadcrumb-title">Billing Details</h4>
+                        <div class="breadcrumb-action justify-content-center flex-wrap">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url "rabah_dashboard:dashboard" %}"><i
+                                            class="uil uil-estate"></i>Home</a>
+                                    </li>
+                                    <li class="breadcrumb-item active" aria-current="page">Billing Details</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class=" checkout wizard8 global-shadow border-0 px-sm-50 px-20 mb-30 bg-white radius-xl w-100">
+        <div class="row justify-content-center">
+            <div class="col-xl-8">
+                <div class="row justify-content-center">
+                    <div class="col-xl-5">
+                        <div class="checkout-progress-indicator ">
+                            <div class="checkout-progress justify-content-center px-0">
+                                <div class="step current" id="1">
+                                    <span>1</span>
+                                </div>
+                                <div class="step" id="2">
+                                    <span>2</span>
+                                </div>
+                                <div class="step" id="3">
+                                    <span>3</span>
+                                </div>
+                                <div class="step" id="4">
+                                    <span>4</span>
+                                </div>
+                            </div>
+                            <div class="card-header border-bottom-0">
+                                <h4>Billing Details</h4>
+                                <p>Fill in your billing details.</p>
+                                <div class="div">
+                                    <img class="svg w-100" src="{% static "img/svg/progress1.png" %}" alt="img">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-7 col-lg-8 col-sm-10">
+                        <div class="card checkout-shipping-form shadow-none h-100vh">
+                            <div class="card-header border-bottom-0 align-content-start pb-sm-0 pb-1 px-0">
+                                <h4 class="fw-500">1. Please Fill in billing details</h4>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="edit-profile__body">
+                                    <form method="post" action=".">
+                                        {% csrf_token %}
+                                        {{ form|crispy }}
+                                        <div class="button-group d-flex pt-20 mb-20 justify-content-md-end justify-content-center">
+                                            <button class="btn btn-primary btn-default btn-squared text-capitalize text-white">
+                                                Save
+                                                & Next
+                                            </button>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

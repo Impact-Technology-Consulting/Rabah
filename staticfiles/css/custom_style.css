@@ -1,0 +1,147 @@
+/* Styles for screens with a width of 1920px or less */
+/*@media (min-width: 1919px) {*/
+.table-container::-webkit-scrollbar {
+    width: 5px !important; /* Set the width of the scrollbar */
+    height: 5px !important;
+    background-color: #f0f0f0; /* Set the background color of the scrollbar track */
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: #888888; /* Set the color of the scrollbar handle */
+    border-radius: 4px; /* Set the border radius of the scrollbar handle */
+    height: 5px !important;
+
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555555; /* Set the color of the scrollbar handle on hover */
+}
+
+
+.table-responsive {
+    overflow: hidden;
+}
+
+.table-bordered {
+    table-layout: auto;
+    border-collapse: separate;
+}
+
+.table-bordered thead th,
+.table-bordered tbody td {
+    white-space: nowrap;
+    padding: 10px; /* Add padding to the cells */
+}
+
+.table-bordered thead th {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 3;
+}
+
+.table--default thead th {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 3;
+}
+
+table-social tbody tr:first-child td {
+    color: var(--color-dark);
+    font-weight: normal !important;
+}
+
+td {
+    text-align: left !important;
+}
+
+
+input {
+    border: 1px solid #ccc; /* Set the border style */
+    border-radius: 4px; /* Add rounded corners to the border */
+    padding: 8px; /* Add padding to the input */
+    /*min-width: 150px;*/
+}
+
+input:focus {
+    outline: none; /* Remove the default focus outline */
+    /*border-color: #1B3F7F !important; !* Change the border color when the input is focused *!*/
+    box-shadow: #9D2154; /* Add a box shadow when the input is focused */
+}
+
+
+td {
+    text-align: left !important;
+    font-weight: 200 !important;
+}
+
+th {
+    text-align: left !important;
+    font-weight: bolder !important;
+}
+
+.sticky-counter {
+    position: sticky;
+    left: 0; /* Stick the column to the left */
+    background-color: white !important;
+    font-weight: bold;
+    z-index: 2;
+    min-width: 20px !important; /* Set a fixed width for the counter column */
+}
+
+
+.processing-indicator {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 100vh;
+
+}
+
+#show_row {
+}
+
+#hide_row {
+    display: none;
+}
+
+
+/* Apply styles when viewport width is at least 1921px and height is at least 1081px */
+@media screen and (min-width: 1919px) {
+    body {
+        /* Hide the scrollbar */
+        scrollbar-width: none; /* For Firefox */
+        -ms-overflow-style: none; /* For Internet Explorer/Edge */
+    }
+
+    body::-webkit-scrollbar {
+        width: 0px !important; /* Set the width of the scrollbar to 0 to hide it */
+        height: 0px !important;
+    }
+}
+
+
+/* Media query for screens with a maximum width of 768px or smaller */
+@media (max-width: 768px) {
+    .modal-dialog {
+        max-width: 80vw !important; /* Adjust the width for smaller screens */
+    }
+}
+
+/* Media query for screens with a minimum width of 1200px or larger */
+@media (min-width: 1200px) {
+    .modal-dialog {
+        max-width: 50vw !important; /* Adjust the width for larger screens */
+    }
+}

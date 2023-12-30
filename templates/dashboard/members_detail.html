@@ -1,0 +1,573 @@
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% block css %}
+    <style>
+        /* Styles for the selected members list */
+        #selected-members-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .selected-member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+
+        #member-suggestions li {
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 10px 10px 5px;
+        }
+
+        #member-suggestions li img {
+            /* Your styles for the images go here */
+            max-width: 60px; /* Adjust the max-width as needed */
+            border-radius: 50%; /* Add a border-radius for rounded images, adjust as needed */
+            margin-right: 10px; /* Add margin for spacing between the image and the text */
+        }
+
+        .selected-member-item img {
+            width: 30px; /* Adjust the width to your preference */
+            height: 30px; /* Adjust the height to your preference */
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .selected-member-item span {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .cancel-button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .cancel-button:hover {
+            background-color: #c82333;
+        }
+
+    </style>
+{% endblock %}
+
+
+{% block title %}
+    Memeber Detal | Rabah
+{% endblock %}
+{% block content %}
+
+    <div class="profile-setting ">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-main">
+                        <h4 class="text-capitalize breadcrumb-title">Member Profile</h4>
+                        <div class="breadcrumb-action justify-content-center flex-wrap">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#"><i class="uil uil-estate"></i>Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Member profile</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-3 col-lg-4 col-sm-5">
+
+                    <div class="card mb-25">
+                        <div class="card-body text-center p-0">
+                            <div class="account-profile border-bottom pt-25 px-25 pb-0 flex-column d-flex align-items-center ">
+                                <div class="ap-img mb-20 pro_img_wrapper">
+                                    <input id="file-upload" type="file" name="fileUpload" class="d-none">
+                                    <label for="file-upload">
+
+                                        <img class="ap-img__main rounded-circle wh-120"
+                                             src="{{ member.user.user_profile.profileImageURL }}"
+                                             alt="profile">
+
+                                    </label>
+                                </div>
+                                <div class="ap-nameAddress pb-3">
+                                    <h5 class="ap-nameAddress__title">{{ member.user.first_name }}</h5>
+                                    <p class="ap-nameAddress__subTitle fs-14 m-0">{{ member.user.last_name }}</p>
+                                </div>
+                            </div>
+                            <div class="ps-tab p-20 pb-25">
+                                <div class="nav flex-column text-start" id="v-pills-tab" role="tablist"
+                                     aria-orientation="vertical">
+                                    <a class="nav-link active" id="v-pills-user-tab" data-bs-toggle="pill"
+                                       href="#v-pills-user" role="tab" aria-selected="true">
+                                        <i class="uil uil-user-circle px-2"></i>
+                                        Edit User</a>
+
+                                    <a class="nav-link " id="v-pills-home-tab" data-bs-toggle="pill"
+                                       href="#v-pills-home" role="tab" aria-selected="true">
+                                        <i class="uil uil-user px-2"></i>
+                                        Edit member</a>
+                                    <a class="nav-link" id="v-pills-family-members-tab" data-bs-toggle="pill"
+                                       href="#v-pills-family-members" role="tab" aria-selected="false">
+                                        <i class="uil uil-users-alt px-2"></i>
+                                        Family Members</a>
+
+                                    <a class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill"
+                                       href="#v-pills-profile" role="tab" aria-selected="false">
+                                        <i class="uil uil-setting px-2"></i>
+                                        Account
+                                        setting</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-xxl-9 col-lg-8 col-sm-7">
+                    <div class="as-cover">
+                        <div class="as-cover__imgWrapper">
+                            <input id="file-upload1" type="file" name="fileUpload" class="d-none">
+                            <label for="file-upload1">
+                                <img src="{% static "img/profile_img_background.png" %}" alt="image" class="w-100">
+
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-50">
+                        <div class="tab-content" id="v-pills-tabContent">
+                            <div class="tab-pane fade  show active" id="v-pills-user" role="tabpanel"
+                                 aria-labelledby="v-pills-home-tab">
+
+                                <div class="edit-profile mt-25">
+                                    <div class="card">
+                                        <div class="card-header px-sm-25 px-3">
+                                            <div class="edit-profile__title">
+                                                <h6>Edit User</h6>
+                                                <span class="fs-13 color-light fw-400">Set up member information</span>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row justify-content-center">
+                                                <div class="col-xxl-6">
+                                                    <div class="edit-profile__body mx-xl-20">
+                                                        <form method="post"
+                                                              action="{% url "user:member_profile_edit" member.user.user_profile.id %}">
+                                                            {% csrf_token %}
+                                                            {{ user_form|crispy }}
+                                                            <div class="button-group d-flex flex-wrap pt-30 mb-15">
+                                                                <button class="btn btn-primary btn-default btn-squared me-15 text-capitalize btn-sm">
+                                                                    update profile
+                                                                </button>
+                                                                <button class="btn btn-light btn-default btn-squared fw-400 text-capitalize btn-sm">
+                                                                    cancel
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade  " id="v-pills-home" role="tabpanel"
+                                 aria-labelledby="v-pills-home-tab">
+
+                                <div class="edit-profile mt-25">
+                                    <div class="card">
+                                        <div class="card-header px-sm-25 px-3">
+                                            <div class="edit-profile__title">
+                                                <h6>Edit Profile</h6>
+                                                <span class="fs-13 color-light fw-400">Set up your personal
+information</span>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row justify-content-center">
+                                                <div class="col-xxl-6">
+                                                    <div class="edit-profile__body mx-xl-20">
+                                                        <form method="post"
+                                                              action="{% url "rabah_members:group_member_detail" member.id %}">
+                                                            {% csrf_token %}
+                                                            {{ member_form|crispy }}
+                                                            <div class="button-group d-flex flex-wrap pt-30 mb-15">
+                                                                <button class="btn btn-primary btn-default btn-squared me-15 text-capitalize btn-sm">
+                                                                    update profile
+                                                                </button>
+                                                                <button class="btn btn-light btn-default btn-squared fw-400 text-capitalize btn-sm">
+                                                                    cancel
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade " id="v-pills-family-members" role="tabpanel"
+                                 aria-labelledby="v-pills-family-members-tab">
+
+                                <div class="edit-profile edit-social mt-25">
+                                    <div class="card">
+                                        <div class="card-header  px-sm-25 px-3">
+                                            <div class="d-flex justify-content-between" style="width: 100%">
+                                                <h6>Family Members</h6>
+
+                                                <button class="btn btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#new-member">Add Family
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        {% for family_member in  member.get_family_members %}
+                                            <div class="col-md-6 col-sm-12 mb-25">
+                                                <div class="media  py-30  ps-30 pe-20 bg-white radius-xl users-list ">
+                                                    <img class=" me-20 rounded-circle wh-80 bg-opacity-primary  "
+                                                         src="{{ family_member.user.user_profile.profileImageURL }}"
+                                                         alt="Generic placeholder image">
+                                                    <div class="media-body d-xl-flex users-list-body">
+                                                        <div class="flex-1 pe-xl-30 users-list-body__title">
+                                                            <h5 class="mt-0 fw-700 mb-2">{{ family_member.user.first_name }} {{ family_member.user.last_name }} </h5>
+                                                            <form action="{% url "rabah_members:update_existing_member_to_family" %}"
+                                                                  onsubmit="updateExistingMemberForm()"
+                                                                  id="updateExistingMemberForm">
+                                                                {% csrf_token %}
+                                                                <input type="hidden"
+                                                                       name="family_relationship_member_id"
+                                                                       value="{{ family_member.id }}">
+                                                                <select name="family_relationship" class="form-control"
+                                                                        onchange="updateExistingMemberForm()"
+                                                                        style="max-width: 151px">
+                                                                    {% for relationship_code, relationship_label in family_relationship_choices %}
+                                                                        <option value="{{ relationship_code }}"
+                                                                                {% if family_member.family_relationship == relationship_code %}selected{% endif %}>
+                                                                            {{ relationship_label }}
+                                                                        </option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </form>
+                                                            <p class="mb-0">{{ family_member.user.user_profile.about|truncatechars:30 }}.</p>
+
+                                                        </div>
+                                                        <div class="users-list__button mt-xl-0 mt-15">
+                                                            <a href="{% url "rabah_members:group_member_detail" family_member.id %}"
+                                                               class="btn btn-primary btn-default btn-squared text-capitalize px-20 mb-10 global-shadow">
+                                                                view
+                                                            </a>
+                                                            <a href="https://wa.me/{{ family_member.user.mobile }}"
+                                                               target="_blank">
+                                                                <button type="button"
+                                                                        class="border text-capitalize px-25 color-gray transparent shadow2 follow my-xl-0 radius-md">
+                                                                    Message
+                                                                </button>
+                                                            </a>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
+                                 aria-labelledby="v-pills-profile-tab">
+
+                                <div class="edit-profile mt-25">
+                                    <div class="card">
+                                        <div class="card-header  px-sm-25 px-3">
+                                            <div class="edit-profile__title">
+                                                <h6>Account setting</h6>
+                                                <span class="fs-13 color-light fw-400">Update your username and manage your
+account</span>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row justify-content-center">
+                                                <div class="col-xxl-6">
+                                                    <div class="edit-profile__body mx-xl-20">
+                                                        <form>
+                                                            <div class="form-group mb-20">
+                                                                <label for="name1">username</label>
+                                                                <input type="text" class="form-control" id="name1"
+                                                                       placeholder="Duran Clayton">
+                                                                <small id="passwordHelpInline2"
+                                                                       class="text-light fs-13">Your
+                                                                    Dashboard URL:
+                                                                    https://dashboard.com/<span class="color-dark">clayton</span>
+                                                                </small>
+                                                            </div>
+                                                            <div class="form-group mb-1">
+                                                                <label for="email45">email</label>
+                                                                <input type="email" class="form-control" id="email45"
+                                                                       placeholder="Contact@example.com">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-transparent">
+                                            <div class="row justify-content-center align-items-center">
+                                                <div class="col-xxl-6">
+                                                    <div class="d-flex justify-content-between mt-1 align-items-center flex-wrap">
+                                                        <div class="text-capitalize py-10">
+                                                            <h6>close account</h6>
+                                                            <span class="fs-13 color-light fw-400">Delete your account and
+account
+data</span>
+                                                        </div>
+                                                        <div class="my-sm-0 my-10 py-10">
+                                                            <button class="btn btn-danger btn-default btn-squared fw-400 text-capitalize">
+                                                                close account
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="button-group d-flex flex-wrap pt-35 mb-35">
+                                                        <button class="btn btn-primary btn-default btn-squared me-15 text-capitalize">
+                                                            Save Changes
+                                                        </button>
+                                                        <button class="btn btn-light btn-default btn-squared fw-400 text-capitalize">
+                                                            cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade new-member " id="new-member" role="dialog" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content  radius-xl">
+                <div class="modal-header">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary btn-squared active" id="btn-create-member">Create
+                            Member
+                        </button>
+                        <button type="button" class="btn btn-primary btn-squared" id="btn-add-member">Add Existing
+                            Member
+                        </button>
+                    </div>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="uil uil-multiply"></i>
+                    </button>
+                    <!-- Buttons to switch between creating and adding members -->
+
+                </div>
+                <div class="modal-body">
+                    <div class="new-member-modal" id="create-member-content">
+                        <!-- Content for creating a new member -->
+                        <form id="addFamilyMemberForm" method="post"
+                              action="{% url "rabah_members:add_family_member" member.id %}"
+                              enctype="multipart/form-data" onsubmit="submitFamilyMemberForm()">
+                            {% csrf_token %}
+                            {{ member_create_form|crispy }}
+                            <div class="button-group d-flex pt-25">
+                                <button class="btn btn-primary btn-default btn-squared text-capitalize"
+                                        onclick="submitFamilyMemberForm()">
+                                    Add New Member
+                                </button>
+                                <button type="button"
+                                        class="btn btn-light btn-default btn-squared fw-400 text-capitalize b-light color-light"
+                                        data-bs-dismiss="modal">Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="new-member-modal " id="add-member-content" style="display: none;">
+
+                        <form method="post" action="{% url "rabah_members:add_existing_member_to_family" member.id %}"
+                              class="d-flex justify-content-between align-items-center"
+                              id="addExistingFamilyMemberForm" onsubmit="addExistingMemberForm()">
+                            {% csrf_token %}
+                            {{ add_existing_member_form|crispy }}
+
+                            <button id="submit-button" class="btn btn-sm btn-primary"
+                                    oncancel="addExistingMemberForm()">Add
+                            </button>
+                        </form>
+                        <ul id="member-suggestions"></ul>
+                        <div id="selected-members-container">
+                            <p>Selected Members:</p>
+                            <ul id="selected-members-list"></ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+    {% comment %} For switching add member or create member{% endcomment %}
+    <script>
+        // JavaScript to handle switching between create and add member content
+        document.getElementById('btn-create-member').addEventListener('click', function () {
+            document.getElementById('create-member-content').style.display = 'block';
+            document.getElementById('add-member-content').style.display = 'none';
+
+            // Toggle the active class
+            document.getElementById('btn-create-member').classList.add('active');
+            document.getElementById('btn-add-member').classList.remove('active');
+        });
+
+        document.getElementById('btn-add-member').addEventListener('click', function () {
+            document.getElementById('create-member-content').style.display = 'none';
+            document.getElementById('add-member-content').style.display = 'block';
+
+            // Toggle the active class
+            document.getElementById('btn-create-member').classList.remove('active');
+            document.getElementById('btn-add-member').classList.add('active');
+        });
+    </script>
+
+    {% comment %} For create member{% endcomment %}
+    <script>
+        function submitFamilyMemberForm() {
+            event.preventDefault();
+            // Get form data
+            const form = document.getElementById('addFamilyMemberForm');
+
+            // Make an AJAX request
+            submitForm(form)
+        }
+    </script>
+
+    {% comment %}For adding existing member{% endcomment %}
+    <script>
+        function addExistingMemberForm() {
+            event.preventDefault();
+            // Get form data
+            const form = document.getElementById('addExistingFamilyMemberForm');
+
+            // Make an AJAX request
+            submitForm(form)
+        }
+    </script>
+    {% comment %}For updating existing member{% endcomment %}
+    <script>
+        function updateExistingMemberForm() {
+            event.preventDefault();
+            // Get form data
+            const form = document.getElementById('updateExistingMemberForm');
+
+            // Make an AJAX request
+            submitForm(form)
+        }
+    </script>
+
+    {% comment %} For Adding Existing members{% endcomment %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var memberInput = document.getElementById('id_new_member_name');
+            var memberInputID = document.getElementById('id_new_member_id');
+            var suggestionsList = document.getElementById('member-suggestions');
+
+            memberInput.addEventListener('input', function () {
+                var query = memberInput.value;
+
+                // Make an AJAX request to your backend endpoint using fetch
+                fetch('/member/autocomplete/?query=' + encodeURIComponent(query))
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update suggestions based on backend response
+                        updateMemberSuggestions(data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching member suggestions:', error);
+                    });
+            });
+
+            suggestionsList.addEventListener('click', function (event) {
+                console.log("clicked ")
+                console.log("clicked ", event.target.tagName)
+                if (event.target.tagName === 'LI') {
+                    // Use the data directly from the suggestion list
+                    var selectedMemberId = event.target.dataset.uuid;
+                    var selectedMemberDetails = {
+                        id: selectedMemberId,
+                        name: event.target.querySelector('span').textContent,
+                        image_url: event.target.querySelector('img').src, // Replace with the actual property name
+                        additional_info: '' // Replace with the actual property name or remove if not needed
+                    };
+
+
+                    // Clear the input and suggestions
+                    memberInput.value = selectedMemberDetails.name;
+                    memberInputID.value = selectedMemberDetails.id;
+                    suggestionsList.innerHTML = '';
+                }
+            });
+
+
+            function updateMemberSuggestions(suggestions) {
+                suggestionsList.innerHTML = '';
+
+                if (suggestions.length > 0) {
+                    suggestions.forEach(function (member) {
+                        var listItem = document.createElement('li');
+
+                        // Create an image element
+                        var memberImage = document.createElement('img');
+                        memberImage.src = member.image_url; // Replace with actual image URL
+                        memberImage.alt = member.name; // Replace with alt text
+                        listItem.appendChild(memberImage);
+
+                        // Create a span element for the member's name
+                        var memberName = document.createElement('span');
+                        memberName.textContent = member.name; // Adjust the property based on your data
+                        listItem.appendChild(memberName);
+
+                        // Set the dataset for the member's UUID
+                        listItem.dataset.uuid = member.id; // Assuming your member object has an 'id' property
+
+                        // Append the list item to the suggestions list
+                        suggestionsList.appendChild(listItem);
+                    });
+                } else {
+                    var noMatchItem = document.createElement('li');
+                    noMatchItem.textContent = 'No matching members found.';
+                    suggestionsList.appendChild(noMatchItem);
+                }
+            }
+        });
+
+
+    </script>
+
+{% endblock %}

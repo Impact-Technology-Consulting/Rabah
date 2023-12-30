@@ -1,0 +1,84 @@
+{% extends "dashboard/base.html" %}
+
+
+{% block css %}
+    <style>
+        .card:hover {
+            background-color: #f0f0f0; /* Change this to your desired hover color */
+            transition: background-color 0.3s ease-in-out; /* Add a smooth transition effect */
+            cursor: pointer; /* Change cursor to pointer on hover */
+        }
+
+        .card-title {
+            color: #333; /* Set the default text color */
+        }
+    </style>
+{% endblock %}
+
+{% block title %}
+    Organisation List | Rabah
+{% endblock %}
+{% block content %}
+
+
+    <div class="social-dash-wrap">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-main">
+                    <h4 class="text-capitalize breadcrumb-title">Organisations</h4>
+                    <div class="breadcrumb-action justify-content-center flex-wrap">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#"><i class="uil uil-estate"></i>Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">organisation</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                {% for member in members %}
+                    <div class="col-md-7 mb-3">
+                        <div class="card" onclick="setAndRedirect('{{ member.organisation.id }}')">
+                            <div class="card-body">
+                                <h3 class="card-title">{{ member.organisation.name|capfirst }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">{{ member.organisation.name|capfirst }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">{{ member.organisation.name|capfirst }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+
+    <script>
+        function setAndRedirect(organisation_id) {
+            // Set the organization ID in a cookie
+            document.cookie = `organisation_id=${organisation_id}; path=/`;
+
+            // Redirect to the dashboard or any other URL
+            window.location.href = '{% url "rabah_dashboard:dashboard" %}';
+        }
+    </script>
+{% endblock %}

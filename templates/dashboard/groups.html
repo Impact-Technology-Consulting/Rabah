@@ -1,0 +1,176 @@
+{% extends "dashboard/base.html" %}
+{% load custom_filters %}
+{% load crispy_forms_filters %}
+
+{% block css %}
+
+
+{% endblock %}
+
+{% block title %}
+   Groups | Rabah
+{% endblock %}
+{% block content %}
+    <div class="container-fluid ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-main user-member justify-content-sm-between ">
+                    <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
+                        <div class="d-flex align-items-center user-member__title justify-content-center me-sm-25">
+                            <h4 class="text-capitalize fw-500 breadcrumb-title"> Groups</h4>
+                            <span class="sub-title ms-sm-25 ps-sm-25">Home</span>
+                        </div>
+                        <form action="." class="d-flex align-items-center user-member__form my-sm-0 my-2">
+                            <i class="uil uil-search"></i>
+                            <input class="form-control me-sm-2 border-0 box-shadow-none" type="search"
+                                   value="{{  request.GET.search}}" name="search"
+                                   placeholder="Search by Name" aria-label="Search">
+                        </form>
+                    </div>
+                    <div class="action-btn">
+                        <a href="#" class="btn px-15 btn-primary" data-bs-toggle="modal" data-bs-target="#new-member">
+                            <i class="las la-plus fs-16"></i>add group</a>
+
+                        <div class="modal fade new-member " id="new-member" role="dialog" tabindex="-1"
+                             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content  radius-xl">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title fw-500" id="staticBackdropLabel">Create Group</h6>
+                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                            <i class="uil uil-multiply"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="new-member-modal">
+                                            <form method="post" action="." enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                {{ form|crispy }}
+                                                <div class="button-group d-flex pt-25">
+                                                    <button class="btn btn-primary btn-default btn-squared text-capitalize"
+                                                            type="submit">
+                                                        add new group
+                                                    </button>
+                                                    <button type="button"
+                                                            class="btn btn-light btn-default btn-squared fw-400 text-capitalize b-light color-light"
+                                                            data-bs-dismiss="modal">cancel
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for group in groups %}
+                <div class="col-xxl-4 col-md-6 mb-25">
+                    <div class="user-group px-30 pt-30 pb-25 radius-xl" style="min-height: 256px">
+                        <div class="border-bottom">
+                            <div class="media user-group-media d-flex justify-content-between">
+                                <div class="media-body d-flex align-items-center">
+                                    <img class="me-20 wh-70 rounded-circle bg-opacity-primary"
+                                         src="{{ group.imageURL }}"
+                                         alt="author">
+                                    <div>
+                                        <a href="{% url "rabah_organisations:groups_detail" group.id %}">
+                                            <h6 class="mt-0  fw-500">{{ group.name }}</h6>
+                                        </a>
+                                        <p class="fs-13 color-light mb-0">San Francisco, CA</p>
+                                    </div>
+                                </div>
+                                <div class="mt-n15">
+                                    <div class="dropdown dropdown-click">
+                                        <button class="btn-link border-0 bg-transparent p-0" data-bs-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
+                                            <i class="uil uil-ellipsis-v"></i>
+                                        </button>
+                                        <div class="dropdown-default dropdown-bottomLeft dropdown-menu-right dropdown-menu">
+                                            <a class="dropdown-item"
+                                               href="{% url "rabah_organisations:groups_detail" group.id %}">view</a>
+                                            <a class="dropdown-item" href="#">edit</a>
+                                            <a class="dropdown-item" href="#">deactivate</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="user-group-people" style="">
+                                <p class="mt-15">{{ group.description|truncatewords:10 }}.</p>
+                                <ul class="d-flex flex-wrap mb-20 user-group-people__parent">
+                                    {% for member in group.random_10_members %}
+
+                                        <li>
+                                            <a href="#"><img class="rounded-circle wh-34 bg-opacity-secondary"
+                                                             src="{{ member.user.user_profile.profileImageURL }}"
+                                                             alt="author"></a>
+                                        </li>
+
+                                    {% endfor %}
+
+
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="user-pagination">
+                    <div class="d-flex justify-content-md-end justify-content-center mt-1 mb-30">
+                        <nav class="dm-page ">
+                            <ul class="dm-pagination d-flex">
+                                {% if is_paginated %}
+                                    <li class="dm-pagination__item">
+                                        {% if page_obj.has_previous %}
+                                            <a href="{% paginate_url page_obj.previous_page_number 'page' request.GET.urlencode %}"
+                                               class="dm-pagination__link pagination-control"><span
+                                                    class="la la-angle-left"></span></a>
+                                        {% else %}
+                                            <a href="#" class="dm-pagination__link pagination-control"><span
+                                                    class="la la-angle-left"></span></a>
+                                        {% endif %}
+                                        {% get_proper_elided_page_range paginator page_obj.number as page_range %}
+                                        {% for i in page_range %}
+                                            {% if page_obj.number == i %}
+                                                <a href="#" class="dm-pagination__link active"><span
+                                                        class="page-number">{{ i }}</span></a>
+                                            {% else %}
+                                                <a href="{% paginate_url i 'page' request.GET.urlencode %}"
+                                                   class="dm-pagination__link"><span
+                                                        class="page-number">{{ i }}</span></a>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if page_obj.has_next %}
+                                            <a href="{% paginate_url page_obj.next_page_number 'page' request.GET.urlencode %}"
+                                               class="dm-pagination__link pagination-control"><span
+                                                    class="la la-angle-right"></span></a>
+                                        {% else %}
+                                            <a href="#" class="dm-pagination__link pagination-control"><span
+                                                    class="la la-angle-right"></span></a>
+
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+
+{% endblock %}

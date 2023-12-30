@@ -1,0 +1,282 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+
+        {% block title %}
+
+        {% endblock %}
+    </title>
+    <link href='https://fonts.googleapis.com/css?family=Cairo' rel='stylesheet'>
+
+    <link rel="stylesheet" href="{% static "css/plugin.min.css" %}">
+    <link rel="stylesheet" href="{% static "style.css" %}">
+    <link rel="stylesheet" href="{% static "css/custom_style.css" %}">
+    <link rel="shortcut icon" href="{% static "img/favicon.ico" %}" type="image/x-icon"/>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            font-weight: normal;
+        }
+
+        b, strong {
+            font-weight: normal;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: normal;
+            font-family: "Cairo", sans-serif;
+        }
+
+        .bold {
+            font-weight: normal;
+        }
+
+
+    </style>
+    {% block css %}
+
+    {% endblock %}
+</head>
+
+<body class=" side-menu  ">
+<div class="mobile-search">
+
+</div>
+<div class="mobile-author-actions"></div>
+<header class="header-top">
+    <nav class="navbar navbar-light">
+        <div class="navbar-left">
+            <div class="logo-area">
+                <a class="navbar-brand" href="#">
+                    <img class=" dark" src="{% static 'img/logo-dark.png' %}" alt="logo">
+                    <img class="light" src="{% static 'img/logo-white.png' %}" alt="logo">
+                </a>
+                <a href="#" class="sidebar-toggle">
+                    <img class="svg" src="{% static 'img/svg/align-center-alt.svg' %}" alt="img"></a>
+            </div>
+
+
+        </div>
+
+        <div class="navbar-right">
+            <ul class="navbar-right__menu">
+
+
+                <li class="nav-author">
+                    <div class="dropdown-custom">
+                        <a href="{% url "user:user_profile" %}" class="nav-item-toggle"><img
+                                {% if request.user.user_profile.profileImageURL %}
+                                    src="{{ request.user.user_profile.profileImageURL }}"
+                                {% else %}
+                                    src="{% static 'img/favicon.ico' %}"
+                                {% endif %}
+                                    alt=""
+                                    class=" rounded-circle">
+                            <span class="nav-item__title">{{ request.user.first_name }}<i
+                                    class="las la-angle-down nav-item__arrow"></i></span>
+                        </a>
+                        <div class="dropdown-parent-wrapper">
+                            <div class="dropdown-wrapper">
+                                <div class="nav-author__info">
+                                    <div class="author-img">
+
+                                        <img
+                                                {% if request.user.user_profile.profileImageURL %}
+                                                    src="{{ request.user.user_profile.profileImageURL }}"
+                                                {% else %}
+                                                    src="{% static 'img/favicon.ico' %}"
+                                                {% endif %}
+                                                    alt="" class="rounded-circle">
+                                    </div>
+                                    <div>
+                                        <a href="{% url "user:user_profile" %}"><h6>{{ request.user.first_name }}</h6>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="nav-author__options">
+
+                                    <a href="{% url "user:custom_logout" %}" class="nav-author__signout">
+                                        <i class="uil uil-sign-out-alt"></i> Sign Out</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+
+            <div class="navbar-right__mobileAction d-md-none">
+                <a href="#" class="btn-search">
+                    <img src="{% static 'img/svg/search.svg' %}" alt="search" class="svg feather-search">
+                    <img src="{% static 'img/svg/x.svg' %}" alt="x" class="svg feather-x"></a>
+                <a href="#" class="btn-author-action">
+                    <img class="svg" src="{% static "img/svg/more-vertical.svg" %}" alt="more-vertical"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+<main class="main-content">
+    <div class="sidebar-wrapper">
+        <div class="sidebar sidebar-collapse" id="sidebar">
+            <div class="sidebar__menu-group">
+                <ul class="sidebar_nav">
+
+
+                    <li class="{% if request.resolver_match.view_name == 'rabah_dashboard:dashboard' %}active{% endif %}">
+                        <a href="{% url "rabah_dashboard:dashboard" %}">
+                            <span class="nav-icon uil uil-create-dashboard"></span>
+                            <span class="menu-text">Dashboard</span>
+                        </a>
+                    </li>
+
+
+                    <li class="{% if request.resolver_match.view_name == 'rabah_organisations:groups' %}active{% endif %}">
+                        <a href="{% url "rabah_organisations:groups" %}">
+                            <span class="nav-icon uil uil-users-alt"></span>
+                            <span class="menu-text">Groups</span>
+                        </a>
+                    </li>
+
+
+                    <li class="{% if request.resolver_match.view_name == 'rabah_members:members' %}active{% endif %}">
+                        <a href="{% url "rabah_members:members" %}">
+                            <span class="nav-icon uil uil-user"></span>
+                            <span class="menu-text">Members</span>
+                        </a>
+                    </li>
+                    <li class="{% if request.resolver_match.view_name == 'rabah_events:events' %}active{% endif %}">
+                        <a href="{% url "rabah_events:events" %}">
+                            <span class="nav-icon uil uil-create-dashboard"></span>
+                            <span class="menu-text">Events</span>
+                        </a>
+                    </li>
+
+                    <li class="{% if request.resolver_match.view_name == 'rabah_subscriptions:subscription_page' %}active{% endif %}">
+                        <a href="{% url "rabah_subscriptions:subscription_page" %}">
+                            <span class="nav-icon uil uil-credit-card-search"></span>
+                            <span class="menu-text">Subscription</span>
+                        </a>
+                    </li>
+
+
+                    <li class="has-child ">
+                        <a href="#" class="">
+                            <span class="nav-icon uil uil-window"></span>
+                            <span class="menu-text">Contribution</span>
+                            <span class="toggle-icon"></span>
+                        </a>
+                        <ul style="top: 454.167px; left: 214px; display: none;">
+                            <li class="{% if request.resolver_match.view_name == 'rabah_contributions:add_contribution_type' %}active{% endif %}">
+                                <a href="{% url "rabah_contributions:add_contribution_type" %}">
+                                    <span class="nav-icon uil uil-plus"></span>
+                                    <span class="menu-text"> Add donation Type</span>
+                                </a>
+                            </li>
+                            <li class="{% if request.resolver_match.view_name == 'rabah_contributions:add_giving_transaction' %}active{% endif %}">
+                                <a href="{% url "rabah_contributions:add_giving_transaction" %}">
+                                    <span class="nav-icon uil uil-plus"></span>
+                                    <span class="menu-text"> Manage donations</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                    {% if not request.user.is_authenticated %}
+                        <li class="{% if request.resolver_match.view_name == 'account_login' %}active{% endif %}">
+                            <a href="{% url "account_login" %}">
+                                <span class="nav-icon uil uil-signin"></span>
+                                <span class="menu-text">Log In</span>
+                            </a>
+                        </li>
+
+                    {% else %}
+                        <li class="{% if request.resolver_match.view_name == 'user:custom_logout' %}active{% endif %}">
+                            <a href="{% url "user:custom_logout" %}">
+                                <span class="nav-icon uil uil-sign-out-alt"></span>
+                                <span class="menu-text">Logout </span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="contents">
+        <div class="container-fluid">
+
+
+            <div class="social-dash-wrap">
+
+                {% block content %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</main>
+<div id="overlayer">
+    <div class="loader-overlay">
+        <div class="dm-spin-dots spin-lg">
+            <span class="spin-dot badge-dot dot-primary"></span>
+            <span class="spin-dot badge-dot dot-primary"></span>
+            <span class="spin-dot badge-dot dot-primary"></span>
+            <span class="spin-dot badge-dot dot-primary"></span>
+        </div>
+    </div>
+</div>
+<div class="overlay-dark-sidebar"></div>
+<div class="customizer-overlay"></div>
+
+<script src="{% static "js/plugins.min.js" %}"></script>
+<script src="{% static "js/script.min.js" %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="{% static "js/main.js" %}"></script>
+{% block script %}
+
+{% endblock %}
+<script>
+    {% if messages %}
+        toastr.options.timeOut = 10000; // 3s
+
+        document.addEventListener("DOMContentLoaded", function () {
+            {% for message in messages %}
+                {% if message.tags == "info" %}
+                    toastr.success("{{ message }}", "Success", {"iconClass": 'bg-primary text-white'});
+                {% elif message.tags == "success" %}
+                    toastr.success("{{ message }}", "Success", {"iconClass": 'bg-primary text-white'});
+                {% elif message.tags == "warning" %}
+                    toastr.warning('{{ message }}');
+                {% elif message.tags == "error" %}
+                    toastr.error('{{ message }}');
+                {% endif %}
+            {% endfor %}
+        });
+    {% endif %}
+
+
+</script>
+</body>
+
+</html>
+
+

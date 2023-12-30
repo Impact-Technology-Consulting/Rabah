@@ -1,0 +1,229 @@
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_filters %}
+
+
+{% block css %}
+    <style>
+        /* Styles for the selected members list */
+        #selected-members-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .selected-member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+
+        #member-suggestions li {
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 10px 10px 5px;
+        }
+
+        #member-suggestions li img {
+            /* Your styles for the images go here */
+            max-width: 60px; /* Adjust the max-width as needed */
+            border-radius: 50%; /* Add a border-radius for rounded images, adjust as needed */
+            margin-right: 10px; /* Add margin for spacing between the image and the text */
+        }
+
+        .selected-member-item img {
+            width: 30px; /* Adjust the width to your preference */
+            height: 30px; /* Adjust the height to your preference */
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .selected-member-item span {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .cancel-button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .cancel-button:hover {
+            background-color: #c82333;
+        }
+
+    </style>
+{% endblock %}
+
+
+{% block title %}
+    Giving | Rabah
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-main">
+                    <h4 class="text-capitalize breadcrumb-title">Donation</h4>
+                    <div class="breadcrumb-action justify-content-center flex-wrap">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{% url "rabah_dashboard:dashboard" %}"><i
+                                        class="uil uil-estate"></i>Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Donation</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card card-default  mb-4">
+                    <div class="card-header">
+                        <h6>Add Donation</h6>
+                    </div>
+                    <div class="card-body mx-md-5">
+                        <form action="{% url "rabah_contributions:add_giving_transaction" %}" method="post">
+                            {% csrf_token %}
+                            {{ form.contribution_type|as_crispy_field }}
+                            {{ form.member_id|as_crispy_field }}
+                            {{ form.member_name|as_crispy_field }}
+                            <ul id="member-suggestions"></ul>
+                            <div id="selected-members-container">
+                                <ul id="selected-members-list"></ul>
+                            </div>
+                            {{ form.method|as_crispy_field }}
+                            {{ form.amount|as_crispy_field }}
+                            {{ form.description|as_crispy_field }}
+                            {{ form.is_anonymous|as_crispy_field }}
+                            <button type="submit" class="btn btn-primary float-end">Add Giving Transaction</button>
+                            {% if contribution %}
+                                <a href="{% url "rabah_contributions:contributions" contribution.id %}" class="btn btn-primary"> View All </a>
+                            {% endif %}
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block script %}
+    {% comment %} For Adding Existing members{% endcomment %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var memberInput = document.getElementById('id_member_name');
+            var memberInputID = document.getElementById('id_member_id');
+            var suggestionsList = document.getElementById('member-suggestions');
+
+            memberInput.addEventListener('input', function () {
+                var query = memberInput.value;
+
+                // Make an AJAX request to your backend endpoint using fetch
+                fetch('/member/autocomplete/?query=' + encodeURIComponent(query))
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update suggestions based on backend response
+                        updateMemberSuggestions(data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching member suggestions:', error);
+                    });
+            });
+
+            suggestionsList.addEventListener('click', function (event) {
+                console.log("clicked ")
+                console.log("clicked ", event.target.tagName)
+                if (event.target.tagName === 'LI') {
+                    // Use the data directly from the suggestion list
+                    var selectedMemberId = event.target.dataset.uuid;
+                    var selectedMemberDetails = {
+                        id: selectedMemberId,
+                        name: event.target.querySelector('span').textContent,
+                        image_url: event.target.querySelector('img').src, // Replace with the actual property name
+                        additional_info: '' // Replace with the actual property name or remove if not needed
+                    };
+
+
+                    // Clear the input and suggestions
+                    memberInput.value = selectedMemberDetails.name;
+                    memberInputID.value = selectedMemberDetails.id;
+                    suggestionsList.innerHTML = '';
+                }
+            });
+
+
+            function updateMemberSuggestions(suggestions) {
+                suggestionsList.innerHTML = '';
+
+                if (suggestions.length > 0) {
+                    suggestions.forEach(function (member) {
+                        var listItem = document.createElement('li');
+
+                        // Create an image element
+                        var memberImage = document.createElement('img');
+                        memberImage.src = member.image_url; // Replace with actual image URL
+                        memberImage.alt = member.name; // Replace with alt text
+                        listItem.appendChild(memberImage);
+
+                        // Create a span element for the member's name
+                        var memberName = document.createElement('span');
+                        memberName.textContent = member.name; // Adjust the property based on your data
+                        listItem.appendChild(memberName);
+
+                        // Set the dataset for the member's UUID
+                        listItem.dataset.uuid = member.id; // Assuming your member object has an 'id' property
+
+                        // Append the list item to the suggestions list
+                        suggestionsList.appendChild(listItem);
+                    });
+                } else {
+                    var noMatchItem = document.createElement('li');
+                    noMatchItem.textContent = 'No matching members found.';
+                    suggestionsList.appendChild(noMatchItem);
+                }
+            }
+        });
+
+    </script>
+    {% comment %} IS anonymout{% endcomment %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Function to toggle member name based on is_anonymous checkbox
+            function toggleMemberName() {
+                var isAnonymousChecked = document.getElementById("id_is_anonymous").checked;
+                var memberNameDiv = document.getElementById("div_id_member_name");
+
+                if (isAnonymousChecked) {
+                    memberNameDiv.style.display = "none";
+                } else {
+                    memberNameDiv.style.display = "block";
+                }
+            }
+
+            // Initial toggle based on a page load
+            toggleMemberName();
+
+            // Attach an event listener to the is_anonymous checkbox
+            document.getElementById("id_is_anonymous").addEventListener("change", function () {
+                toggleMemberName();
+            });
+        });
+    </script>
+
+{% endblock %}
