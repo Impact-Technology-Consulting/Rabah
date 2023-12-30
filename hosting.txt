@@ -1,0 +1,68 @@
+Tutorial Url  https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-22-04
+
+
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/Rabah
+ExecStart=/home/ubuntu/Rabah/venv/bin/gunicorn \
+        --access-logfile - \
+        --workers 3 \
+        --bind unix:/run/gunicorn.sock \
+        Rabah.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+
+sudo nano /etc/nginx/sites-available/Rabah
+
+
+# Nginx Configuration
+server {
+    listen 80;
+    server_name 51.20.85.41;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/ubuntu/Rabah;
+    }
+    location /media/ {
+        root /home/ubuntu/Rabah;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+}
+
+
+Celery Configuration systemd confuration in
+sudo nano /etc/systemd/system/celery.service
+
+[Unit]
+Description=Celery Service
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/Rabah
+ExecStart=/home/ubuntu/Rabah/venv/bin/celery -A Rabah worker  --loglevel=info
+
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl daemon-reload
+sudo systemctl start celery
+sudo systemctl enable celery
+sudo systemctl status celery
+
+
+
