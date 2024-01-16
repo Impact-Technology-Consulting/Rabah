@@ -62,7 +62,7 @@ class RabahLoginView(View):
         form = RabahLoginForm()
         # if the user is authenticated, redirect the user to dashboard page
         if self.request.user.is_authenticated:
-            return redirect("dashboard:dashboard")
+            return redirect("rabah_dashboard:dashboard")
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
