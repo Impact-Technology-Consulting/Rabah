@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block title %}
-   Groups | Rabah
+    Groups | Rabah
 {% endblock %}
 {% block content %}
     <div class="container-fluid ">
@@ -17,13 +17,15 @@
                 <div class="breadcrumb-main user-member justify-content-sm-between ">
                     <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
                         <div class="d-flex align-items-center user-member__title justify-content-center me-sm-25">
-                            <h4 class="text-capitalize fw-500 breadcrumb-title"> Groups</h4>
-                            <span class="sub-title ms-sm-25 ps-sm-25">Home</span>
+                            <h4 class="text-capitalize fw-500 breadcrumb-title"><a
+                                    href="{% url "rabah_organisations:groups" %}" style="color: #0c0a09">Groups</a></h4>
+                            <span class="sub-title ms-sm-25 ps-sm-25"> <a href="{% url "rabah_dashboard:dashboard" %}"
+                                                                          style="color: #0c0a09">Home</a> </span>
                         </div>
                         <form action="." class="d-flex align-items-center user-member__form my-sm-0 my-2">
                             <i class="uil uil-search"></i>
                             <input class="form-control me-sm-2 border-0 box-shadow-none" type="search"
-                                   value="{{  request.GET.search}}" name="search"
+                                   value="{{ request.GET.search }}" name="search"
                                    placeholder="Search by Name" aria-label="Search">
                         </form>
                     </div>
@@ -74,40 +76,46 @@
                         <div class="border-bottom">
                             <div class="media user-group-media d-flex justify-content-between">
                                 <div class="media-body d-flex align-items-center">
-                                    <img class="me-20 wh-70 rounded-circle bg-opacity-primary"
-                                         src="{{ group.imageURL }}"
-                                         alt="author">
+                                    <a href="{% url "rabah_organisations:groups_detail" group.id %}">
+                                        <img class="me-20 wh-70 rounded-circle bg-opacity-primary"
+                                             src="{{ group.imageURL }}"
+                                             alt="author">
+                                    </a>
                                     <div>
                                         <a href="{% url "rabah_organisations:groups_detail" group.id %}">
-                                            <h6 class="mt-0  fw-500">{{ group.name }}</h6>
+                                            <h4 class="mt-0  fw-500">{{ group.name|capfirst }}</h4>
                                         </a>
-                                        <p class="fs-13 color-light mb-0">San Francisco, CA</p>
+                                        <p class="fs-13 color-light mb-0">
+                                            Total Members : {{ group.members_count }}</p>
                                     </div>
                                 </div>
                                 <div class="mt-n15">
                                     <div class="dropdown dropdown-click">
                                         <button class="btn-link border-0 bg-transparent p-0" data-bs-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false">
-                                            <i class="uil uil-ellipsis-v"></i>
+                                            <i class="uil uil-ellipsis-v " style="font-size: 20px"></i>
                                         </button>
                                         <div class="dropdown-default dropdown-bottomLeft dropdown-menu-right dropdown-menu">
                                             <a class="dropdown-item"
                                                href="{% url "rabah_organisations:groups_detail" group.id %}">view</a>
-                                            <a class="dropdown-item" href="#">edit</a>
-                                            <a class="dropdown-item" href="#">deactivate</a>
+                                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                               data-bs-target="#edit-group-{{ group.id }}">edit</a>
+
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="user-group-people" style="">
-                                <p class="mt-15">{{ group.description|truncatewords:10 }}.</p>
+                                <p class="mt-15">{{ group.description|capfirst|truncatewords:10 }}.</p>
                                 <ul class="d-flex flex-wrap mb-20 user-group-people__parent">
                                     {% for member in group.random_10_members %}
 
                                         <li>
-                                            <a href="#"><img class="rounded-circle wh-34 bg-opacity-secondary"
-                                                             src="{{ member.user.user_profile.profileImageURL }}"
-                                                             alt="author"></a>
+                                            <a href="{% url "rabah_members:group_member_detail" member.id %}"><img
+                                                    class="rounded-circle wh-34 bg-opacity-secondary"
+                                                    src="{{ member.user.user_profile.profileImageURL }}"
+                                                    alt="author"></a>
                                         </li>
 
                                     {% endfor %}
@@ -117,6 +125,79 @@
                             </div>
                         </div>
 
+                    </div>
+                </div>
+
+                <div class="modal fade new-member " id="edit-group-{{ group.id }}"
+                     role="dialog" tabindex="-1"
+                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content  radius-xl">
+                            <div class="modal-header">
+                                <h6 class="modal-title fw-500" id="staticBackdropLabel">
+                                    Edit Group</h6>
+                                <button type="button" class="close" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                    <i class="uil uil-multiply"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="new-member-modal">
+                                    <form method="post" action="{% url "rabah_organisations:groups_update" group.id %}"
+                                          enctype="multipart/form-data">
+                                        {% csrf_token %}
+
+
+                                        <div id="div_id_name" class="form-group"><label
+                                                for="id_name" class=" requiredField">
+                                            Name<span class="asteriskField">*</span>
+                                        </label>
+                                            <div><input type="text" name="name"
+                                                        maxlength="250"
+                                                        value="{{ group.name }}"
+                                                        class="textinput textInput form-control"
+                                                        required="" id="id_name"></div>
+                                        </div>
+                                        <div id="div_id_image" class="form-group"><label
+                                                for="id_image" class="">
+                                            Image
+                                        </label>
+                                            <div><input type="file" name="image"
+                                                        accept="image/*"
+                                                        value="{{ group.image }}"
+                                                        class="clearablefileinput form-control-file"
+                                                        id="id_image"></div>
+                                        </div>
+                                        <div id="div_id_description" class="form-group">
+                                            <label for="id_description" class="">
+                                                Description
+                                            </label>
+                                            <div><textarea name="description" cols="40"
+                                                           rows="10"
+
+                                                           class="textarea form-control"
+                                                           id="id_description">{{ group.description }}</textarea>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="organisation_id"
+                                               value="{{ group.organisation.id }}"
+                                               id="id_organisation_id">
+
+                                        <div class="button-group d-flex pt-25">
+                                            <button class="btn btn-primary btn-default btn-squared text-capitalize"
+                                                    type="submit">
+                                                update group
+                                            </button>
+                                            <button type="button"
+                                                    class="btn btn-light btn-default btn-squared fw-400 text-capitalize b-light color-light"
+                                                    data-bs-dismiss="modal">cancel
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
