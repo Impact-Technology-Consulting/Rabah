@@ -8,9 +8,11 @@ from rabah_organisations.models import Organisation
 
 # Create your models here.
 
+
 class ContributionType(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     name = models.CharField(max_length=250)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -27,7 +29,7 @@ class ContributionType(models.Model):
 
     def total_contribution_amount(self, organisation_id):
         contributions = Contribution.objects.filter(organisation_id=organisation_id)
-        total_amount = contributions.aggregate(models.Sum('amount'))['amount__sum'] or 0
+        total_amount = contributions.aggregate(models.Sum("amount"))["amount__sum"] or 0
         return total_amount
 
 
@@ -51,14 +53,27 @@ METHOD_CHOICES = (
 
 class Contribution(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     contribution_type = models.ForeignKey(ContributionType, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(Member, on_delete=models.SET_NULL, blank=True, null=True,
-                                   related_name="contribution_created_by")
-    member = models.ForeignKey(Member, on_delete=models.SET_NULL, blank=True, null=True,
-                               related_name="contribution_memeber")
-    method = models.CharField(max_length=250, choices=METHOD_CHOICES, blank=True, null=True)
+    created_by = models.ForeignKey(
+        Member,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="contribution_created_by",
+    )
+    member = models.ForeignKey(
+        Member,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="contribution_memeber",
+    )
+    method = models.CharField(
+        max_length=250, choices=METHOD_CHOICES, blank=True, null=True
+    )
     transaction_id = models.CharField(max_length=250, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)

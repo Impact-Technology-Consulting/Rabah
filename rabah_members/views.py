@@ -5,8 +5,12 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import ListView
 
-from rabah_members.forms import MemberCreateForm, MemberEditForm, AddExistingMemberToFamilyForm, \
-    UpdateExistingMemberFamilyRelationShipForm
+from rabah_members.forms import (
+    MemberCreateForm,
+    MemberEditForm,
+    AddExistingMemberToFamilyForm,
+    UpdateExistingMemberFamilyRelationShipForm,
+)
 from rabah_members.models import Member, FAMILY_RELATIONSHIP_CHOICES
 from rabah_members.utils import query_members
 from users.forms import UserProfileUpdateForm
@@ -15,16 +19,24 @@ from users.mixin import AuthAndAdminOrganizationMemberMixin, AuthAndOrganization
 
 class MemberAutocompleteView(AuthAndAdminOrganizationMemberMixin, View):
     def get(self, request):
-        query = request.GET.get('query', '')
+        query = request.GET.get("query", "")
 
         # Perform a simple case-insensitive search for members
-        members = Member.objects.filter(Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query) &
-                                        Q(organisation_id=self.organisation_id))
+        members = Member.objects.filter(
+            Q(user__first_name__icontains=query)
+            | Q(user__last_name__icontains=query)
+            & Q(organisation_id=self.organisation_id)
+        )
 
-        suggestions = [{"name": f"{member.user.first_name} {member.user.last_name}", "id": member.id,
-                        "image_url": member.user.user_profile.profileImageURL,
-                        "additional_info": member.family_relationship} for member in
-                       members]
+        suggestions = [
+            {
+                "name": f"{member.user.first_name} {member.user.last_name}",
+                "id": member.id,
+                "image_url": member.user.user_profile.profileImageURL,
+                "additional_info": member.family_relationship,
+            }
+            for member in members
+        ]
 
         return JsonResponse(suggestions, safe=False)
 
@@ -33,6 +45,7 @@ class MembersDashboardView(AuthAndAdminOrganizationMemberMixin, ListView):
     """
     This is used to get all the members currently on breeze nd add members
     """
+
     template_name = "dashboard/members.html"
     queryset = Member.objects.all()
     paginate_by = 5
@@ -45,7 +58,7 @@ class MembersDashboardView(AuthAndAdminOrganizationMemberMixin, ListView):
         The return value must be an iterable and may be an instance of
         `QuerySet` in which case `QuerySet` specific behavior will be enabled.
         """
-        query = self.request.GET.get('search')
+        query = self.request.GET.get("search")
 
         queryset = Member.objects.filter(organisation_id=self.organisation_id)
         ordering = self.get_ordering()
@@ -59,16 +72,13 @@ class MembersDashboardView(AuthAndAdminOrganizationMemberMixin, ListView):
 
 
 class AdminAddMemberPageView(AuthAndAdminOrganizationMemberMixin, View):
-
     def get(self, request):
         organisation_id = self.organisation_id
         is_admin_user = Member.objects.is_admin_user(self.request.user, organisation_id)
         if not is_admin_user:
-            return redirect(request.META.get('HTTP_REFERER'))
+            return redirect(request.META.get("HTTP_REFERER"))
         form = MemberCreateForm(organisation_id)
-        context = {
-            "form": form
-        }
+        context = {"form": form}
 
         return render(request, "dashboard/add_member.html", context)
 
@@ -78,9 +88,9 @@ class AdminAddMemberPageView(AuthAndAdminOrganizationMemberMixin, View):
         if form.is_valid():
             form.save()
             messages.success(request, "member created successfully")
-            return redirect(request.META.get('HTTP_REFERER'))
+            return redirect(request.META.get("HTTP_REFERER"))
         else:
-            return render(request, "dashboard/add_member.html", {'form': form})
+            return render(request, "dashboard/add_member.html", {"form": form})
 
 
 class GroupMembersView(AuthAndOrganizationMixin, View):
@@ -111,8 +121,9 @@ class MemberDetailView(AuthAndOrganizationMixin, View):
         member_form = MemberEditForm(instance=member)
         user_form = UserProfileUpdateForm(instance=member.user.user_profile)
         member_create_form = MemberCreateForm(organisation_id)
-        add_existing_member_form = AddExistingMemberToFamilyForm(organisation_id=organisation_id,
-                                                                 current_member_id=member.id)
+        add_existing_member_form = AddExistingMemberToFamilyForm(
+            organisation_id=organisation_id, current_member_id=member.id
+        )
         family_relationship_choices = FAMILY_RELATIONSHIP_CHOICES
 
         context = {
@@ -133,7 +144,7 @@ class MemberDetailView(AuthAndOrganizationMixin, View):
         if member_form.is_valid():
             member_form.save()
             messages.success(request, "successfully update member")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class AddFamilyMemberView(AuthAndOrganizationMixin, View):
@@ -149,16 +160,24 @@ class AddFamilyMemberView(AuthAndOrganizationMixin, View):
         if not member.family:
             member.create_family()
         print("organisation_id:", self.organisation_id)
-        form = MemberCreateForm(organisation_id=self.organisation_id, data=request.POST, files=request.FILES)
+        form = MemberCreateForm(
+            organisation_id=self.organisation_id, data=request.POST, files=request.FILES
+        )
         if form.is_valid():
             instance = form.save()
             #  add to the family
             instance.family = member.family
             instance.save()
-            return JsonResponse({"success": True, "message": "Successfully add member to family"})
+            return JsonResponse(
+                {"success": True, "message": "Successfully add member to family"}
+            )
         else:
             # Return form errors in the JSON response
-            errors_list = [error for field, error_list in form.errors.items() for error in error_list]
+            errors_list = [
+                error
+                for field, error_list in form.errors.items()
+                for error in error_list
+            ]
             return JsonResponse({"errors": errors_list}, status=400)
 
 
@@ -175,31 +194,55 @@ class AddExistingMemberToFamilyView(AuthAndAdminOrganizationMemberMixin, View):
         if not member.family:
             member.create_family()
 
-        form = AddExistingMemberToFamilyForm(organisation_id=self.organisation_id, current_member_id=member.id,
-                                             data=request.POST)
+        form = AddExistingMemberToFamilyForm(
+            organisation_id=self.organisation_id,
+            current_member_id=member.id,
+            data=request.POST,
+        )
         if form.is_valid():
             result = form.save()
             if result:
-                return JsonResponse({"success": True, "message": "Successfully add member to family"})
+                return JsonResponse(
+                    {"success": True, "message": "Successfully add member to family"}
+                )
             else:
-                return JsonResponse({"errors": ["member already in family"]}, status=400)
+                return JsonResponse(
+                    {"errors": ["member already in family"]}, status=400
+                )
         else:
             # Return form errors in the JSON response
-            errors_list = [error for field, error_list in form.errors.items() for error in error_list]
+            errors_list = [
+                error
+                for field, error_list in form.errors.items()
+                for error in error_list
+            ]
             return JsonResponse({"errors": errors_list}, status=400)
 
 
-class UpdateExistingMemberFamilyRelationShipView(AuthAndAdminOrganizationMemberMixin, View):
-
+class UpdateExistingMemberFamilyRelationShipView(
+    AuthAndAdminOrganizationMemberMixin, View
+):
     def post(self, request):
         form = UpdateExistingMemberFamilyRelationShipForm(data=self.request.POST)
         if form.is_valid():
             result = form.save()
             if result:
-                return JsonResponse({"success": True, "message": "Successfully update family relationship"}, status=200)
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "message": "Successfully update family relationship",
+                    },
+                    status=200,
+                )
             else:
-                return JsonResponse({"errors": ["Error updating family relationship"]}, status=400)
+                return JsonResponse(
+                    {"errors": ["Error updating family relationship"]}, status=400
+                )
         else:
             # Return form errors in the JSON response
-            errors_list = [error for field, error_list in form.errors.items() for error in error_list]
+            errors_list = [
+                error
+                for field, error_list in form.errors.items()
+                for error in error_list
+            ]
             return JsonResponse({"errors": errors_list}, status=400)

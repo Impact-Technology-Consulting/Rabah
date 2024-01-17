@@ -14,7 +14,7 @@ class AuthAndOrganizationMixin:
         if not request.user.is_authenticated:
             return redirect("account_login")
 
-        self.organisation_id = request.COOKIES.get('organisation_id')
+        self.organisation_id = request.COOKIES.get("organisation_id")
 
         if not self.organisation_id:
             return redirect("rabah_dashboard:user_organisations")
@@ -33,13 +33,14 @@ class AuthAndAdminOrganizationMemberMixin:
     """
     Mixin to check for authentication and organization ID in cookies.
     """
+
     organisation_id = None
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect("account_login")
 
-        self.organisation_id = request.COOKIES.get('organisation_id')
+        self.organisation_id = request.COOKIES.get("organisation_id")
 
         if not self.organisation_id:
             return redirect("rabah_dashboard:user_organisations")
@@ -61,13 +62,14 @@ class AuthAndAdminOrganizationNotSubscribedMixin:
     """
     Mixin to check for authentication and organization ID in cookies.
     """
+
     organisation_id = None
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect("account_login")
 
-        self.organisation_id = request.COOKIES.get('organisation_id')
+        self.organisation_id = request.COOKIES.get("organisation_id")
 
         if not self.organisation_id:
             return redirect("rabah_dashboard:user_organisations")

@@ -19,11 +19,14 @@ def query_contributions(query, item):
     query_list = sorted(query_list, key=lambda x: x[-1])
     query = reduce(
         operator.or_,
-        (Q(member__user__email__icontains=x) |
-         Q(method=x) |
-         Q(member__user__first_name__icontains=x) |
-         Q(member__user__last_name__icontains=x) |
-         Q(member__user__first_name=[x]) for x in query_list)
+        (
+            Q(member__user__email__icontains=x)
+            | Q(method=x)
+            | Q(member__user__first_name__icontains=x)
+            | Q(member__user__last_name__icontains=x)
+            | Q(member__user__first_name=[x])
+            for x in query_list
+        ),
     )
     object_list = item.filter(query).distinct()
     return object_list
@@ -32,7 +35,7 @@ def query_contributions(query, item):
 def total_contribution_amount(organisation_id):
     try:
         contributions = Contribution.objects.filter(organisation_id=organisation_id)
-        total_amount = contributions.aggregate(models.Sum('amount'))['amount__sum'] or 0
+        total_amount = contributions.aggregate(models.Sum("amount"))["amount__sum"] or 0
         return total_amount
     except:
         return 0

@@ -15,7 +15,8 @@ SUBSCRIPTION_STATUS = (
 
 class Subscription(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     name = models.CharField(max_length=250, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -23,9 +24,11 @@ class Subscription(models.Model):
 
 class BillingAddress(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     organisation = models.ForeignKey(
-        Organisation, on_delete=models.SET_NULL, blank=True, null=True)
+        Organisation, on_delete=models.SET_NULL, blank=True, null=True
+    )
     address = models.CharField(max_length=250, blank=True, null=True)
     city = models.CharField(max_length=250, blank=True, null=True)
     state = models.CharField(max_length=250, blank=True, null=True)
@@ -38,11 +41,17 @@ class BillingAddress(models.Model):
 
 class OrganisationSubscription(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
-    subscription = models.ForeignKey(Subscription, on_delete=models.SET_NULL, blank=True, null=True)
-    billing_subscription = models.ForeignKey(BillingAddress, on_delete=models.SET_NULL, blank=True, null=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
+    subscription = models.ForeignKey(
+        Subscription, on_delete=models.SET_NULL, blank=True, null=True
+    )
+    billing_subscription = models.ForeignKey(
+        BillingAddress, on_delete=models.SET_NULL, blank=True, null=True
+    )
     organisation = models.ForeignKey(
-        Organisation, on_delete=models.SET_NULL, blank=True, null=True)
+        Organisation, on_delete=models.SET_NULL, blank=True, null=True
+    )
     status = models.CharField(choices=SUBSCRIPTION_STATUS, max_length=250)
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -53,9 +62,13 @@ def post_save_create_organisation(sender, instance, *args, **kwargs):
     :param instance:  the user created or updated
     """
     if instance:
-        organisation_subscription = OrganisationSubscription.objects.filter(organisation=instance).first()
+        organisation_subscription = OrganisationSubscription.objects.filter(
+            organisation=instance
+        ).first()
         if not organisation_subscription:
-            OrganisationSubscription.objects.create(organisation=instance, status="INACTIVE")
+            OrganisationSubscription.objects.create(
+                organisation=instance, status="INACTIVE"
+            )
 
 
 post_save.connect(post_save_create_organisation, sender=Organisation)
@@ -84,15 +97,27 @@ METHOD_CHOICES = (
 
 class Transaction(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     organisation = models.ForeignKey(
-        Organisation, on_delete=models.SET_NULL, blank=True, null=True)
-    created_by = models.ForeignKey(Member, on_delete=models.SET_NULL, blank=True, null=True, related_name="created_by")
+        Organisation, on_delete=models.SET_NULL, blank=True, null=True
+    )
+    created_by = models.ForeignKey(
+        Member,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="created_by",
+    )
     member = models.ForeignKey(Member, on_delete=models.SET_NULL, blank=True, null=True)
-    method = models.CharField(max_length=250, choices=METHOD_CHOICES, blank=True, null=True)
+    method = models.CharField(
+        max_length=250, choices=METHOD_CHOICES, blank=True, null=True
+    )
     transaction_id = models.CharField(max_length=250, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
-    status = models.CharField(max_length=255, blank=True, null=True, choices=TRANSACTION_STATUS)
+    status = models.CharField(
+        max_length=255, blank=True, null=True, choices=TRANSACTION_STATUS
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     is_anonymous = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)

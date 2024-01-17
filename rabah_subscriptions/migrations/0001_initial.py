@@ -6,64 +6,199 @@ import uuid
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('rabah_members', '0001_initial'),
-        ('rabah_organisations', '0001_initial'),
+        ("rabah_members", "0001_initial"),
+        ("rabah_organisations", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BillingAddress',
+            name="BillingAddress",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('address', models.CharField(blank=True, max_length=250, null=True)),
-                ('city', models.CharField(blank=True, max_length=250, null=True)),
-                ('state', models.CharField(blank=True, max_length=250, null=True)),
-                ('country', models.CharField(blank=True, max_length=250, null=True)),
-                ('zip_code', models.CharField(blank=True, max_length=250, null=True)),
-                ('is_billing_verified', models.BooleanField(default=False)),
-                ('is_card_verified', models.BooleanField(default=False)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('organisation', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rabah_organisations.organisation')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("address", models.CharField(blank=True, max_length=250, null=True)),
+                ("city", models.CharField(blank=True, max_length=250, null=True)),
+                ("state", models.CharField(blank=True, max_length=250, null=True)),
+                ("country", models.CharField(blank=True, max_length=250, null=True)),
+                ("zip_code", models.CharField(blank=True, max_length=250, null=True)),
+                ("is_billing_verified", models.BooleanField(default=False)),
+                ("is_card_verified", models.BooleanField(default=False)),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
+                (
+                    "organisation",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="rabah_organisations.organisation",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Subscription',
+            name="Subscription",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('name', models.CharField(blank=True, max_length=250, null=True)),
-                ('price', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=250, null=True)),
+                ("price", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Transaction',
+            name="Transaction",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('method', models.CharField(blank=True, choices=[('CASH', 'Cash'), ('CREDIT_CARD', 'Credit Card'), ('DEBIT_CARD', 'Debit Card'), ('BANK_TRANSFER', 'Bank Transfer'), ('CHECK', 'Check'), ('MONEY_ORDER', 'Money Order'), ('PAYPAL', 'PayPal'), ('VENMO', 'Venmo'), ('BITCOIN', 'Bitcoin'), ('APPLE_PAY', 'Apple Pay'), ('GOOGLE_PAY', 'Google Pay'), ('SQUARE', 'Square'), ('CRYPTOCURRENCY', 'Other Cryptocurrency'), ('OTHER', 'Other')], max_length=250, null=True)),
-                ('transaction_id', models.CharField(blank=True, max_length=250, null=True)),
-                ('description', models.CharField(blank=True, max_length=255, null=True)),
-                ('status', models.CharField(blank=True, choices=[('SUCCESS', 'SUCCESS'), ('FAILED', 'FAILED')], max_length=255, null=True)),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('is_anonymous', models.BooleanField(default=False)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='created_by', to='rabah_members.member')),
-                ('member', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rabah_members.member')),
-                ('organisation', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rabah_organisations.organisation')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                (
+                    "method",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("CASH", "Cash"),
+                            ("CREDIT_CARD", "Credit Card"),
+                            ("DEBIT_CARD", "Debit Card"),
+                            ("BANK_TRANSFER", "Bank Transfer"),
+                            ("CHECK", "Check"),
+                            ("MONEY_ORDER", "Money Order"),
+                            ("PAYPAL", "PayPal"),
+                            ("VENMO", "Venmo"),
+                            ("BITCOIN", "Bitcoin"),
+                            ("APPLE_PAY", "Apple Pay"),
+                            ("GOOGLE_PAY", "Google Pay"),
+                            ("SQUARE", "Square"),
+                            ("CRYPTOCURRENCY", "Other Cryptocurrency"),
+                            ("OTHER", "Other"),
+                        ],
+                        max_length=250,
+                        null=True,
+                    ),
+                ),
+                (
+                    "transaction_id",
+                    models.CharField(blank=True, max_length=250, null=True),
+                ),
+                (
+                    "description",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        blank=True,
+                        choices=[("SUCCESS", "SUCCESS"), ("FAILED", "FAILED")],
+                        max_length=255,
+                        null=True,
+                    ),
+                ),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("is_anonymous", models.BooleanField(default=False)),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="created_by",
+                        to="rabah_members.member",
+                    ),
+                ),
+                (
+                    "member",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="rabah_members.member",
+                    ),
+                ),
+                (
+                    "organisation",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="rabah_organisations.organisation",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='OrganisationSubscription',
+            name="OrganisationSubscription",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('status', models.CharField(choices=[('ACTIVE', 'ACTIVE'), ('INACTIVE', 'INACTIVE')], max_length=250)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('billing_subscription', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rabah_subscriptions.billingaddress')),
-                ('organisation', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rabah_organisations.organisation')),
-                ('subscription', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rabah_subscriptions.subscription')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[("ACTIVE", "ACTIVE"), ("INACTIVE", "INACTIVE")],
+                        max_length=250,
+                    ),
+                ),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
+                (
+                    "billing_subscription",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="rabah_subscriptions.billingaddress",
+                    ),
+                ),
+                (
+                    "organisation",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="rabah_organisations.organisation",
+                    ),
+                ),
+                (
+                    "subscription",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="rabah_subscriptions.subscription",
+                    ),
+                ),
             ],
         ),
     ]
