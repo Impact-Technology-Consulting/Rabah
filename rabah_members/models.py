@@ -30,13 +30,13 @@ FAMILY_RELATIONSHIP_CHOICES = [
     ("BROTHER", "Brother"),
     ("SON", "Son"),
     ("DAUGHTER", "Daughter"),
-
 ]
 
 
 class Member(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     is_admin_member = models.BooleanField(default=False)
@@ -44,8 +44,12 @@ class Member(models.Model):
     is_active = models.BooleanField(default=True)
     groups = models.ManyToManyField(Group, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    family = models.ForeignKey(Family, on_delete=models.SET_NULL, null=True, related_name='members')
-    family_relationship = models.CharField(blank=True, null=True, max_length=250, choices=FAMILY_RELATIONSHIP_CHOICES)
+    family = models.ForeignKey(
+        Family, on_delete=models.SET_NULL, null=True, related_name="members"
+    )
+    family_relationship = models.CharField(
+        blank=True, null=True, max_length=250, choices=FAMILY_RELATIONSHIP_CHOICES
+    )
     objects = MemberManager()
 
     def __str__(self):
@@ -70,12 +74,20 @@ def post_save_create_member(sender, instance, *args, **kwargs):
     :param instance:  the user created or updated
     """
     if instance:
-        member = Member.objects.filter(organisation=instance, user=instance.owner).first()
+        member = Member.objects.filter(
+            organisation=instance, user=instance.owner
+        ).first()
         if not member:
             name = f"{instance.owner.last_name} Family"
             family = Family.objects.create(name=name)
-            Member.objects.create(user=instance.owner, organisation=instance, is_admin_member=True, is_active=True,
-                                  is_owner=True, family=family)
+            Member.objects.create(
+                user=instance.owner,
+                organisation=instance,
+                is_admin_member=True,
+                is_active=True,
+                is_owner=True,
+                family=family,
+            )
 
 
 post_save.connect(post_save_create_member, sender=Organisation)

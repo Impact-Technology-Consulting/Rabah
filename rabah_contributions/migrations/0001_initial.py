@@ -5,31 +5,76 @@ import uuid
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Contribution',
+            name="Contribution",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('method', models.CharField(blank=True, choices=[('CASH', 'Cash'), ('CREDIT_CARD', 'Credit Card'), ('DEBIT_CARD', 'Debit Card'), ('BANK_TRANSFER', 'Bank Transfer'), ('CHECK', 'Check'), ('MONEY_ORDER', 'Money Order'), ('PAYPAL', 'PayPal'), ('VENMO', 'Venmo'), ('BITCOIN', 'Bitcoin'), ('APPLE_PAY', 'Apple Pay'), ('GOOGLE_PAY', 'Google Pay'), ('SQUARE', 'Square'), ('CRYPTOCURRENCY', 'Other Cryptocurrency'), ('OTHER', 'Other')], max_length=250, null=True)),
-                ('transaction_id', models.CharField(blank=True, max_length=250, null=True)),
-                ('description', models.CharField(blank=True, max_length=255, null=True)),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('is_anonymous', models.BooleanField(default=False)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                (
+                    "method",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("CASH", "Cash"),
+                            ("CREDIT_CARD", "Credit Card"),
+                            ("DEBIT_CARD", "Debit Card"),
+                            ("BANK_TRANSFER", "Bank Transfer"),
+                            ("CHECK", "Check"),
+                            ("MONEY_ORDER", "Money Order"),
+                            ("PAYPAL", "PayPal"),
+                            ("VENMO", "Venmo"),
+                            ("BITCOIN", "Bitcoin"),
+                            ("APPLE_PAY", "Apple Pay"),
+                            ("GOOGLE_PAY", "Google Pay"),
+                            ("SQUARE", "Square"),
+                            ("CRYPTOCURRENCY", "Other Cryptocurrency"),
+                            ("OTHER", "Other"),
+                        ],
+                        max_length=250,
+                        null=True,
+                    ),
+                ),
+                (
+                    "transaction_id",
+                    models.CharField(blank=True, max_length=250, null=True),
+                ),
+                (
+                    "description",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("is_anonymous", models.BooleanField(default=False)),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='ContributionType',
+            name="ContributionType",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('name', models.CharField(max_length=250)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("name", models.CharField(max_length=250)),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
             ],
         ),
     ]

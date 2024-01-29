@@ -16,27 +16,29 @@ class RabahHomePageView(View):
 
 
 class UserOrganisationsView(LoginRequiredMixin, View):
-
     def get(self, request):
         member = Member.objects.filter(user=self.request.user)
-        return render(request, 'dashboard/organisation_list.html', {"members": member})
+        return render(request, "dashboard/organisation_list.html", {"members": member})
 
 
 class DashBoardView(AuthAndOrganizationMixin, View):
-
     def get(self, request):
-        organisation_id = request.COOKIES.get('organisation_id')
+        organisation_id = request.COOKIES.get("organisation_id")
         if not organisation_id:
             # Handle the case where organization ID is not set
             return redirect("rabah_dashboard:user_organisations")
 
-        member = Member.objects.filter(user=self.request.user, organisation_id=organisation_id).first()
+        member = Member.objects.filter(
+            user=self.request.user, organisation_id=organisation_id
+        ).first()
         groups_count = Group.objects.filter(organisation_id=organisation_id).count()
         groups = Group.objects.filter(organisation_id=organisation_id)
         events = Event.objects.filter(organisation_id=organisation_id).count()
         members_count = Member.objects.filter(organisation_id=organisation_id).count()
         members = Member.objects.filter(organisation_id=organisation_id)
-        contribution_types = ContributionType.objects.filter(organisation_id=organisation_id)[:5]
+        contribution_types = ContributionType.objects.filter(
+            organisation_id=organisation_id
+        )[:5]
         contributions = Contribution.objects.filter(organisation_id=organisation_id)[:5]
         total_contributions = total_contribution_amount(self.organisation_id)
         context = {
@@ -50,4 +52,4 @@ class DashBoardView(AuthAndOrganizationMixin, View):
             "events": events,
         }
 
-        return render(request, 'dashboard/dashboard.html', context)
+        return render(request, "dashboard/dashboard.html", context)

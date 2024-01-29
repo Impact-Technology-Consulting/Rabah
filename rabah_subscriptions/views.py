@@ -16,20 +16,26 @@ class BillingInfoView(AuthAndAdminOrganizationNotSubscribedMixin, View):
     def get(self, request, *args, **kwargs):
         member = get_member(self.request.user, self.organisation_id)
         if not member:
-            return render(request, '404.html')
+            return render(request, "404.html")
 
-        billing_address, created = BillingAddress.objects.get_or_create(organisation=member.organisation)
+        billing_address, created = BillingAddress.objects.get_or_create(
+            organisation=member.organisation
+        )
         billing_address_form = BillingAddressForm(instance=billing_address)
 
         if billing_address.is_billing_verified:
             return redirect("rabah_dashboard:dashboard")
-        return render(request, "dashboard/billing_info.html", {'form': billing_address_form})
+        return render(
+            request, "dashboard/billing_info.html", {"form": billing_address_form}
+        )
 
     def post(self, request, *args, **kwargs):
         member = get_member(self.request.user, kwargs.get("organisation_id"))
         if not member:
-            return render(request, '404.html')
-        billing_address, created = BillingAddress.objects.get_or_create(organisation=member.organisation)
+            return render(request, "404.html")
+        billing_address, created = BillingAddress.objects.get_or_create(
+            organisation=member.organisation
+        )
 
         form = BillingAddressForm(instance=billing_address, data=self.request.POST)
         if form.is_valid():
@@ -48,8 +54,10 @@ class BillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
     def get(self, request, *args, **kwargs):
         member = get_member(self.request.user, self.organisation_id)
         if not member:
-            return render(request, '404.html')
-        billing_address, created = BillingAddress.objects.get_or_create(organisation=member.organisation)
+            return render(request, "404.html")
+        billing_address, created = BillingAddress.objects.get_or_create(
+            organisation=member.organisation
+        )
         billing_address_form = BillingAddressForm(instance=billing_address)
 
         if not billing_address.is_billing_verified:
@@ -64,12 +72,11 @@ class SubscriptionPageView(AuthAndAdminOrganizationNotSubscribedMixin, View):
 
     def get(self, request):
         organisation_subscription = OrganisationSubscription.objects.filter(
-            organisation_id=self.organisation_id).first()
+            organisation_id=self.organisation_id
+        ).first()
         if not organisation_subscription:
-            organisation_subscription = OrganisationSubscription.objects.create(organisation_id=self.organisation_id,
-                                                                                status="INACTIVE")
-        context = {
-            "organisation_subscription": organisation_subscription
-        }
+            organisation_subscription = OrganisationSubscription.objects.create(
+                organisation_id=self.organisation_id, status="INACTIVE"
+            )
+        context = {"organisation_subscription": organisation_subscription}
         return render(request, "dashboard/subscription.html", context)
-

@@ -8,9 +8,11 @@ from rabah_organisations.models import Organisation
 
 # Create your models here.
 
+
 class Event(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     group = models.ForeignKey
     name = models.CharField(max_length=250)
@@ -22,7 +24,8 @@ class Event(models.Model):
 
 class EventMember(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     members_attendance = models.ManyToManyField("MemberAttendance", blank=True)
@@ -38,7 +41,8 @@ ATTENDANCE_STATUS = (
 
 class MemberAttendance(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     member = models.ForeignKey(Member, on_delete=models.CASCADE)

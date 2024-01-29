@@ -10,7 +10,6 @@ from users.mixin import AuthAndAdminOrganizationMemberMixin
 
 
 class EventView(AuthAndAdminOrganizationMemberMixin, View):
-
     def get(self, request):
         organisation_id = self.organisation_id
         form = EventCreateForm(organisation_id)
@@ -34,10 +33,10 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
         if form.is_valid():
             form.save()
             messages.success(self.request, "Successfully create event")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         else:
             messages.error(request, "Error creating event")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class EventCalendarView(AuthAndAdminOrganizationMemberMixin, View):
@@ -51,12 +50,14 @@ class EventCalendarView(AuthAndAdminOrganizationMemberMixin, View):
         events = Event.objects.filter(organisation_id=organisation_id)
         data = []
         for event in events:
-            data.append({
-                'id': event.id,
-                'title': event.name,
-                'start': event.start_date.isoformat(),
-                'end': event.end_date.isoformat(),
-            })
+            data.append(
+                {
+                    "id": event.id,
+                    "title": event.name,
+                    "start": event.start_date.isoformat(),
+                    "end": event.end_date.isoformat(),
+                }
+            )
         return JsonResponse(data, safe=False)
 
 
@@ -66,10 +67,14 @@ class EventDeleteView(AuthAndAdminOrganizationMemberMixin, View):
     """
 
     def get(self, request, event_id):
-        event = Event.objects.filter(id=event_id, organisation_id=self.organisation_id).first()
+        event = Event.objects.filter(
+            id=event_id, organisation_id=self.organisation_id
+        ).first()
         if not event:
-            messages.error(request, "Event with this id does not exist in this organisation")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(
+                request, "Event with this id does not exist in this organisation"
+            )
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         event.delete()
         messages.success(request, "Event deleted successfully")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
