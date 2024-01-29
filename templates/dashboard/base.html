@@ -138,67 +138,69 @@
             <div class="sidebar__menu-group">
                 <ul class="sidebar_nav">
 
-
-                    <li class="{% if request.resolver_match.view_name == 'rabah_dashboard:dashboard' %}active{% endif %}">
-                        <a href="{% url "rabah_dashboard:dashboard" %}">
-                            <span class="nav-icon uil uil-create-dashboard"></span>
-                            <span class="menu-text">Dashboard</span>
-                        </a>
-                    </li>
-
-
-                    <li class="{% if request.resolver_match.view_name == 'rabah_organisations:groups' %}active{% endif %}">
-                        <a href="{% url "rabah_organisations:groups" %}">
-                            <span class="nav-icon uil uil-users-alt"></span>
-                            <span class="menu-text">Groups</span>
-                        </a>
-                    </li>
+                    {% if  request.user.is_authenticated %}
+                        <li class="{% if request.resolver_match.view_name == 'rabah_dashboard:dashboard' %}active{% endif %}">
+                            <a href="{% url "rabah_dashboard:dashboard" %}">
+                                <span class="nav-icon uil uil-create-dashboard"></span>
+                                <span class="menu-text">Dashboard</span>
+                            </a>
+                        </li>
 
 
-                    <li class="{% if request.resolver_match.view_name == 'rabah_members:members' %}active{% endif %}">
-                        <a href="{% url "rabah_members:members" %}">
-                            <span class="nav-icon uil uil-user"></span>
-                            <span class="menu-text">Members</span>
-                        </a>
-                    </li>
-                    <li class="{% if request.resolver_match.view_name == 'rabah_events:events' %}active{% endif %}">
-                        <a href="{% url "rabah_events:events" %}">
-                            <span class="nav-icon uil uil-create-dashboard"></span>
-                            <span class="menu-text">Events</span>
-                        </a>
-                    </li>
-
-                    <li class="{% if request.resolver_match.view_name == 'rabah_subscriptions:subscription_page' %}active{% endif %}">
-                        <a href="{% url "rabah_subscriptions:subscription_page" %}">
-                            <span class="nav-icon uil uil-credit-card-search"></span>
-                            <span class="menu-text">Subscription</span>
-                        </a>
-                    </li>
+                        <li class="{% if request.resolver_match.view_name == 'rabah_organisations:groups' %}active{% endif %}">
+                            <a href="{% url "rabah_organisations:groups" %}">
+                                <span class="nav-icon uil uil-users-alt"></span>
+                                <span class="menu-text">Groups</span>
+                            </a>
+                        </li>
 
 
-                    <li class="has-child ">
-                        <a href="#" class="">
-                            <span class="nav-icon uil uil-window"></span>
-                            <span class="menu-text">Contribution</span>
-                            <span class="toggle-icon"></span>
-                        </a>
-                        <ul style="top: 454.167px; left: 214px; display: none;">
-                            <li class="{% if request.resolver_match.view_name == 'rabah_contributions:add_contribution_type' %}active{% endif %}">
-                                <a href="{% url "rabah_contributions:add_contribution_type" %}">
-                                    <span class="nav-icon uil uil-plus"></span>
-                                    <span class="menu-text"> Add donation Type</span>
-                                </a>
-                            </li>
-                            <li class="{% if request.resolver_match.view_name == 'rabah_contributions:add_giving_transaction' %}active{% endif %}">
-                                <a href="{% url "rabah_contributions:add_giving_transaction" %}">
-                                    <span class="nav-icon uil uil-plus"></span>
-                                    <span class="menu-text"> Manage donations</span>
-                                </a>
-                            </li>
+                        <li class="{% if request.resolver_match.view_name == 'rabah_members:members' %}active{% endif %}">
+                            <a href="{% url "rabah_members:members" %}">
+                                <span class="nav-icon uil uil-user"></span>
+                                <span class="menu-text">Members</span>
+                            </a>
+                        </li>
+                        <li class="{% if request.resolver_match.view_name == 'rabah_events:events' %}active{% endif %}">
+                            <a href="{% url "rabah_events:events" %}">
+                                <span class="nav-icon uil uil-create-dashboard"></span>
+                                <span class="menu-text">Event Calendar</span>
+                            </a>
+                        </li>
 
-                        </ul>
-                    </li>
 
+
+                        <li class="{% if request.resolver_match.view_name == 'rabah_subscriptions:subscription_page' %}active{% endif %}">
+                            <a href="{% url "rabah_subscriptions:subscription_page" %}">
+                                <span class="nav-icon uil uil-credit-card-search"></span>
+                                <span class="menu-text">Subscription</span>
+                            </a>
+                        </li>
+
+
+                        <li class="has-child ">
+                            <a href="#" class="">
+                                <span class="nav-icon uil uil-window"></span>
+                                <span class="menu-text">Contribution</span>
+                                <span class="toggle-icon"></span>
+                            </a>
+                            <ul style="top: 454.167px; left: 214px; display: none;">
+                                <li class="{% if request.resolver_match.view_name == 'rabah_contributions:add_contribution_type' %}active{% endif %}">
+                                    <a href="{% url "rabah_contributions:add_contribution_type" %}">
+                                        <span class="nav-icon uil uil-plus"></span>
+                                        <span class="menu-text"> Add donation Type</span>
+                                    </a>
+                                </li>
+                                <li class="{% if request.resolver_match.view_name == 'rabah_contributions:add_giving_transaction' %}active{% endif %}">
+                                    <a href="{% url "rabah_contributions:add_giving_transaction" %}">
+                                        <span class="nav-icon uil uil-plus"></span>
+                                        <span class="menu-text"> Manage donations</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+                    {% endif %}
 
                     {% if not request.user.is_authenticated %}
                         <li class="{% if request.resolver_match.view_name == 'account_login' %}active{% endif %}">
@@ -248,7 +250,6 @@
 
 <script src="{% static "js/plugins.min.js" %}"></script>
 <script src="{% static "js/script.min.js" %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="{% static "js/main.js" %}"></script>
 {% block script %}

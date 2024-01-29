@@ -17786,7 +17786,7 @@ table.fc-scrollgrid thead .fc-scroller-harness .fc-scroller {
 .fc-daygrid-day .fc-daygrid-event {
     padding: 5.5px 12px;
     font-size: 13px;
-    color: var(--color-white) !important
+    color: black !important
 }
 
 .fc-daygrid-day .fc-daygrid-event .fc-daygrid-event-dot {

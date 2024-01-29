@@ -203,3 +203,4 @@ class UpdateExistingMemberFamilyRelationShipView(AuthAndAdminOrganizationMemberM
             # Return form errors in the JSON response
             errors_list = [error for field, error_list in form.errors.items() for error in error_list]
             return JsonResponse({"errors": errors_list}, status=400)
+
