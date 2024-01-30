@@ -3,6 +3,18 @@
 {% load custom_filters %}
 
 {% block css %}
+    <style>
+        .custom-checkbox-input {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            position: relative;
+            cursor: pointer;
+
+        }
+
+
+    </style>
 
 {% endblock %}
 
@@ -15,7 +27,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb-main">
-                    <h4 class="text-capitalize breadcrumb-title">Mark Attendance</h4>
+                    <h4 class="text-capitalize breadcrumb-title">Mark Attendance
+
+                    </h4>
                     <div class="breadcrumb-action justify-content-center flex-wrap">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
@@ -28,7 +42,8 @@
             </div>
             <div class="col-md-6">
                 <div class="search-result global-shadow rounded-pill bg-white">
-                    <form action="/" class="d-flex align-items-center justify-content-between">
+                    <form action="{% url "rabah_events:mark_attendance" event.id %}"
+                          class="d-flex align-items-center justify-content-between">
                         <div class="border-right d-flex align-items-center w-100  ps-25 pe-sm-25 pe-0 py-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -37,7 +52,9 @@
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
                             <input class="form-control border-0 box-shadow-none" type="search"
-                                   placeholder="Type and search" aria-label="Search">
+                                   name="search"
+                                   value="{{ request.GET.search|default_if_none:'' }}"
+                                   placeholder="Search member" aria-label="Search">
                         </div>
                         <button type="button" class="border-0 bg-transparent px-25">search</button>
                     </form>
@@ -47,20 +64,19 @@
                 <div class="search-keyword mt-20 mb-30">
                     <ul class="nav m-n1" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" href="#pills-home"
+                            <a class="nav-link active" id="all"
+                               href="{% url "rabah_events:mark_attendance" event.id %}?status=all"
                                role="tab" aria-selected="true">all</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" href="#pills-profile"
+                            <a class="nav-link" id="present"
+                               href="{% url "rabah_events:mark_attendance" event.id %}?status=PRESENT"
                                role="tab" aria-selected="false">Present</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" href="#pills-contact"
+                            <a class="nav-link" id="absent"
+                               href="{% url "rabah_events:mark_attendance" event.id %}?status=ABSENT"
                                role="tab" aria-selected="false">Absent</a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="pills-presentation-tab" data-bs-toggle="pill"
-                               href="#pills-presentation" role="tab" aria-selected="false">Late</a>
                         </li>
 
                     </ul>
@@ -74,27 +90,31 @@
                             <tr class="userDatatable-header">
                                 <th>
                                     <div class="d-flex align-items-center">
-                                        <div class="custom-checkbox  check-all">
-                                            <label for="check-44">
-                                                <span class="checkbox-text userDatatable-title">user</span>
+                                        <div class="  check-all">
+                                            <input class="checkbox custom-checkbox-input" type="checkbox"
+                                                   id="main-check">
+                                            <label for="main-check">
+                                                <span class="checkbox-text userDatatable-title"
+                                                      style="font-size: 30px; margin-left: 50px !important;">user</span>
                                             </label>
                                         </div>
+
                                     </div>
                                 </th>
                                 <th>
-                                    <span class="userDatatable-title">email</span>
+                                    <span class="userDatatable-title" style="font-size: 20px">Name</span>
                                 </th>
                                 <th>
-                                    <span class="userDatatable-title">gender</span>
+                                    <span class="userDatatable-title" style="font-size: 20px">email</span>
                                 </th>
                                 <th>
-                                    <span class="userDatatable-title">position</span>
+                                    <span class="userDatatable-title" style="font-size: 20px">gender</span>
                                 </th>
                                 <th>
-                                    <span class="userDatatable-title">join date</span>
+                                    <span class="userDatatable-title" style="font-size: 20px">position</span>
                                 </th>
                                 <th>
-                                    <span class="userDatatable-title">status</span>
+                                    <span class="userDatatable-title" style="font-size: 20px">join date</span>
                                 </th>
 
                             </tr>
@@ -106,28 +126,34 @@
 
                                     <td>
                                         <div class="d-flex">
+
                                             <div class="userDatatable__imgWrapper d-flex align-items-center">
                                                 <div class="checkbox-group-wrapper">
                                                     <div class="checkbox-group d-flex">
-                                                        <div class="checkbox-theme-default custom-checkbox checkbox-group__single d-flex">
-                                                            <input class="checkbox" type="checkbox"
-                                                                   id="check-grp-content-{{ member.id }}">
-                                                            <label for="check-grp-content-{{ member.id }}"></label>
+                                                        <div class="checkbox-theme-default custom-checkbox-input checkbox-group__single d-flex">
+                                                            <input class="checkbox custom-checkbox-input"
+                                                                   type="checkbox"
+                                                                    {% is_checkbox_checked event.id member.id %}
+
+                                                                   data-id="{{ member.id }}"
+                                                                   id="check-grp-{{ member.id }}">
+                                                            <label for="check-grp-{{ member.id }}"></label>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <a href="#" class="profile-image rounded-circle d-block m-0 wh-38"
-                                                   style="background-image:url('{{ member.user.user_profile.profileImageURL }}'); background-size: cover;"></a>
-                                            </div>
-                                            <div class="userDatatable-inline-title">
                                                 <a href="{% url "rabah_members:group_member_detail" member.id %}"
-                                                   class="text-dark fw-500">
-                                                    <h6>{{ member.user.first_name }} {{ member.user.last_name }}</h6>
-                                                </a>
-                                                <p class="d-block mb-0">
-                                                    {{ member.user.user_profile.address }}
-                                                </p>
+                                                   class="profile-image rounded-circle d-block m-0 wh-38"
+                                                   style="background-image:url('{{ member.user.user_profile.profileImageURL }}'); background-size: cover;margin-left: 50px !important;"></a>
                                             </div>
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="userDatatable-content">
+                                            <a href="{% url "rabah_members:group_member_detail" member.id %}"
+                                               class="text-dark fw-500">
+                                                <h6>{{ member.user.first_name }} {{ member.user.last_name }}</h6>
+                                            </a>
                                         </div>
                                     </td>
                                     <td>
@@ -150,22 +176,7 @@
                                             {{ member.user.date_joined }}
                                         </div>
                                     </td>
-                                    <td>
-                                        <div class="userDatatable-content d-inline-block">
-                                            <form action="{% url "rabah_events:update_or_create_attendance" %}"
-                                                  method="post">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="member_id" value="{{ member.id }}">
-                                                <input type="hidden" name="event_id" value="{{ event.id }}">
-                                                <select class="form-select" name="attendance"
-                                                        id="statusSelect{{ member.id }}">
-                                                    <option value="present">Present</option>
-                                                    <option value="absent">Absent</option>
-                                                    <option value="late">Late</option>
-                                                </select>
-                                            </form>
-                                        </div>
-                                    </td>
+
 
                                 </tr>
                             {% endfor %}
@@ -221,36 +232,91 @@
 
 
 {% block script %}
+
     <script>
+        {% comment %} Check box for all check box once clicked on the main check box{% endcomment %}
         document.addEventListener("DOMContentLoaded", function () {
-            const statusSelects = document.querySelectorAll("[id^='statusSelect']");
+            const mainCheck = document.getElementById("main-check");
+            const groupCheckboxes = document.querySelectorAll("[id^='check-grp-']");
 
-            statusSelects.forEach(select => {
-                select.addEventListener("change", function () {
-                    const form = this.closest("form");
-                    const formData = new FormData(form);
+            mainCheck.addEventListener("change", function () {
+                const isChecked = mainCheck.checked;
 
-                    fetch(form.action, {
-                        method: form.method,
-                        body: formData,
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! Status: ${response.status}`);
-                            }
-                            return response.text();
-                        })
-                        .then(data => {
-                            // Handle the response if needed
-                            console.log(data);
-                        })
-                        .catch(error => {
-                            // Handle errors
-                            console.error('Error:', error);
-                        });
+                groupCheckboxes.forEach(checkbox => {
+                    checkbox.checked = isChecked;
+                });
+
+                // When collecting checked checkboxes, create an array of objects with id and is_checked
+                const checkedCheckboxes = Array.from(groupCheckboxes)
+                    .map(checkbox => ({id: checkbox.getAttribute("data-id"), is_checked: checkbox.checked}));
+
+                // Send the checked checkboxes to the backend
+                submitDataToBackend(checkedCheckboxes);
+            });
+
+            // Add event listener for individual checkboxes
+            groupCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener("change", function () {
+                    // When individual checkbox is clicked, submit its data to the backend
+                    const checkboxData = [{id: this.getAttribute("data-id"), is_checked: this.checked}];
+                    submitDataToBackend(checkboxData);
                 });
             });
+
+            function submitDataToBackend(data) {
+                // Send the data to the backend
+                fetch("{% url "rabah_events:mark_multiple_attendance" event.id  %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({checkedCheckboxes: data}),
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        // Handle the response if needed
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        console.error('Error:', error);
+                    });
+            }
+        });
+    </script>
+
+
+    {% comment %} Set the nav pill acitve base one the active nav{% endcomment %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the current status from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+
+            // Remove 'active' class from all tabs
+            const tabs = document.querySelectorAll('.nav-link');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Set 'active' class for the tab corresponding to the current status
+            if (status === 'PRESENT') {
+                document.getElementById('present').classList.add('active');
+            } else if (status === 'ABSENT') {
+                document.getElementById('absent').classList.add('active');
+            } else {
+                // Default to 'all' if no or unknown status
+                document.getElementById('all').classList.add('active');
+            }
         });
     </script>
 
 {% endblock %}
+
+
