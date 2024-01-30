@@ -11,13 +11,30 @@ class EventCreateForm(forms.ModelForm):
     end_date = forms.DateTimeField(
         widget=DateTimeInput(attrs={'type': 'datetime-local'}),
     )
+    repeat_until_date = forms.DateTimeField(
+        widget=DateTimeInput(attrs={'type': 'datetime-local'}),
+    )
+    # Define choices for repeat_count dynamically
+    REPEAT_COUNT_CHOICES = [(i, f"{i} event's") for i in range(1, 101)]
+
+    repeat_count = forms.ChoiceField(
+        choices=REPEAT_COUNT_CHOICES,
+        initial=1,  # Set the default value to 1
+        widget=forms.Select(attrs={'class': 'form-control'}),
+    )
+
     class Meta:
         model = Event
         fields = [
             "name",
+            "image",
             "description",
             "start_date",
             "end_date",
+            "repeat",
+            "repeat_end",
+            "repeat_count",
+            "repeat_until_date",
         ]
 
     def __init__(self, organisation_id, *args, **kwargs):

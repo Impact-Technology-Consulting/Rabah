@@ -1,6 +1,9 @@
 from django import template
 from django.core.paginator import Paginator
 
+from rabah_events.models import MemberAttendance
+from rabah_members.models import Member
+
 register = template.Library()
 
 
@@ -24,26 +27,14 @@ def get_proper_elided_page_range(p, number, on_each_side=2, on_ends=2):
                                            on_ends=on_ends)
 
 
-@register.filter
-def get_all_fields(obj):
-    return obj._meta.fields
-
-
-@register.filter
-def get_all_field_values(obj):
-    return [getattr(obj, field.name) for field in obj._meta.fields]
-
-
-@register.filter
-def zip_fields_values(fields, values):
-    return zip(fields, values)
-
-
-@register.filter
-def render_form_with_instance(form, instance):
-    for field in form:
-        if field.name != "user":
-            field.field.widget.attrs['value'] = getattr(instance, field.name)
-    return form
-
-
+@register.simple_tag
+def is_checkbox_checked(event_id, member_id):
+    member = Member.objects.filter(id=member_id).first()
+    if not member:
+        return ""
+    member_attendance = MemberAttendance.objects.filter(member=member, event_id=event_id).first()
+    if not member_attendance:
+        return ""
+    if member_attendance.status != "ABSENT":
+        return "checked"
+    return ""
