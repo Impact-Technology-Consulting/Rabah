@@ -5,15 +5,22 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import ListView
 
+from rabah_events.tasks import create_multiple_members
 from rabah_members.forms import MemberCreateForm, MemberEditForm, AddExistingMemberToFamilyForm, \
-    UpdateExistingMemberFamilyRelationShipForm
+    UpdateExistingMemberFamilyRelationShipForm, MemberUploadCreateForm
 from rabah_members.models import Member, FAMILY_RELATIONSHIP_CHOICES
 from rabah_members.utils import query_members
+from rabah_organisations.models import Group
 from users.forms import UserProfileUpdateForm
 from users.mixin import AuthAndAdminOrganizationMemberMixin, AuthAndOrganizationMixin
+from .utils import convert_file_to_dictionary
 
 
 class MemberAutocompleteView(AuthAndAdminOrganizationMemberMixin, View):
+    """
+    this is used for auto complete when searching members on the frontend
+    """
+
     def get(self, request):
         query = request.GET.get('query', '')
 
@@ -35,7 +42,7 @@ class MembersDashboardView(AuthAndAdminOrganizationMemberMixin, ListView):
     """
     template_name = "dashboard/members.html"
     queryset = Member.objects.all()
-    paginate_by = 5
+    paginate_by = 20
     context_object_name = "members"
 
     def get_queryset(self):
@@ -57,8 +64,55 @@ class MembersDashboardView(AuthAndAdminOrganizationMemberMixin, ListView):
             queryset = queryset.order_by(*ordering)
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-class AdminAddMemberPageView(AuthAndAdminOrganizationMemberMixin, View):
+        # Create an instance of form and pass it to the context
+        form = MemberUploadCreateForm()
+        context['member_upload_create'] = form
+        return context
+
+
+class GroupMembersView(AuthAndOrganizationMixin, ListView):
+    """
+    This is used to get members inside the group, same as members list HTML.
+    """
+    template_name = "dashboard/members.html"
+    context_object_name = "members"
+    form_class = MemberUploadCreateForm
+    paginate_by = 20
+
+    def get_queryset(self):
+        organisation_id = self.organisation_id
+        group_id = self.kwargs.get('group_id')
+
+        group = Group.objects.filter(id=group_id, organisation_id=organisation_id).first()
+        if not group:
+            # You may want to handle the case when the group does not exist
+            return Member.objects.none()
+
+        members = group.member_set.all()
+
+        # Include search functionality
+        query = self.request.GET.get('search')
+        if query:
+            members = query_members(item=members, query=query)
+
+        return members
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Add the form to the context
+        context['member_upload_create'] = self.form_class()
+
+        return context
+
+
+class MemberCreateView(AuthAndAdminOrganizationMemberMixin, View):
+    """
+    this is used to create members it the create  page with the member form
+    """
 
     def get(self, request):
         organisation_id = self.organisation_id
@@ -83,18 +137,28 @@ class AdminAddMemberPageView(AuthAndAdminOrganizationMemberMixin, View):
             return render(request, "dashboard/add_member.html", {'form': form})
 
 
-class GroupMembersView(AuthAndOrganizationMixin, View):
+class MemberUploadCreateView(AuthAndAdminOrganizationMemberMixin, View):
     """
-    this is used to create members inside the group detail page
+    this is used to create the member using files for creating multiple users at once
     """
 
-    def get(self, request, group_id):
-        organisation_id = self.organisation_id
-        members = Member.objects.filter(organisation_id=organisation_id)
-        context = {
-            "members": members,
-        }
-        return render(request, "dashboard/members.html", context)
+    def post(self, request):
+        form = MemberUploadCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            member_file = form.cleaned_data.get("member_file")
+            groups = form.cleaned_data.get("groups")
+            print(member_file)
+            print(groups)
+            data, header_dictionary = convert_file_to_dictionary(member_file)
+
+            # use celery to create the members
+            # todo: celery might have issues taking this
+            create_multiple_members(data=data, organisation_id=self.organisation_id, groups=groups)
+            messages.success(request, "successfully upload member file")
+        else:
+            for error in form.errors:
+                messages.warning(request, f"{error}: {form.errors[error][0]}")
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 class MemberDetailView(AuthAndOrganizationMixin, View):
@@ -203,4 +267,3 @@ class UpdateExistingMemberFamilyRelationShipView(AuthAndAdminOrganizationMemberM
             # Return form errors in the JSON response
             errors_list = [error for field, error_list in form.errors.items() for error in error_list]
             return JsonResponse({"errors": errors_list}, status=400)
-

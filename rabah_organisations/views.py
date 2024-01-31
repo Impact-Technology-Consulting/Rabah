@@ -80,3 +80,17 @@ class GroupDetailView(AuthAndAdminOrganizationMemberMixin, View):
             "group_update_form": group_update_form,
         }
         return render(request, "dashboard/group_detail.html", context)
+
+
+class GroupDeleteView(AuthAndAdminOrganizationMemberMixin, View):
+    """
+    this is used to delete a group
+    """
+
+    def get(self, request, id):
+        organisation_id = self.organisation_id
+        group = Group.objects.filter(organisation_id=organisation_id, id=id).first()
+        if not group:
+            return redirect(request.META.get('HTTP_REFERER'))
+        group.delete()
+        return redirect(request.META.get('HTTP_REFERER'))

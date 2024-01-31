@@ -32,8 +32,10 @@ class Event(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     repeat_count = models.IntegerField(blank=True, null=True)
-    repeat_until_date = models.DateTimeField(blank=True, null=True)
+    repeat_until_date = models.DateField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    #  for event that could have repeat count, or repeat until date
+    parent_event = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True)
 
     @property
     def imageURL(self):

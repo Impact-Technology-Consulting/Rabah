@@ -8,6 +8,7 @@ from django.views import View
 
 from rabah_events.forms import EventCreateForm
 from rabah_events.models import Event, EventMember, MemberAttendance
+from rabah_events.tasks import create_event_for_repeat_count, create_event_for_until_date
 from rabah_members.models import Member
 from rabah_members.utils import query_members
 from users.mixin import AuthAndAdminOrganizationMemberMixin
@@ -36,11 +37,19 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
         organisation_id = self.organisation_id
         form = EventCreateForm(organisation_id, data=self.request.POST, files=self.request.FILES)
         if form.is_valid():
-            form.save()
+            event = form.save()
+
+            #  create the event for the automation
+            if event.repeat_end == "AFTER":
+                create_event_for_repeat_count(event.id)
+            elif event.repeat_end == "ON_DATE":
+                create_event_for_until_date(event.id)
+
             messages.success(self.request, "Successfully create event")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
-            messages.error(request, "Error creating event")
+            for error in form.errors:
+                messages.warning(request, f"{error}: {form.errors[error][0]}")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

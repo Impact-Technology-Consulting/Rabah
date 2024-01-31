@@ -7,6 +7,11 @@ from users.models import GENDER_CHOICES, User
 from .models import FAMILY_RELATIONSHIP_CHOICES
 
 
+class MemberUploadCreateForm(forms.Form):
+    member_file = forms.FileField()
+    groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), required=False, widget=CheckboxSelectMultiple)
+
+
 class MemberCreateForm(forms.Form):
     first_name = forms.CharField(max_length=150)
     last_name = forms.CharField(max_length=150)

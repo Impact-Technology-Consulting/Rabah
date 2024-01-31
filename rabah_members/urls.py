@@ -1,14 +1,17 @@
 from django.urls import path
 
-from .views import MembersDashboardView, GroupMembersView, MemberDetailView, AdminAddMemberPageView, \
+from .views import MembersDashboardView, GroupMembersView, MemberDetailView, MemberCreateView, \
     AddFamilyMemberView, MemberAutocompleteView, AddExistingMemberToFamilyView, \
-    UpdateExistingMemberFamilyRelationShipView
+    UpdateExistingMemberFamilyRelationShipView, MemberUploadCreateView
 
 app_name = "rabah_members"
 urlpatterns = [
-    path("members/", MembersDashboardView.as_view(), name="members"),
     path('autocomplete/', MemberAutocompleteView.as_view(), name='member_autocomplete'),
-    path("add_member/", AdminAddMemberPageView.as_view(), name="add_member"),
+
+    path("members/", MembersDashboardView.as_view(), name="members"),
+    path("add_member/", MemberCreateView.as_view(), name="add_member"),
+    path("add_member_file_upload/", MemberUploadCreateView.as_view(), name='add_member_file_upload'),
+
     path("add_member/<str:member_id>/", AddFamilyMemberView.as_view(), name="add_family_member"),
     path("add_existing_member_to_family/<str:member_id>/", AddExistingMemberToFamilyView.as_view(),
          name="add_existing_member_to_family"),

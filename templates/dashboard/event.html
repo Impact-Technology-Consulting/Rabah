@@ -131,6 +131,7 @@
                         <form action="." method="post" action="." enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="row">
+                                {{ form.organisation_id }}
                                 <div class="col-12">
                                     {{ form.name|as_crispy_field }}
                                 </div>
@@ -395,25 +396,23 @@
         function getDateLimits() {
             var currentDate = new Date();
             var minDate = new Date(currentDate);
-            minDate.setFullYear(currentDate.getFullYear() - 100);
             var maxDate = new Date(currentDate);
-            maxDate.setFullYear(currentDate.getFullYear() + 100);
-            return {currentDate: currentDate, minDate: minDate, maxDate: maxDate};
+            maxDate.setFullYear(currentDate.getFullYear() + 10);
+            return { currentDate: currentDate, minDate: minDate, maxDate: maxDate };
         }
 
         // Function to set date limits for a given date input
         function setDateLimits(inputElement) {
             var dateLimits = getDateLimits();
-            inputElement.min = dateLimits.minDate.toISOString().slice(0, 10);
-            inputElement.max = dateLimits.maxDate.toISOString().slice(0, 10);
+            inputElement.min = dateLimits.currentDate.toISOString().slice(0, 16);
+            inputElement.max = dateLimits.maxDate.toISOString().slice(0, 16);
         }
 
-        // Apply date limits to all date inputs with 'type="date"'
-        var dateInputs = document.querySelectorAll("input[type='date']");
-        dateInputs.forEach(function (input) {
+        // Apply date limits to all datetime-local inputs
+        var datetimeInputs = document.querySelectorAll("input[type='datetime-local']");
+        datetimeInputs.forEach(function (input) {
             setDateLimits(input);
         });
-
     </script>
 
     {% comment %}Event Create form {% endcomment %}
