@@ -16,6 +16,25 @@ from decouple import config
 
 from .installed import *
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+DEBUG = config('DEBUG', default=False, cast=bool)
+
+# Default DATABASES configuration using SQLite
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+if DEBUG:
+    # Override settings for local development
+    from .local import *
+else:
+    # Override settings for production
+    from .production import *
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
