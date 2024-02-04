@@ -298,58 +298,27 @@ information</span>
                                         <div class="card-header  px-sm-25 px-3">
                                             <div class="edit-profile__title">
                                                 <h6>Account setting</h6>
-                                                <span class="fs-13 color-light fw-400">Update your username and manage your
-account</span>
+                                                <span class="fs-13 color-light fw-400">Give user permission as to signup</span>
                                             </div>
                                         </div>
-                                        <div class="card-body">
-                                            <div class="row justify-content-center">
-                                                <div class="col-xxl-6">
-                                                    <div class="edit-profile__body mx-xl-20">
-                                                        <form>
-                                                            <div class="form-group mb-20">
-                                                                <label for="name1">username</label>
-                                                                <input type="text" class="form-control" id="name1"
-                                                                       placeholder="Duran Clayton">
-                                                                <small id="passwordHelpInline2"
-                                                                       class="text-light fs-13">Your
-                                                                    Dashboard URL:
-                                                                    https://dashboard.com/<span class="color-dark">clayton</span>
-                                                                </small>
-                                                            </div>
-                                                            <div class="form-group mb-1">
-                                                                <label for="email45">email</label>
-                                                                <input type="email" class="form-control" id="email45"
-                                                                       placeholder="Contact@example.com">
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                         <div class="card-footer bg-transparent">
                                             <div class="row justify-content-center align-items-center">
                                                 <div class="col-xxl-6">
                                                     <div class="d-flex justify-content-between mt-1 align-items-center flex-wrap">
                                                         <div class="text-capitalize py-10">
-                                                            <h6>close account</h6>
-                                                            <span class="fs-13 color-light fw-400">Delete your account and
-account
-data</span>
+                                                            <h6>member permission</h6>
+                                                            <span class="fs-13 color-light fw-400">add {{ member.user.email }} as an admin</span>
                                                         </div>
                                                         <div class="my-sm-0 my-10 py-10">
-                                                            <button class="btn btn-danger btn-default btn-squared fw-400 text-capitalize">
-                                                                close account
-                                                            </button>
+                                                            <form action="{% url "rabah_members:member_login_permission"  member.id %}"
+                                                                  method="post">
+                                                                {% csrf_token %}
+                                                                <button class="btn btn-primary btn-default btn-squared fw-400 text-capitalize">
+                                                                    Invite Member
+                                                                </button>
+                                                            </form>
                                                         </div>
-                                                    </div>
-                                                    <div class="button-group d-flex flex-wrap pt-35 mb-35">
-                                                        <button class="btn btn-primary btn-default btn-squared me-15 text-capitalize">
-                                                            Save Changes
-                                                        </button>
-                                                        <button class="btn btn-light btn-default btn-squared fw-400 text-capitalize">
-                                                            cancel
-                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

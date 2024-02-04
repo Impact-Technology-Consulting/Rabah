@@ -14,7 +14,6 @@ REPEAT_CHOICES = (
 )
 
 REPEAT_END_CHOICES = (
-    ("NEVER", "NEVER"),
     ("AFTER", "AFTER"),
     ("ON_DATE", "ON_DATE"),
 )

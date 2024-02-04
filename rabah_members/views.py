@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views import View
 from django.views.generic import ListView
 
@@ -13,6 +14,7 @@ from rabah_members.utils import query_members
 from rabah_organisations.models import Group
 from users.forms import UserProfileUpdateForm
 from users.mixin import AuthAndAdminOrganizationMemberMixin, AuthAndOrganizationMixin
+from users.tasks import send_member_activate_account
 from .utils import convert_file_to_dictionary
 
 
@@ -267,3 +269,26 @@ class UpdateExistingMemberFamilyRelationShipView(AuthAndAdminOrganizationMemberM
             # Return form errors in the JSON response
             errors_list = [error for field, error_list in form.errors.items() for error in error_list]
             return JsonResponse({"errors": errors_list}, status=400)
+
+
+class MemberAddLoginPermissionView(AuthAndAdminOrganizationMemberMixin, View):
+    """
+    this is used to add login permission to a member
+    """
+
+    def post(self, request, member_id):
+        member = Member.objects.filter(id=member_id).first()
+        if not member:
+            return JsonResponse({"errors": ["member id not found "]})
+        user = member.user
+        token = user.generate_token()
+
+        # Generate activation URL for the MemberCreatePasswordView
+        activation_url = request.build_absolute_uri(
+            reverse("user:member_create_password", kwargs={"token": token})
+        ) + f"?member_id={member_id}"  # Pass member_id as a query parameter
+
+        print(activation_url)
+        send_member_activate_account(activation_url, member.user.email, member.user.first_name, member.user.last_name)
+        messages.success(request,"Successfully send activation link to member")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

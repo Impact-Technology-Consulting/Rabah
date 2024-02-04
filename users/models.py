@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
+from django.core.signing import TimestampSigner
 from django.db import models
 from django.db.models.signals import post_save
 from django.utils import timezone
@@ -84,6 +85,23 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateField(default=timezone.now)
     timestamp = models.DateTimeField(auto_now_add=True)
     objects = UserManager()
+
+    def generate_token(self):
+        signer = TimestampSigner()
+        token = signer.sign(str(self.id))
+
+        return token
+
+    @staticmethod
+    def verify_token(token, max_age=86400):  # 1 day expiration by default
+        signer = TimestampSigner()
+        try:
+            user_id = signer.unsign(token, max_age=max_age)
+
+            return User.objects.get(id=user_id)
+        except Exception as a:  # (BadSignature, SignatureExpired, ValueError, User.DoesNotExist):
+            print(a)
+            return None
 
 
 # Create your models here.

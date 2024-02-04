@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views import View
 
+from rabah_members.models import Member
 from rabah_organisations.models import Organisation
 from users.forms import UserProfileUpdateForm, ChangePasswordForm, RabahSignupForm, RabahLoginForm
 from users.mixin import AuthAndOrganizationMixin
@@ -156,6 +157,69 @@ class ChangeUserPassword(LoginRequiredMixin, View):
             if user is not None:
                 login(request, user)
             messages.info(request, "Successfully Update password")
+        else:
+            for error in form.errors:
+                messages.warning(request, f"{error}: {form.errors[error][0]}")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class MemberCreatePasswordView(View):
+    """
+    this is used for members to be able to create a password
+    """
+
+    def get(self, request, token):
+        member_id = self.request.GET.get("member_id")
+        user = User.verify_token(token)
+        if not user:
+            messages.error(request, "Invalid token")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        member = Member.objects.filter(id=member_id).first()
+        if not member:
+            messages.error(request, "Invalid member")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        form = ChangePasswordForm()
+        context = {
+            "form": form,
+            "user": user
+        }
+        return render(request, "account/create_password.html", context)
+
+    def post(self, request, token):
+        member_id = self.request.POST.get("member_id")
+
+        user = User.verify_token(token)
+        if not user:
+            messages.error(request, "Invalid token")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        member = Member.objects.filter(id=member_id).first()
+        if not member:
+            messages.error(request, "Invalid member")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        form = ChangePasswordForm(data=request.POST)
+        if form.is_valid():
+            password = form.cleaned_data.get("password")
+            confirm_password = form.cleaned_data.get("confirm_password")
+            if password != confirm_password:
+                messages.error(request, "Password does not match")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            user.set_password(password)
+            user.save()
+
+            member.is_active = True
+            member.is_admin_member = True
+            member.save()
+
+            user = authenticate(request, email=user.email, password=password,
+                                backend='django.contrib.auth.backends.ModelBackend')
+            if user is not None:
+                login(request, user)
+            messages.info(request, "Successfully Update password")
+            return redirect("rabah_dashboard:dashboard")
         else:
             for error in form.errors:
                 messages.warning(request, f"{error}: {form.errors[error][0]}")
