@@ -41,7 +41,7 @@ class Member(models.Model):
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     is_admin_member = models.BooleanField(default=False)
     is_owner = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)  # means they can access the organisation
     groups = models.ManyToManyField(Group, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     family = models.ForeignKey(Family, on_delete=models.SET_NULL, null=True, related_name='members')

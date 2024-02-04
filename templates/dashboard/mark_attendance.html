@@ -13,6 +13,17 @@
 
         }
 
+        .table-container {
+            height: 80vh; /* Set the desired height */
+            overflow-y: scroll; /* Enable vertical scrolling */
+            scrollbar-width: thin; /* Set the width of the scrollbar */
+            scrollbar-color: #888888 #f0f0f0; /* Set the color of the scrollbar */
+        }
+
+        .toast-success{
+            background: white;
+            color: black !important;
+        }
 
     </style>
 
@@ -24,10 +35,11 @@
 
 {% block content %}
     <div class="container-fluid">
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb-main">
-                    <h4 class="text-capitalize breadcrumb-title">Mark Attendance
+                    <h4 class="text-capitalize breadcrumb-title">Mark Attendance | {{ event.name }}
 
                     </h4>
                     <div class="breadcrumb-action justify-content-center flex-wrap">
@@ -40,6 +52,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-md-6">
                 <div class="search-result global-shadow rounded-pill bg-white">
                     <form action="{% url "rabah_events:mark_attendance" event.id %}"
@@ -82,108 +95,144 @@
                     </ul>
                 </div>
             </div>
+
+            <div class="col-xxl-6 col-sm-6 mb-25">
+
+                <div class="ap-po-details ap-po-details--2 p-25 radius-xl d-flex justify-content-between">
+                    <div class="overview-content w-100">
+                        <div class=" ap-po-details-content d-flex flex-wrap justify-content-between">
+                            <div class="ap-po-details__titlebar">
+                                <h1>{{ present_count }}+</h1>
+                                <p>Present Members</p>
+                            </div>
+                            <div class="ap-po-details__icon-area">
+                                <div class="svg-icon order-bg-opacity-primary color-primary">
+                                    <i class="uil uil-user-check"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xxl-6 col-sm-6 mb-25">
+
+                <div class="ap-po-details ap-po-details--2 p-25 radius-xl d-flex justify-content-between">
+                    <div class="overview-content w-100">
+                        <div class=" ap-po-details-content d-flex flex-wrap justify-content-between">
+                            <div class="ap-po-details__titlebar">
+                                <h1>{{ absent_count }}</h1>
+                                <p>Absent Members</p>
+                            </div>
+                            <div class="ap-po-details__icon-area">
+                                <div class="svg-icon order-bg-opacity-info color-info">
+                                    <i class="uil uil-user-minus"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
             <div class="col-lg-12">
                 <div class="userDatatable global-shadow border-light-0 p-30 bg-white radius-xl w-100 mb-30">
                     <div class="table-responsive">
-                        <table class="table mb-0 table-borderless">
-                            <thead>
-                            <tr class="userDatatable-header">
-                                <th>
-                                    <div class="d-flex align-items-center">
-                                        <div class="  check-all">
-                                            <input class="checkbox custom-checkbox-input" type="checkbox"
-                                                   id="main-check">
-                                            <label for="main-check">
-                                                <span class="checkbox-text userDatatable-title"
-                                                      style="font-size: 30px; margin-left: 50px !important;">user</span>
-                                            </label>
-                                        </div>
-
-                                    </div>
-                                </th>
-                                <th>
-                                    <span class="userDatatable-title" style="font-size: 20px">Name</span>
-                                </th>
-                                <th>
-                                    <span class="userDatatable-title" style="font-size: 20px">email</span>
-                                </th>
-                                <th>
-                                    <span class="userDatatable-title" style="font-size: 20px">gender</span>
-                                </th>
-                                <th>
-                                    <span class="userDatatable-title" style="font-size: 20px">position</span>
-                                </th>
-                                <th>
-                                    <span class="userDatatable-title" style="font-size: 20px">join date</span>
-                                </th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for member in members %}
-                                <tr>
-
-
-                                    <td>
-                                        <div class="d-flex">
-
-                                            <div class="userDatatable__imgWrapper d-flex align-items-center">
-                                                <div class="checkbox-group-wrapper">
-                                                    <div class="checkbox-group d-flex">
-                                                        <div class="checkbox-theme-default custom-checkbox-input checkbox-group__single d-flex">
-                                                            <input class="checkbox custom-checkbox-input"
-                                                                   type="checkbox"
-                                                                    {% is_checkbox_checked event.id member.id %}
-
-                                                                   data-id="{{ member.id }}"
-                                                                   id="check-grp-{{ member.id }}">
-                                                            <label for="check-grp-{{ member.id }}"></label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <a href="{% url "rabah_members:group_member_detail" member.id %}"
-                                                   class="profile-image rounded-circle d-block m-0 wh-38"
-                                                   style="background-image:url('{{ member.user.user_profile.profileImageURL }}'); background-size: cover;margin-left: 50px !important;"></a>
-                                            </div>
-
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="userDatatable-content">
-                                            <a href="{% url "rabah_members:group_member_detail" member.id %}"
-                                               class="text-dark fw-500">
-                                                <h6>{{ member.user.first_name }} {{ member.user.last_name }}</h6>
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="userDatatable-content">
-                                            {{ member.user.email }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="userDatatable-content">
-                                            {{ member.user.user_profile.gender }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="userDatatable-content">
-                                            {{ member.user.user_profile.career }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="userDatatable-content">
-                                            {{ member.user.date_joined }}
-                                        </div>
-                                    </td>
-
+                        <div class="table-container">
+                            <table class="table mb-0 table-borderless">
+                                <thead>
+                                <tr class="userDatatable-header">
+                                    <th>
+                                        <span class="userDatatable-title">User</span>
+                                    </th>
+                                    <th>
+                                        <span class="userDatatable-title">Name</span>
+                                    </th>
+                                    <th>
+                                        <span class="userDatatable-title">email</span>
+                                    </th>
+                                    <th>
+                                        <span class="userDatatable-title">gender</span>
+                                    </th>
+                                    <th>
+                                        <span class="userDatatable-title">position</span>
+                                    </th>
+                                    <th>
+                                        <span class="userDatatable-title">join date</span>
+                                    </th>
 
                                 </tr>
-                            {% endfor %}
+                                </thead>
+                                <tbody>
+                                {% for member in members %}
+                                    <tr>
 
 
-                            </tbody>
-                        </table>
+                                        <td>
+                                            <div class="d-flex">
+
+                                                <div class="userDatatable__imgWrapper d-flex align-items-center">
+                                                    <div class="checkbox-group-wrapper">
+                                                        <div class="checkbox-group d-flex">
+                                                            <div class="checkbox-theme-default custom-checkbox-input checkbox-group__single d-flex">
+                                                                <div class="form-check form-switch form-switch-primary form-switch-md">
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                           data-id="{{ member.id }}"
+                                                                           id="check-grp-{{ member.id }}"
+                                                                            {% is_checkbox_checked event.id member.id %}>
+                                                                    <label class="form-check-label"
+                                                                           for="switch-s6"></label>
+                                                                </div>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <a href="{% url "rabah_members:group_member_detail" member.id %}"
+                                                       class="profile-image rounded-circle d-block m-0 wh-38"
+                                                       style="background-image:url('{{ member.user.user_profile.profileImageURL }}'); background-size: cover;margin-left: 50px !important;"></a>
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                <a href="{% url "rabah_members:group_member_detail" member.id %}"
+                                                   class="text-dark fw-500">
+                                                    <h6>{{ member.user.first_name }} {{ member.user.last_name }}</h6>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ member.user.email }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ member.user.user_profile.gender }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ member.user.user_profile.career }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ member.user.date_joined }}
+                                            </div>
+                                        </td>
+
+
+                                    </tr>
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                     <div class="d-flex justify-content-end pt-30">
                         <nav class="dm-page ">
@@ -227,6 +276,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 {% endblock %}
 
@@ -236,28 +287,14 @@
     <script>
         {% comment %} Check box for all check box once clicked on the main check box{% endcomment %}
         document.addEventListener("DOMContentLoaded", function () {
-            const mainCheck = document.getElementById("main-check");
             const groupCheckboxes = document.querySelectorAll("[id^='check-grp-']");
 
-            mainCheck.addEventListener("change", function () {
-                const isChecked = mainCheck.checked;
-
-                groupCheckboxes.forEach(checkbox => {
-                    checkbox.checked = isChecked;
-                });
-
-                // When collecting checked checkboxes, create an array of objects with id and is_checked
-                const checkedCheckboxes = Array.from(groupCheckboxes)
-                    .map(checkbox => ({id: checkbox.getAttribute("data-id"), is_checked: checkbox.checked}));
-
-                // Send the checked checkboxes to the backend
-                submitDataToBackend(checkedCheckboxes);
-            });
 
             // Add event listener for individual checkboxes
             groupCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener("change", function () {
-                    // When individual checkbox is clicked, submit its data to the backend
+
+                    // When an individual checkbox is clicked, submit its data to the backend
                     const checkboxData = [{id: this.getAttribute("data-id"), is_checked: this.checked}];
                     submitDataToBackend(checkboxData);
                 });
@@ -281,10 +318,14 @@
                     })
                     .then(data => {
                         // Handle the response if needed
-                        console.log(data);
+                        var data = JSON.parse(data);
+                        const message = data.message;
+                        toastr.success(message, "Success",);
                     })
                     .catch(error => {
                         // Handle errors
+                        toastr.warning('error marking attendance');
+
                         console.error('Error:', error);
                     });
             }
@@ -318,5 +359,7 @@
     </script>
 
 {% endblock %}
+
+
 
 

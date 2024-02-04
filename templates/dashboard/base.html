@@ -161,14 +161,21 @@
                                 <span class="menu-text">Members</span>
                             </a>
                         </li>
+
+                        <li class="{% if request.resolver_match.view_name == 'rabah_events:event_list' %}active{% endif %}">
+                            <a href="{% url "rabah_events:event_list" %}">
+                                <span class="nav-icon uil uil-create-dashboard"></span>
+                                <span class="menu-text">Events</span>
+                            </a>
+                        </li>
+
+
                         <li class="{% if request.resolver_match.view_name == 'rabah_events:events' %}active{% endif %}">
                             <a href="{% url "rabah_events:events" %}">
                                 <span class="nav-icon uil uil-create-dashboard"></span>
                                 <span class="menu-text">Event Calendar</span>
                             </a>
                         </li>
-
-
 
                         <li class="{% if request.resolver_match.view_name == 'rabah_subscriptions:subscription_page' %}active{% endif %}">
                             <a href="{% url "rabah_subscriptions:subscription_page" %}">
@@ -224,7 +231,44 @@
     </div>
     <div class="contents">
         <div class="container-fluid">
+            {% if messages %}
+                <!-- Dismiss All Button -->
 
+
+                {% for message in messages %}
+                    {% if message.tags == "info" or message.tags == 'success' %}
+
+                        <div class="alert
+                                    alert-success text-white
+                                    p-2 alert-dismissible fade show text-center text-capitalize shadow-sm sentence "
+                             role="alert"
+                             style="background-color: #1B3F7F;">
+                            {{ message }}
+
+                            <button type="button" class="btn-close text-capitalize dismiss-all-button"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close">
+                                <img src="{% static "img/svg/x.svg" %}" alt="x" class="svg" aria-hidden="true"
+                                     style="color: white">
+                            </button>
+                        </div>
+                    {% else %}
+                        <div class="alert
+                                    alert-success text-white
+                                    p-2 alert-dismissible fade show text-center text-capitalize shadow-sm sentence"
+                             role="alert"
+                             style="background-color: #9D2154">
+                            {{ message }}
+
+                            <button type="button" class="btn-close text-capitalize dismiss-all-button"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close">
+                                <img src="{% static "img/svg/x.svg" %}" alt="x" class="svg" aria-hidden="true">
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
 
             <div class="social-dash-wrap">
 
@@ -251,31 +295,16 @@
 <script src="{% static "js/plugins.min.js" %}"></script>
 <script src="{% static "js/script.min.js" %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="{% static "js/main.js" %}"></script>
+<script>
+    toastr.options.timeOut = 10000; // 3s
+    toastr.options.progressBar = true; // 3s
+</script>
 {% block script %}
 
 {% endblock %}
-<script>
-    {% if messages %}
-        toastr.options.timeOut = 10000; // 3s
 
-        document.addEventListener("DOMContentLoaded", function () {
-            {% for message in messages %}
-                {% if message.tags == "info" %}
-                    toastr.success("{{ message }}", "Success", {"iconClass": 'bg-primary text-white'});
-                {% elif message.tags == "success" %}
-                    toastr.success("{{ message }}", "Success", {"iconClass": 'bg-primary text-white'});
-                {% elif message.tags == "warning" %}
-                    toastr.warning('{{ message }}');
-                {% elif message.tags == "error" %}
-                    toastr.error('{{ message }}');
-                {% endif %}
-            {% endfor %}
-        });
-    {% endif %}
-
-
-</script>
 </body>
 
 </html>

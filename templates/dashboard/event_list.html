@@ -1,0 +1,298 @@
+{% extends "dashboard/base.html" %}
+{% load custom_filters %}
+{% load static %}
+{% load crispy_forms_filters %}
+
+
+{% block css %}
+    <style>
+
+    </style>
+{% endblock %}
+
+
+{% block title %}
+    Event | Rabah
+{% endblock %}
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-main">
+                    <h4 class="text-capitalize breadcrumb-title">Upcoming Events</h4>
+                    <div class="breadcrumb-action justify-content-center flex-wrap">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#"><i class="uil uil-estate"></i>Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Events</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="userDatatable global-shadow border-light-0 p-30 bg-white radius-xl w-100 mb-30">
+                    <div class="table-responsive">
+                        <div class="table-container">
+                            <table class="table mb-0 table-borderless">
+                                <thead>
+                                <tr class="userDatatable-header">
+                                    <th>
+                                        <span class="userDatatable-title">Name</span>
+
+                                    </th>
+                                    <th>
+                                        <span class="userDatatable-title">Start Date</span>
+                                    </th>
+                                    <th>
+                                        <span class="userDatatable-title">End Date</span>
+                                    </th>
+                                    <th>
+                                        <span class="userDatatable-title">Repeat</span>
+                                    </th>
+                                    <th>
+                                        <span class="userDatatable-title">Action</span>
+                                    </th>
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for event in events %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex">
+
+                                                <div class="userDatatable-inline-title pt-2">
+                                                    <a href="{% url "rabah_events:mark_attendance" event.id %}"
+                                                       class="text-dark fw-500 ">
+                                                        <h6>{{ event.name }}</h6>
+                                                    </a>
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ event.start_date }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ event.end_date }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {% if  event.repeat %}
+                                                    <span class="bg-opacity-success  color-success rounded-pill userDatatable-content-status active">{{ event.repeat }}</span>
+                                                {% else %}
+                                                    <span class="bg-opacity-danger  color-danger rounded-pill userDatatable-content-status "> {{ event.repeat }}</span>
+                                                {% endif %}
+
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <ul class="orderDatatable_actions mb-0 d-flex flex-wrap">
+                                                <li>
+                                                    <a href="#" data-bs-toggle="modal"
+                                                       data-bs-target="#e-info-modal-{{ event.id }}"
+                                                       class="view">
+                                                        <i class="uil uil-eye"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+
+                                                    <a class="dropdown-item" href="{% url "rabah_events:event_update" event.id %}"  target="_blank">
+                                                        <i class="uil uil-edit"></i></a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url "rabah_events:event_delete" event.id %}"
+                                                       class="remove">
+                                                        <i class="uil uil-trash-alt"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </td>
+
+
+                                    </tr>
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end pt-30">
+                        <nav class="dm-page ">
+                            <ul class="dm-pagination d-flex">
+                                {% if is_paginated %}
+                                    <li class="dm-pagination__item">
+                                        {% if page_obj.has_previous %}
+                                            <a href="{% paginate_url page_obj.previous_page_number 'page' request.GET.urlencode %}"
+                                               class="dm-pagination__link pagination-control"><span
+                                                    class="la la-angle-left"></span></a>
+                                        {% else %}
+                                            <a href="#" class="dm-pagination__link pagination-control"><span
+                                                    class="la la-angle-left"></span></a>
+                                        {% endif %}
+                                        {% get_proper_elided_page_range paginator page_obj.number as page_range %}
+                                        {% for i in page_range %}
+                                            {% if page_obj.number == i %}
+                                                <a href="#" class="dm-pagination__link active"><span
+                                                        class="page-number">{{ i }}</span></a>
+                                            {% else %}
+                                                <a href="{% paginate_url i 'page' request.GET.urlencode %}"
+                                                   class="dm-pagination__link"><span
+                                                        class="page-number">{{ i }}</span></a>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if page_obj.has_next %}
+                                            <a href="{% paginate_url page_obj.next_page_number 'page' request.GET.urlencode %}"
+                                               class="dm-pagination__link pagination-control"><span
+                                                    class="la la-angle-right"></span></a>
+                                        {% else %}
+                                            <a href="#" class="dm-pagination__link pagination-control"><span
+                                                    class="la la-angle-right"></span></a>
+
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    {% for event in events %}
+        <div class="e-info-modal-{{ event.id }} e-info-modal modal fade" id="e-info-modal-{{ event.id }}" tabindex="-1"
+             role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-sm e-info-dialog modal-dialog-centered" id="c-event" role="document">
+                <div class="modal-content">
+                    <div class="modal-header e-info-header bg-primary">
+                        <h6 class="modal-title e-info-title">{{ event.name }}</h6>
+                        <div class="e-info-action">
+                            <a href="{% url "rabah_events:event_update" event.id %}"  class="btn-icon">
+                                <img class="svg" src="{% static "img/svg/edit.svg" %}" alt="edit">
+                            </a>
+
+                            <button class="btn-icon">
+                                <a href="{% url "rabah_events:event_delete" event.id %}" class="svg">
+                                    <img class="svg"
+                                         src="{% static 'img/svg/trash-2.svg' %}"
+                                         alt="trash">
+                                </a>
+                            </button>
+                            <button type="button" class="btn-icon btn-closed" data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                <i class="uil uil-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-6 d-flex flex-column justify-content-center align-center">
+                                <img src="{% static "img/service_plan.png" %}" alt=""
+                                     style="object-fit: contain; height: 50%; width: 50%; margin-bottom: 10px">
+                                <a href="{% url "rabah_events:mark_attendance" event.id %}"
+                                   class="btn btn-lg btn-secondary" style="width: 100%; max-height: 10px">Check
+                                    In
+                                </a>
+                            </div>
+                            <div class="col-6 d-flex flex-column justify-content-center align-center  ">
+                                <img src="{% static "img/event_detail.png" %}" alt=""
+                                     style="object-fit: contain; height: 50%; width: 50%; margin-bottom: 10px">
+
+                                <button class="btn btn-lg btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#e-info-modal-detail-{{ event.id }}"
+                                        style="width: 100%; max-height: 10px">Event
+                                    Detail
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="e-info-modal-detail-{{ event.id }} e-info-modal modal fade" id="e-info-modal-detail-{{ event.id }}"
+             tabindex="-1"
+             role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-sm e-info-dialog modal-dialog-centered" id="c-event" role="document">
+                <div class="modal-content">
+                    <div class="modal-header e-info-header bg-primary">
+                        <h6 class="modal-title e-info-title">{{ event.name }}</h6>
+                        <div class="e-info-action">
+                            <button class="btn-icon">
+                                <img class="svg" src="{% static "img/svg/edit.svg" %}" alt="edit">
+                            </button>
+
+                            <button class="btn-icon">
+                                <a href="{% url "rabah_events:event_delete" event.id %}" class="svg">
+                                    <img class="svg"
+                                         src="{% static 'img/svg/trash-2.svg' %}"
+                                         alt="trash">
+                                </a>
+                            </button>
+                            <button type="button" class="btn-icon btn-closed" data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                <i class="uil uil-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body" style="min-height: 50vh">
+                        <ul class="e-info-list">
+                            <li>
+                                <img class="svg" src="{% static 'img/svg/chevron-right.svg' %}" alt="chevron-right.svg">
+                                <span class="list-line">
+                                <span class="list-label">Start Date :</span>
+                                <span class="list-meta"> {{ event.start_date }}</span>
+                                </span>
+                            </li>
+                            <li>
+                                <img class="svg" src="{% static 'img/svg/chevron-right.svg' %}" alt="chevron-right.svg">
+                                <span class="list-line">
+                                <span class="list-label">End Date :</span>
+                                <span class="list-meta"> {{ event.end_date }}</span>
+                                </span>
+                            </li>
+                            <li>
+                                <img class="svg" src="{% static 'img/svg/align-left.svg' %}" alt="align-left">
+                                <span class="list-line">
+                <span class="list-text"> {{ event.description|linebreaks }}</span>
+                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    {% endfor %}
+
+
+{% endblock %}
+
+{% block script %}
+
+
+
+{% endblock %}
