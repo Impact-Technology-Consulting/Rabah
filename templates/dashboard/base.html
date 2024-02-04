@@ -161,14 +161,21 @@
                                 <span class="menu-text">Members</span>
                             </a>
                         </li>
+
+                        <li class="{% if request.resolver_match.view_name == 'rabah_events:event_list' %}active{% endif %}">
+                            <a href="{% url "rabah_events:event_list" %}">
+                                <span class="nav-icon uil uil-create-dashboard"></span>
+                                <span class="menu-text">Events</span>
+                            </a>
+                        </li>
+
+
                         <li class="{% if request.resolver_match.view_name == 'rabah_events:events' %}active{% endif %}">
                             <a href="{% url "rabah_events:events" %}">
                                 <span class="nav-icon uil uil-create-dashboard"></span>
                                 <span class="menu-text">Event Calendar</span>
                             </a>
                         </li>
-
-
 
                         <li class="{% if request.resolver_match.view_name == 'rabah_subscriptions:subscription_page' %}active{% endif %}">
                             <a href="{% url "rabah_subscriptions:subscription_page" %}">
@@ -288,7 +295,12 @@
 <script src="{% static "js/plugins.min.js" %}"></script>
 <script src="{% static "js/script.min.js" %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="{% static "js/main.js" %}"></script>
+<script>
+    toastr.options.timeOut = 10000; // 3s
+    toastr.options.progressBar = true; // 3s
+</script>
 {% block script %}
 
 {% endblock %}

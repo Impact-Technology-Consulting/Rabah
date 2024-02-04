@@ -184,9 +184,9 @@
                     <div class="modal-header e-info-header bg-primary">
                         <h6 class="modal-title e-info-title">{{ event.name }}</h6>
                         <div class="e-info-action">
-                            <button class="btn-icon">
+                            <a href="{% url "rabah_events:event_update" event.id %}"  class="btn-icon">
                                 <img class="svg" src="{% static "img/svg/edit.svg" %}" alt="edit">
-                            </button>
+                            </a>
 
                             <button class="btn-icon">
                                 <a href="{% url "rabah_events:event_delete" event.id %}" class="svg">
