@@ -149,13 +149,20 @@ class MemberUploadCreateView(AuthAndAdminOrganizationMemberMixin, View):
         if form.is_valid():
             member_file = form.cleaned_data.get("member_file")
             groups = form.cleaned_data.get("groups")
-            print(member_file)
-            print(groups)
             data, header_dictionary = convert_file_to_dictionary(member_file)
+
+            print(groups)
+            print(data)
+            # Convert QuerySet to a serializable format
+            groups_serializable = list(groups.values())
+
+            # Ensure that the data is serializable
+            data_serializable = [dict(item) for item in data]
 
             # use celery to create the members
             # todo: celery might have issues taking this
-            create_multiple_members(data=data, organisation_id=self.organisation_id, groups=groups)
+            create_multiple_members.delay(data=data_serializable, organisation_id=self.organisation_id,
+                                          groups=groups_serializable)
             messages.success(request, "successfully upload member file")
         else:
             for error in form.errors:
@@ -289,6 +296,7 @@ class MemberAddLoginPermissionView(AuthAndAdminOrganizationMemberMixin, View):
         ) + f"?member_id={member_id}"  # Pass member_id as a query parameter
 
         print(activation_url)
-        send_member_activate_account(activation_url, member.user.email, member.user.first_name, member.user.last_name)
-        messages.success(request,"Successfully send activation link to member")
+        send_member_activate_account.delay(activation_url, member.user.email, member.user.first_name,
+                                           member.user.last_name)
+        messages.success(request, "Successfully send activation link to member")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

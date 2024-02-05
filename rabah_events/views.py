@@ -45,9 +45,9 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
 
             #  create the event for the automation
             if event.repeat_end == "AFTER":
-                create_event_for_repeat_count(event.id)
+                create_event_for_repeat_count.delay(event.id)
             elif event.repeat_end == "ON_DATE":
-                create_event_for_until_date(event.id)
+                create_event_for_until_date.delay(event.id)
 
             messages.success(self.request, "Successfully create event")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

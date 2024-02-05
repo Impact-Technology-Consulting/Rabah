@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 from rabah_events.models import Event
 from rabah_members.models import Member
+from rabah_organisations.models import Group
 from users.models import User
 
 
@@ -116,13 +117,17 @@ def create_multiple_members(data, organisation_id, groups):
             user_profile = user.user_profile
             user_profile.address = item.get('address')
             user_profile.career = item.get('career')
-            user_profile.gender = item.get("gender")
+            user_profile.gender = f"{item.get('gender')}".upper()
             user_profile.save()
             instance.organisation_id = organisation_id
             instance.user = user
             instance.save()
 
-            instance.groups.set(groups)
+            for group_data in groups:
+                group = Group.objects.filter(id=group_data.get("id")).first()
+                if group:
+                    instance.groups.add(group)
+
             instance.save()
 
         except:
