@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime, timedelta
 
 from django.db import models
 
@@ -15,6 +16,26 @@ class Organisation(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 
+class GroupManager(models.Manager):
+
+    def calculate_group_increment_percentage(self, organisation_id):
+        # Calculate the date of the last month
+        last_month = datetime.now() - timedelta(days=30)
+
+        # Count the number of groups since the last month
+        current_month_count = Group.objects.filter(timestamp__gte=last_month, organisation_id=organisation_id).count()
+
+        # Count the number of groups before the last month
+        last_month_count = Group.objects.filter(timestamp__lt=last_month, organisation_id=organisation_id).count()
+
+        # Calculate the percentage change
+        if last_month_count == 0:
+            return 100  # Handle the case where last month had no groups to avoid division by zero
+        percentage_change = ((current_month_count - last_month_count) / last_month_count) * 100
+
+        return percentage_change
+
+
 class Group(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
@@ -23,6 +44,7 @@ class Group(models.Model):
     image = models.ImageField(upload_to='group_images/', blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    objects = GroupManager()
 
     def members(self):
         return self.member_set.all()

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -131,12 +131,10 @@ class MemberUserProfileUpdateView(AuthAndOrganizationMixin, View):
         form = UserProfileUpdateForm(data=self.request.POST, files=self.request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
-            messages.info(request, "member info successfully updated")
+            return JsonResponse({"success": True, "message": "member info successfully updated"})
         else:
-            for field, error_list in form.errors.items():
-                for error in error_list:
-                    messages.error(request, f"Error in {field}: {error}")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            errors_list = [error for field, error_list in form.errors.items() for error in error_list]
+            return JsonResponse({"errors": errors_list}, status=400)
 
 
 class ChangeUserPassword(LoginRequiredMixin, View):

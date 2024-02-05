@@ -39,13 +39,18 @@
                                         </div>
                                         <div class="ap-po-details__icon-area">
                                             <div class="svg-icon order-bg-opacity-primary color-primary">
-                                                <i class="uil uil-briefcase-alt"></i>
+                                                <i class="uil uil-users-alt"></i>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="ap-po-details-time">
-                                        <span class="color-success"><i class="las la-arrow-up"></i>
-                                        <strong>25.36%</strong></span>
+                                        {% if group_increment_percentage > 0 %}
+                                            <span class="color-success"><i class="las la-arrow-up"></i>
+                                        {% else %}
+                                            <span class="color-danger"><i class="las la-arrow-down"></i>
+
+                                        {% endif %}
+                                        <strong>{{ group_increment_percentage }}%</strong></span>
                                         <small>Since last month</small>
                                     </div>
                                 </div>
@@ -63,13 +68,18 @@
                                         </div>
                                         <div class="ap-po-details__icon-area">
                                             <div class="svg-icon order-bg-opacity-info color-info">
-                                                <i class="uil uil-shopping-cart-alt"></i>
+                                                <i class="uil uil-user"></i>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="ap-po-details-time">
-<span class="color-success"><i class="las la-arrow-up"></i>
-<strong>25.36%</strong></span>
+                                        {% if member_increment_percentage > 0 %}
+                                            <span class="color-success"><i class="las la-arrow-up"></i>
+                                        {% else %}
+                                            <span class="color-danger"><i class="las la-arrow-down"></i>
+
+                                        {% endif %}
+                                        <strong>{{ member_increment_percentage }}%</strong></span>
                                         <small>Since last month</small>
                                     </div>
                                 </div>
@@ -87,13 +97,19 @@
                                         </div>
                                         <div class="ap-po-details__icon-area">
                                             <div class="svg-icon order-bg-opacity-secondary color-secondary">
-                                                <i class="uil uil-usd-circle"></i>
+                                                <i class="uil uil-transaction"></i>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="ap-po-details-time">
-<span class="color-danger"><i class="las la-arrow-down"></i>
-<strong>25.36%</strong></span>
+                                        {% if contribution_increment_percentage > 0 %}
+                                            <span class="color-success"><i class="las la-arrow-up"></i>
+                                        {% else %}
+                                            <span class="color-danger"><i class="las la-arrow-down"></i>
+
+                                        {% endif %}
+                                        <strong>{{ contribution_increment_percentage }}%</strong></span>
+
                                         <small>Since last month</small>
                                     </div>
                                 </div>
@@ -111,13 +127,18 @@
                                         </div>
                                         <div class="ap-po-details__icon-area">
                                             <div class="svg-icon order-bg-opacity-warning color-warning">
-                                                <i class="uil uil-users-alt"></i>
+                                                <i class="uil uil-building"></i>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="ap-po-details-time">
-<span class="color-success"><i class="las la-arrow-up"></i>
-<strong>25.36%</strong></span>
+                                        {% if event_increment_percentage > 0 %}
+                                            <span class="color-success"><i class="las la-arrow-up"></i>
+                                        {% else %}
+                                            <span class="color-danger"><i class="las la-arrow-down"></i>
+
+                                        {% endif %}
+                                        <strong>{{ event_increment_percentage }}%</strong></span>
                                         <small>Since last month</small>
                                     </div>
                                 </div>
@@ -133,7 +154,7 @@
                         </div>
                         <div class="card-body p-0">
                             <div class="selling-table-wrap">
-                                <div class="table-responsive">
+                                <div class="table-responsive" style="height: 300px">
                                     <table class="table table--default table-borderless">
                                         <thead>
                                         <tr>
@@ -168,7 +189,7 @@
                         <div class="card-body p-0">
 
                             <div class="selling-table-wrap">
-                                <div class="table-responsive">
+                                <div class="table-responsive" style="height: 300px">
                                     <table class="table table--default table-borderless">
                                         <thead>
                                         <tr>

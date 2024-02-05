@@ -34,11 +34,19 @@ class DashBoardView(AuthAndOrganizationMixin, View):
         groups_count = Group.objects.filter(organisation_id=organisation_id).count()
         groups = Group.objects.filter(organisation_id=organisation_id)
         events = Event.objects.filter(organisation_id=organisation_id).count()
+
         members_count = Member.objects.filter(organisation_id=organisation_id).count()
         members = Member.objects.filter(organisation_id=organisation_id)
+
         contribution_types = ContributionType.objects.filter(organisation_id=organisation_id)[:5]
         contributions = Contribution.objects.filter(organisation_id=organisation_id)[:5]
         total_contributions = total_contribution_amount(self.organisation_id)
+
+        event_increment_percentage = Event.objects.calculate_event_increment_percentage(self.organisation_id)
+        contribution_increment_percentage = Contribution.objects.calculate_contribution_increment_percentage(
+            self.organisation_id)
+        member_increment_percentage = Member.objects.calculate_member_increment_percentage(self.organisation_id)
+        group_increment_percentage = Group.objects.calculate_group_increment_percentage(self.organisation_id)
         context = {
             "groups_count": groups_count,
             "members_count": members_count,
@@ -48,6 +56,10 @@ class DashBoardView(AuthAndOrganizationMixin, View):
             "contributions": contributions,
             "total_contributions": total_contributions,
             "events": events,
+            "member_increment_percentage": member_increment_percentage,
+            "group_increment_percentage": group_increment_percentage,
+            "contribution_increment_percentage": contribution_increment_percentage,
+            "event_increment_percentage": event_increment_percentage,
         }
 
         return render(request, 'dashboard/dashboard.html', context)

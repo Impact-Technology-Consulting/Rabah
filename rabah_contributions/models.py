@@ -1,6 +1,8 @@
 import uuid
+from datetime import datetime, timedelta
 
 from django.db import models
+from django.db.models import Sum
 
 from rabah_members.models import Member
 from rabah_organisations.models import Organisation
@@ -49,6 +51,31 @@ METHOD_CHOICES = (
 )
 
 
+class ContributionManager(models.Manager):
+
+    def calculate_contribution_increment_percentage(self, organisation_id):
+        # Calculate the date of the last month
+        last_month = datetime.now() - timedelta(days=30)
+
+        # Sum the total contribution amounts in the current month
+        current_month_total = \
+        Contribution.objects.filter(timestamp__gte=last_month, organisation_id=organisation_id).aggregate(
+            Sum('amount'))[
+            'amount__sum'] or 0
+
+        # Sum the total contribution amounts before the last month
+        last_month_total = \
+        Contribution.objects.filter(timestamp__lt=last_month, organisation_id=organisation_id).aggregate(Sum('amount'))[
+            'amount__sum'] or 0
+
+        # Calculate the percentage change
+        if last_month_total == 0:
+            return 100  # Handle the case where last month had no contributions to avoid division by zero
+        percentage_change = ((current_month_total - last_month_total) / last_month_total) * 100
+
+        return percentage_change
+
+
 class Contribution(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
@@ -64,3 +91,4 @@ class Contribution(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     is_anonymous = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
+    objects = ContributionManager()
