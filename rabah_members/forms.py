@@ -96,6 +96,7 @@ class AddExistingMemberToFamilyForm(forms.Form):
         if new_member.family == current_member.family:
             return None
         new_member.family = current_member.family
+        new_member.family_relationship = self.cleaned_data["family_relationship"]
         new_member.save()
         return new_member
 

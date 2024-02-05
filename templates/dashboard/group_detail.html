@@ -6,12 +6,20 @@
         .custom_card_height {
             min-height: 493px !important;
         }
+
+        .table-container {
+            height: 80vh; /* Set the desired height */
+            overflow-y: scroll; /* Enable vertical scrolling */
+            scrollbar-width: thin; /* Set the width of the scrollbar */
+            scrollbar-color: #888888 #f0f0f0; /* Set the color of the scrollbar */
+        }
+
     </style>
 
 {% endblock %}
 
 {% block title %}
-  Group Detal | Rabah
+    Group Detal | Rabah
 {% endblock %}
 {% block content %}
     <div class="container-fluid">
@@ -78,25 +86,7 @@
                                     <span class="text-light fs-14 mt-1 text-capitalize">total members</span>
                                 </div>
                             </div>
-                            <div class="application-task d-flex align-items-center mb-25">
-                                <div class="application-task-icon wh-60 bg-opacity-primary content-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25"
-                                         class="svg wh-25 text-primary replaced-svg">
-                                        <g id="Group_1638" data-name="Group 1638" transform="translate(-125.744 -128)">
-                                            <path id="Path_1024" data-name="Path 1024"
-                                                  d="M138.244,153a12.5,12.5,0,1,1,12.5-12.5A12.515,12.515,0,0,1,138.244,153Z"
-                                                  transform="translate(0)" fill="#ff69a5"></path>
-                                            <path id="Path_1025" data-name="Path 1025"
-                                                  d="M167.584,178.25q0,.217.011.432a8.377,8.377,0,0,0,2.159,5.2l.017.02c.059.065.12.127.181.19.033.034.064.069.1.1s.069.065.1.1c.063.061.125.122.19.181l.02.017a8.376,8.376,0,0,0,5.2,2.159q.215.011.432.011a8.42,8.42,0,0,0,8.41-8.41.7.7,0,0,0-.7-.7H176.7v-7.008a.7.7,0,0,0-.7-.7A8.42,8.42,0,0,0,167.584,178.25Z"
-                                                  transform="translate(-37.75 -37.75)" fill="#fff" opacity="0.5"></path>
-                                        </g>
-                                    </svg>
-                                </div>
-                                <div class="application-task-content">
-                                    <h4>34</h4>
-                                    <span class="text-light fs-14 mt-1 text-capitalize">task completed</span>
-                                </div>
-                            </div>
+
                             <div class="application-task d-flex align-items-center mb-25">
                                 <div class="application-task-icon wh-60 bg-opacity-success content-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="21.084"
@@ -171,8 +161,8 @@
                     <div class="card h-100 custom_card_height">
                         <div class="card-header d-flex justify-content-between align-items-center py-10  px-sm-25 px-3">
                             <h6 class="fw-500 ">admin users</h6>
-                            <a  href="{% url "rabah_members:add_member" %}"
-                                    class="border radius-lg color-primary fw-500 fs-12 bg-transparent acButton">
+                            <a href="{% url "rabah_members:add_member" %}"
+                               class="border radius-lg color-primary fw-500 fs-12 bg-transparent acButton">
                                 <i class="uil uil-user-plus px-2"></i>
                                 add user
                             </a>
@@ -184,7 +174,11 @@
                                     <img src="{{ member.user.user_profile.profileImageURL }}" class="wh-46 me-15"
                                          alt="img">
                                     <div>
-                                        <p class="fs-14 fw-600 color-dark mb-0">{{ member.user.first_name }} {{ member.user.last_name }}</p>
+                                        <p class="fs-14 fw-600 color-dark mb-0">
+                                            <a href="{% url "rabah_members:group_member_detail" member.id %}">
+                                                {{ member.user.first_name }} {{ member.user.last_name }}
+                                            </a>
+                                        </p>
                                         <span class=" mt-1 fs-14  color-light ">{{ member.user.user_profile.gender }}</span>
                                     </div>
                                 </div>
@@ -200,92 +194,97 @@
                 <div class="col-lg-12">
                     <div class="userDatatable global-shadow border-light-0 p-30 bg-white radius-xl w-100 mb-30">
                         <div class="table-responsive">
-                            <table class="table mb-0 table-borderless">
-                                <thead>
-                                <tr class="userDatatable-header">
-                                    <th>
-                                        <div class="d-flex align-items-center">
-                                            <div class="custom-checkbox  check-all">
-                                                <label for="check-44">
-                                                    <span class="checkbox-text userDatatable-title">user</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </th>
-                                    <th>
-                                        <span class="userDatatable-title">email</span>
-                                    </th>
-                                    <th>
-                                        <span class="userDatatable-title">gender</span>
-                                    </th>
-                                    <th>
-                                        <span class="userDatatable-title">position</span>
-                                    </th>
-                                    <th>
-                                        <span class="userDatatable-title">join date</span>
-                                    </th>
-                                    <th>
-                                        <span class="userDatatable-title">status</span>
-                                    </th>
-
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for member in members %}
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex">
-                                                <div class="userDatatable__imgWrapper d-flex align-items-center">
-
-                                                    <a href="#" class="profile-image rounded-circle d-block m-0 wh-38"
-                                                       style="background-image:url('{{ member.user.user_profile.profileImageURL }}'); background-size: cover;"></a>
-                                                </div>
-                                                <div class="userDatatable-inline-title">
-                                                    <a href="{% url "rabah_members:group_member_detail" member.id %}" class="text-dark fw-500">
-                                                        <h6>{{ member.user.first_name }} {{ member.user.last_name }}</h6>
-                                                    </a>
-                                                    <p class="d-block mb-0">
-                                                        {{ member.user.user_profile.address }}
-                                                    </p>
+                            <div class="table-container">
+                                <table class="table mb-0 table-borderless">
+                                    <thead>
+                                    <tr class="userDatatable-header">
+                                        <th>
+                                            <div class="d-flex align-items-center">
+                                                <div class="custom-checkbox  check-all">
+                                                    <label for="check-44">
+                                                        <span class="checkbox-text userDatatable-title">user</span>
+                                                    </label>
                                                 </div>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <div class="userDatatable-content">
-                                                {{ member.user.email }}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="userDatatable-content">
-                                                {{ member.user.user_profile.gender }}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="userDatatable-content">
-                                                {{ member.user.user_profile.career }}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="userDatatable-content">
-                                                {{ member.user.date_joined }}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="userDatatable-content d-inline-block">
-                                                {% if  member.is_active %}
-                                                    <span class="bg-opacity-success  color-success rounded-pill userDatatable-content-status active">active</span>
-                                                {% else %}
-                                                    <span class="bg-opacity-danger  color-danger rounded-pill userDatatable-content-status ">in active</span>
-                                                {% endif %}
-                                            </div>
-                                        </td>
+                                        </th>
+                                        <th>
+                                            <span class="userDatatable-title">email</span>
+                                        </th>
+                                        <th>
+                                            <span class="userDatatable-title">gender</span>
+                                        </th>
+                                        <th>
+                                            <span class="userDatatable-title">position</span>
+                                        </th>
+                                        <th>
+                                            <span class="userDatatable-title">join date</span>
+                                        </th>
+                                        <th>
+                                            <span class="userDatatable-title">login permission</span>
+                                        </th>
 
                                     </tr>
-                                {% endfor %}
+                                    </thead>
+                                    <tbody>
+                                    {% for member in members %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <div class="userDatatable__imgWrapper d-flex align-items-center">
+
+                                                        <a href="#"
+                                                           class="profile-image rounded-circle d-block m-0 wh-38"
+                                                           style="background-image:url('{{ member.user.user_profile.profileImageURL }}'); background-size: cover;"></a>
+                                                    </div>
+                                                    <div class="userDatatable-inline-title">
+                                                        <a href="{% url "rabah_members:group_member_detail" member.id %}"
+                                                           class="text-dark fw-500">
+                                                            <h6>{{ member.user.first_name }} {{ member.user.last_name }}</h6>
+                                                        </a>
+                                                        <p class="d-block mb-0">
+                                                            {{ member.user.user_profile.address }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="userDatatable-content">
+                                                    {{ member.user.email }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="userDatatable-content">
+                                                    {{ member.user.user_profile.gender }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="userDatatable-content">
+                                                    {{ member.user.user_profile.career }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="userDatatable-content">
+                                                    {{ member.user.date_joined }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="userDatatable-content d-inline-block">
+                                                    {% if  member.is_active %}
+                                                        <span class="bg-opacity-success  color-success rounded-pill userDatatable-content-status active">active</span>
+                                                    {% else %}
+                                                        <span class="bg-opacity-danger  color-danger rounded-pill userDatatable-content-status ">in active</span>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    {% endfor %}
 
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
                         <div class="d-flex justify-content-end pt-30">
                             <nav class="dm-page">

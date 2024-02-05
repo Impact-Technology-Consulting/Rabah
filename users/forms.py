@@ -1,9 +1,8 @@
 from allauth.account.forms import SignupForm
 from django import forms
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from users.models import UserProfile
+from users.models import UserProfile, User
 
 
 class RabahSignupForm(SignupForm):

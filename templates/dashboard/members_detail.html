@@ -161,7 +161,9 @@
                                                 <div class="col-xxl-6">
                                                     <div class="edit-profile__body mx-xl-20">
                                                         <form method="post"
-                                                              action="{% url "user:member_profile_edit" member.user.user_profile.id %}">
+                                                              action="{% url "user:member_profile_edit" member.user.user_profile.id %}"
+                                                              id="updateProfileForm"
+                                                              onsubmit="submitProfileUpdateForm()">
                                                             {% csrf_token %}
                                                             {{ user_form|crispy }}
                                                             <div class="button-group d-flex flex-wrap pt-30 mb-15">
@@ -262,7 +264,7 @@ information</span>
                                                                     {% endfor %}
                                                                 </select>
                                                             </form>
-                                                            <p class="mb-0">{{ family_member.user.user_profile.about|truncatechars:30 }}.</p>
+                                                            <p class="mb-0">{{ family_member.user.user_profile.gender|title|truncatechars:30 }}</p>
 
                                                         </div>
                                                         <div class="users-list__button mt-xl-0 mt-15">
@@ -437,6 +439,18 @@ information</span>
         }
     </script>
 
+    {% comment %}For Updating Profile Form{% endcomment %}
+    <script>
+        function submitProfileUpdateForm() {
+            event.preventDefault();
+            // Get form data
+            const form = document.getElementById('updateProfileForm');
+
+            // Make an AJAX request
+            submitForm(form)
+        }
+    </script>
+
     {% comment %}For adding existing member{% endcomment %}
     <script>
         function addExistingMemberForm() {
@@ -476,6 +490,7 @@ information</span>
                     .then(data => {
                         // Update suggestions based on backend response
                         updateMemberSuggestions(data);
+
                     })
                     .catch(error => {
                         console.error('Error fetching member suggestions:', error);
@@ -495,6 +510,20 @@ information</span>
                         additional_info: '' // Replace with the actual property name or remove if not needed
                     };
 
+                    // Clear the input and suggestions
+                    memberInput.value = selectedMemberDetails.name;
+                    memberInputID.value = selectedMemberDetails.id;
+                    suggestionsList.innerHTML = '';
+                } else if (event.target.tagName == 'IMG') {
+                    console.log(event.target.parentNode)
+                    // Use the data directly from the suggestion list
+                    var selectedMemberId = event.target.parentNode.dataset.uuid;
+                    var selectedMemberDetails = {
+                        id: selectedMemberId,
+                        name: event.target.parentNode.querySelector('span').textContent,
+                        image_url: event.target.parentNode.querySelector('img').src, // Replace with the actual property name
+                        additional_info: '' // Replace with the actual property name or remove if not needed
+                    };
 
                     // Clear the input and suggestions
                     memberInput.value = selectedMemberDetails.name;
