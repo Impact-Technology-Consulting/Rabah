@@ -17,6 +17,9 @@ class ContributionType(models.Model):
     name = models.CharField(max_length=250)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ["-timestamp"]
+
     def __str__(self):
         return self.name
 
@@ -59,14 +62,15 @@ class ContributionManager(models.Manager):
 
         # Sum the total contribution amounts in the current month
         current_month_total = \
-        Contribution.objects.filter(timestamp__gte=last_month, organisation_id=organisation_id).aggregate(
-            Sum('amount'))[
-            'amount__sum'] or 0
+            Contribution.objects.filter(timestamp__gte=last_month, organisation_id=organisation_id).aggregate(
+                Sum('amount'))[
+                'amount__sum'] or 0
 
         # Sum the total contribution amounts before the last month
         last_month_total = \
-        Contribution.objects.filter(timestamp__lt=last_month, organisation_id=organisation_id).aggregate(Sum('amount'))[
-            'amount__sum'] or 0
+            Contribution.objects.filter(timestamp__lt=last_month, organisation_id=organisation_id).aggregate(
+                Sum('amount'))[
+                'amount__sum'] or 0
 
         # Calculate the percentage change
         if last_month_total == 0:
@@ -92,3 +96,6 @@ class Contribution(models.Model):
     is_anonymous = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     objects = ContributionManager()
+
+    class Meta:
+        ordering = ["-timestamp"]

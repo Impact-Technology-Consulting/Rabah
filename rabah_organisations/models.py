@@ -15,6 +15,9 @@ class Organisation(models.Model):
     name = models.CharField(max_length=250, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ["-timestamp"]
+
 
 class GroupManager(models.Manager):
 
@@ -45,6 +48,9 @@ class Group(models.Model):
     description = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     objects = GroupManager()
+
+    class Meta:
+        ordering = ["-timestamp"]
 
     def members(self):
         return self.member_set.all()
