@@ -19,7 +19,7 @@ class AuthAndOrganizationMixin:
         self.organisation_id = request.COOKIES.get('organisation_id')
 
         if not self.organisation_id:
-            messages.error(request, "Select a valid organisation")
+            messages.info(request, "Select a valid organisation")
             return redirect("rabah_dashboard:user_organisations")
 
         organisation = Organisation.objects.filter(id=self.organisation_id).first()
