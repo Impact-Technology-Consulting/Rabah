@@ -125,7 +125,8 @@ class ContributionsView(AuthAndAdminOrganizationMemberMixin, View):
             messages.error(request, "No contribution type")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-        contributions = Contribution.objects.filter(contribution_type=contribution_type)
+        contributions = Contribution.objects.filter(contribution_type=contribution_type,
+                                                    organisation_id=self.organisation_id)
 
         # Apply search query if provided
         if query:
