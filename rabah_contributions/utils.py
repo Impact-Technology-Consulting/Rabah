@@ -20,7 +20,8 @@ def query_contributions(query, item):
     query = reduce(
         operator.or_,
         (Q(member__user__email__icontains=x) |
-         Q(method=x) |
+         Q(method__icontains=f"{x}".upper()) |
+         Q(description__icontains=x) |
          Q(member__user__first_name__icontains=x) |
          Q(member__user__last_name__icontains=x) |
          Q(member__user__first_name=[x]) for x in query_list)
