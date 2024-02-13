@@ -222,3 +222,4 @@ class MemberCreatePasswordView(View):
             for error in form.errors:
                 messages.warning(request, f"{error}: {form.errors[error][0]}")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+

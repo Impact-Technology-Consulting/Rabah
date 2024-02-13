@@ -17,13 +17,15 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.0/css/line.css">
 
     <style>
         body {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Hind Siliguri', sans-serif;
             font-weight: normal;
+            font-size: 18px !important;
         }
 
         b, strong {
@@ -43,13 +45,34 @@
             max-height: 50px !important; /* Adjust the value as needed */
             overflow: hidden;
         }
+  /* Added styles */
+        .side-image {
+            background-color: black !important;
+            {#background: url('path/to/your/image.jpg') center center / cover no-repeat;#}
 
+
+        }
+        label {
+            font-weight: bolder !important;
+            font-size: 20px !important;
+        }
+        .edit-profile__title h6{
+            font-size: 30px !important;
+            font-weight: bolder !important;
+        }
+
+        a,p,button,.checkbox-text  {
+            font-size: 20px !important;
+        }
 
     </style>
     {% block extra_head %}
 
     {% endblock %}
+{% block css  %}
+{% endblock %}
     <!-- Fonts -->
+
 
 </head>
 
@@ -59,9 +82,9 @@
 <main class="main-content">
     <div class="admin">
         <div class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-xxl-3 col-xl-4 col-md-6 col-sm-8">
-                    <div class="edit-profile">
+            <div class="row justify-content-center" style="height:100vh !important">
+                <div class="col-12 col-lg-6 p-5" style="padding-top: 0px !important;" >
+                    <div class="edit-profile" style="margin-top: 0px !important;" >
                         <div class="edit-profile__logos">
                             <a href="#">
                                 <img class="dark" src="{% static "img/logo-dark.png" %}" alt="">
@@ -85,39 +108,12 @@
 
                     </div>
                 </div>
+                  <!-- Image -->
+                <div class="col-12 col-lg-6 d-none d-lg-block side-image"></div>
             </div>
         </div>
     </div>
-    <footer class="footer-wrapper">
-        <div class="footer-wrapper__inside">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="footer-copyright">
-                            <p><span>© 2023</span><a href="#">Rabah</a>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="footer-menu text-end">
-                            <ul>
-                                <li>
-                                    <a href="#">About</a>
-                                </li>
-                                <li>
-                                    <a href="#">Team</a>
-                                </li>
-                                <li>
-                                    <a href="#">Contact</a>
-                                </li>
-                            </ul>
-                        </div>
 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
 </main>
 <div id="overlayer">
     <div class="loader-overlay">
@@ -142,6 +138,10 @@
 
 <script src="{% static "js/plugins.min.js" %}"></script>
 <script src="{% static "js/script.min.js" %}"></script>
+
+{% block script %}
+
+{% endblock %}
 
 </body>
 

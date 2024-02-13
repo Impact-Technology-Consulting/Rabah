@@ -151,16 +151,12 @@ class MemberUploadCreateView(AuthAndAdminOrganizationMemberMixin, View):
             groups = form.cleaned_data.get("groups")
             data, header_dictionary = convert_file_to_dictionary(member_file)
 
-            print(groups)
-            print(data)
             # Convert QuerySet to a serializable format
             groups_serializable = list(groups.values())
 
             # Ensure that the data is serializable
             data_serializable = [dict(item) for item in data]
 
-            # use celery to create the members
-            # todo: celery might have issues taking this
             create_multiple_members.delay(data=data_serializable, organisation_id=self.organisation_id,
                                           groups=groups_serializable)
             messages.success(request, "successfully upload member file")

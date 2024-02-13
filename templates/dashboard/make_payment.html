@@ -1,0 +1,157 @@
+{% extends "dashboard/base.html" %}
+
+{% block css %}
+    <!-- Additional CSS -->
+{% endblock %}
+
+{% block title %}
+    Rabah| Make Payment
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-main">
+                    <h4 class="text-capitalize breadcrumb-title">Payment</h4>
+                    <div class="breadcrumb-action justify-content-center flex-wrap">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#"><i class="uil uil-estate"></i>Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Payment</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mx-auto justify-content-center">
+            <div class="col-lg-6">
+                <!-- Subscription Info -->
+                <div class="card card-default card-md mb-4" style="min-height: 60vh">
+                    <div class="card-header">
+                        <h6>Plan</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="columnGrid-wrapper">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card card-default card-md bg-transparent card-bordered">
+                                        <div class="card-header">
+                                            <h6>{{ subscription.name }} Plan</h6>
+                                            {% if  organisation_subscription.subscription == subscription and organisation_subscription.status == "ACTIVE" %}
+                                                <button class="btn btn-gray mt-3 float-end"><i class="uil uil-bill"></i>
+                                                    Current Plan
+                                                </button>
+                                            {% else %}
+                                                <a href="{% url "rabah_subscriptions:make_payment" subscription.id %}"
+                                                   class="btn btn-primary mt-3 float-end"> <i
+                                                        class="uil uil-transaction"></i> Subscribe</a>
+                                            {% endif %}
+
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-grid-table table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <p>Price</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>{{ subscription.price }}</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <p>Duration</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>{{ subscription.get_subscription_duration_display }}</p>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                                <!-- Button to subscribe -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <!-- Organisation Subscription Info -->
+                <div class="card card-default card-md mb-4" style="min-height: 60vh">
+                    <div class="card-header">
+                        <h6>Organisation Subscription</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="columnGrid-wrapper">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card card-default card-md bg-transparent card-bordered">
+                                        <div class="card-header">
+                                            <h6>$ {{ organisation_subscription.subscription.price }} <span>  <small
+                                                    class="pricing_user">
+                                                Recurring Payment / {{ organisation_subscription.subscription.subscription_duration|title }}</small>
+                                          </span></h6>
+
+
+                                            {% if organisation_subscription.status == "ACTIVE" %}
+                                                <a href="{% url "rabah_subscriptions:cancel_subscription" organisation_subscription.subscription.id %}"
+                                                   class="btn btn-danger mt-3 float-end"><i
+                                                        class="uil uil-process"></i> End Subscription
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-grid-table table-responsive">
+                                                <table class="table">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <p>Plan</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>{{ organisation_subscription.subscription.name }}</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <p>Status</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>{{ organisation_subscription.get_status_display }}</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <p>Billing Information</p>
+                                                        </td>
+                                                        <td>
+                                                            {{ billing_address.address }}
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <!-- Additional Scripts -->
+{% endblock %}

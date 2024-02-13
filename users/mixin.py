@@ -3,6 +3,7 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 
 from rabah_members.models import Member, Organisation
+from rabah_subscriptions.models import OrganisationSubscription
 
 
 class AuthAndOrganizationMixin:
@@ -27,6 +28,17 @@ class AuthAndOrganizationMixin:
         if not organisation:
             messages.error(request, "Organisation does not exists")
             return redirect("rabah_dashboard:user_organisations")
+
+        organisation_subscription = OrganisationSubscription.objects.filter(
+            organisation_id=self.organisation_id).first()
+        if not organisation_subscription:
+            organisation_subscription = OrganisationSubscription.objects.create(organisation=organisation,
+                                                                                status="INACTIVE")
+
+        if organisation_subscription.status == "INACTIVE" or organisation_subscription.subscription_id is None:
+            messages.error(request, "Organisation subscription is inactive")
+            return redirect("rabah_subscriptions:subscription_page")
+
         member = Member.objects.is_member_user(request.user, self.organisation_id)
         if not member:
             # log the user out
@@ -56,6 +68,16 @@ class AuthAndAdminOrganizationMemberMixin:
 
         if not organisation:
             return redirect("rabah_dashboard:user_organisations")
+
+        organisation_subscription = OrganisationSubscription.objects.filter(
+            organisation_id=self.organisation_id).first()
+        if not organisation_subscription:
+            organisation_subscription = OrganisationSubscription.objects.create(organisation=organisation,
+                                                                                status="INACTIVE")
+
+        if organisation_subscription.status == "INACTIVE" or organisation_subscription.subscription_id is None:
+            messages.error(request, "Organisation subscription is inactive")
+            return redirect("rabah_subscriptions:subscription_page")
 
         is_admin = Member.objects.is_admin_user(request.user, self.organisation_id)
 
