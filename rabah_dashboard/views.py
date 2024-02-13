@@ -19,6 +19,10 @@ class UserOrganisationsView(LoginRequiredMixin, View):
 
     def get(self, request):
         member = Member.objects.filter(user=self.request.user)
+        if member.count() == 1:
+            response = redirect("rabah_dashboard:dashboard")
+            response.set_cookie('organisation_id', member.first().organisation_id)
+            return response
         return render(request, 'dashboard/organisation_list.html', {"members": member})
 
 

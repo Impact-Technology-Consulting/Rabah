@@ -150,6 +150,11 @@ class MarkAttendancePageView(AuthAndAdminOrganizationMemberMixin, View):
         if not event:
             messages.error(request, "Event with this id does not exist in this organisation")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        #
+        # if event.start_date > timezone.now():
+        #     messages.error(request, "Event has not started yet")
+        #     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
         members = Member.objects.filter(organisation_id=self.organisation_id)
 
         if search:
@@ -175,8 +180,8 @@ class MarkAttendancePageView(AuthAndAdminOrganizationMemberMixin, View):
         context = {
             "members": members,
             "event": event,
-            "present_count":present_count,
-            "absent_count":absent_count
+            "present_count": present_count,
+            "absent_count": absent_count
         }
         return render(request, "dashboard/mark_attendance.html", context)
 
