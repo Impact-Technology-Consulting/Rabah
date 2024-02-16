@@ -174,7 +174,6 @@
         </div>
     </div>
 
-
     {% for event in events %}
         <div class="e-info-modal-{{ event.id }} e-info-modal modal fade" id="e-info-modal-{{ event.id }}" tabindex="-1"
              role="dialog"
@@ -184,7 +183,7 @@
                     <div class="modal-header e-info-header bg-primary">
                         <h6 class="modal-title e-info-title">{{ event.name }}</h6>
                         <div class="e-info-action">
-                            <a href="{% url "rabah_events:event_update" event.id %}"  class="btn-icon">
+                            <a href="{% url "rabah_events:event_update" event.id %}" class="btn-icon">
                                 <img class="svg" src="{% static "img/svg/edit.svg" %}" alt="edit">
                             </a>
 
@@ -215,8 +214,9 @@
                                 <img src="{% static "img/event_detail.png" %}" alt=""
                                      style="object-fit: contain; height: 50%; width: 50%; margin-bottom: 10px">
 
-                                <button class="btn btn-lg btn-primary"  data-bs-toggle="modal"
-                                        data-bs-target="#e-info-modal-detail-{{ event.id }}" style="width: 100%; max-height: 10px">Event
+                                <button class="btn btn-lg btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#e-info-modal-detail-{{ event.id }}"
+                                        style="width: 100%; max-height: 10px">Event
                                     Detail
                                 </button>
 
@@ -227,10 +227,8 @@
             </div>
         </div>
 
-
-
-
-        <div class="e-info-modal-detail-{{ event.id }} e-info-modal modal fade" id="e-info-modal-detail-{{ event.id }}" tabindex="-1"
+        <div class="e-info-modal-detail-{{ event.id }} e-info-modal modal fade" id="e-info-modal-detail-{{ event.id }}"
+             tabindex="-1"
              role="dialog"
              aria-hidden="true">
             <div class="modal-dialog modal-sm e-info-dialog modal-dialog-centered" id="c-event" role="document">
@@ -283,8 +281,8 @@
             </div>
         </div>
 
-
     {% endfor %}
+
 
 
 {% endblock %}
@@ -397,22 +395,29 @@
             var currentDate = new Date();
             var minDate = new Date(currentDate);
             var maxDate = new Date(currentDate);
-            maxDate.setFullYear(currentDate.getFullYear() + 2);
-            return { currentDate: currentDate, minDate: minDate, maxDate: maxDate };
+            maxDate.setFullYear(currentDate.getFullYear() + 1);
+            return {currentDate: currentDate, minDate: minDate, maxDate: maxDate};
         }
 
         // Function to set date limits for a given date input
         function setDateLimits(inputElement) {
             var dateLimits = getDateLimits();
-            inputElement.min = dateLimits.currentDate.toISOString().slice(0, 16);
-            inputElement.max = dateLimits.maxDate.toISOString().slice(0, 16);
+            if (inputElement.type === 'datetime-local') {
+                inputElement.min = dateLimits.currentDate.toISOString().slice(0, 16);
+                inputElement.max = dateLimits.maxDate.toISOString().slice(0, 16);
+            } else if (inputElement.type === 'date') {
+                inputElement.min = dateLimits.currentDate.toISOString().slice(0, 10);
+                inputElement.max = dateLimits.maxDate.toISOString().slice(0, 10);
+            }
         }
 
-        // Apply date limits to all datetime-local inputs
-        var datetimeInputs = document.querySelectorAll("input[type='datetime-local']");
-        datetimeInputs.forEach(function (input) {
+        // Apply date limits to all datetime-local and date inputs
+        var dateInputs = document.querySelectorAll("input[type='datetime-local'], input[type='date']");
+        dateInputs.forEach(function (input) {
             setDateLimits(input);
         });
+
+
     </script>
 
     {% comment %}Event Create form {% endcomment %}

@@ -66,7 +66,7 @@ class MemberEditForm(forms.ModelForm):
     class Meta:
         model = Member
         fields = ['family',
-                  'family_relationship', 'is_admin_member', 'is_owner', 'is_active', 'groups']
+                  'family_relationship', 'is_owner', 'groups']
         widgets = {
             'groups': CheckboxSelectMultiple(),
         }

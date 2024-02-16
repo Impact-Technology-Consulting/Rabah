@@ -8,7 +8,10 @@ local_settings.py
 .idea
 static
 
-media
+media/events
+media/group_images
+media/profile_image
+
 db.sqlite3
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.

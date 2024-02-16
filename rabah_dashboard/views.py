@@ -60,10 +60,10 @@ class DashBoardView(AuthAndOrganizationMixin, View):
             "contributions": contributions,
             "total_contributions": total_contributions,
             "events": events,
-            "member_increment_percentage": member_increment_percentage,
-            "group_increment_percentage": group_increment_percentage,
-            "contribution_increment_percentage": contribution_increment_percentage,
-            "event_increment_percentage": event_increment_percentage,
+            "member_increment_percentage": round(member_increment_percentage, 2),
+            "group_increment_percentage": round(group_increment_percentage, 2),
+            "contribution_increment_percentage": round(contribution_increment_percentage, 2),
+            "event_increment_percentage": round(event_increment_percentage, 2),
         }
 
         return render(request, 'dashboard/dashboard.html', context)
