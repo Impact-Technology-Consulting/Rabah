@@ -1,14 +1,19 @@
+import os
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Rabah.settings')
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr
 
+from django.conf import settings
+
 # Email configuration
-EMAIL_PORT = 465
-EMAIL_HOST = 'email-smtp.eu-north-1.amazonaws.com'
-EMAIL_HOST_USER = 'AKIA3QD2DQONNTLFTBXP'
-EMAIL_HOST_PASSWORD = 'BNGeFVgbxysvpGOKIalOiFpmH2ZnIGI9JfTBIfTduUwo'
-DEFAULT_FROM_EMAIL = 'support@rabah360.com'
+EMAIL_PORT = settings.EMAIL_PORT
+EMAIL_HOST = settings.EMAIL_HOST
+EMAIL_HOST_USER = settings.EMAIL_HOST
+EMAIL_HOST_PASSWORD = settings.EMAIL_HOST
+DEFAULT_FROM_EMAIL = settings.EMAIL_HOST
 
 
 def send_email(subject, message, recipient_email):
