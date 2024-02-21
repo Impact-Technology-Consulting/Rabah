@@ -1,142 +1,174 @@
-/* Variables */
-* {
-  box-sizing: border-box;
+/*
+body, html {
+  height: 100%;
+  background-color: #f7f8f9;
+  color: #6b7c93;
 }
+*/
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+*,
+label {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
   font-size: 16px;
+  font-variant: normal;
+  padding: 0;
+  margin: 0;
   -webkit-font-smoothing: antialiased;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  height: 100vh;
-  width: 100vw;
+  font-weight: bolder;
 }
 
-form {
-  width: 30vw;
-  min-width: 500px;
-  align-self: center;
-  box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
-    0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
-  border-radius: 7px;
-  padding: 40px;
-}
-
-.hidden {
-  display: none;
-}
-
-#payment-message {
-  color: rgb(105, 115, 134);
-  font-size: 16px;
-  line-height: 20px;
-  padding-top: 12px;
-  text-align: center;
-}
-
-#payment-element {
-  margin-bottom: 24px;
-}
-
-/* Buttons and links */
 button {
-  background: #5469d4;
-  font-family: Arial, sans-serif;
-  color: #ffffff;
+  border: none;
   border-radius: 4px;
-  border: 0;
-  padding: 12px 16px;
-  font-size: 16px;
+  outline: none;
+  text-decoration: none;
+  color: #fff;
+  background: #32325d;
+  white-space: nowrap;
+  display: inline-block;
+  height: 50px;
+  line-height: 40px;
+  padding: 0 14px;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  font-size: 15px;
   font-weight: 600;
-  cursor: pointer;
-  display: block;
-  transition: all 0.2s ease;
-  box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
+  letter-spacing: 0.025em;
+  text-decoration: none;
+  -webkit-transition: all 150ms ease;
+  transition: all 150ms ease;
+  float: left;
+  margin-left: 12px;
+  margin-top: 28px;
+}
+
+#submit-button{
   width: 100%;
 }
+
 button:hover {
-  filter: contrast(115%);
-}
-button:disabled {
-  opacity: 0.5;
-  cursor: default;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+  background-color: #43458b;
 }
 
-/* spinner/processing state, errors */
-.spinner,
-.spinner:before,
-.spinner:after {
-  border-radius: 50%;
+#apple-pay-button {
+  display: none;
+  background-color: black;
+  background-image: -webkit-named-image(apple-pay-logo-white);
+  background-size: 100% 100%;
+  background-origin: content-box;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 44px;
+  padding: 10px 0;
+  border-radius: 10px;
 }
-.spinner {
-  color: #ffffff;
-  font-size: 22px;
-  text-indent: -99999px;
-  margin: 0px auto;
-  position: relative;
-  width: 20px;
+/* comment the form to fix bug*/
+
+form {
+  padding: 30px;
+  height: 120px;
+}
+/*
+.form_class {
+  padding: 30px;
+  height: 120px;
+}*/
+
+label {
+  font-weight: 500;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+#card-errors {
   height: 20px;
-  box-shadow: inset 0 0 0 2px;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
+  padding: 4px 0;
+  color: #fa755a;
 }
-.spinner:before,
-.spinner:after {
+
+/*
+.form-row {
+  width: 70%;
+  float: left;
+}*/
+
+.form-row {
+  display: inherit !important;
+}
+
+.token {
+  color: #32325d;
+  font-family: "Source Code Pro", monospace;
+  font-weight: 500;
+}
+
+.wrapper {
+  /*width: 670px;*/
+  margin: 0 auto;
+  height: 100%;
+}
+
+#stripe-token-handler {
   position: absolute;
-  content: "";
-}
-.spinner:before {
-  width: 10.4px;
-  height: 20.4px;
-  background: #5469d4;
-  border-radius: 20.4px 0 0 20.4px;
-  top: -0.2px;
-  left: -0.2px;
-  -webkit-transform-origin: 10.4px 10.2px;
-  transform-origin: 10.4px 10.2px;
-  -webkit-animation: loading 2s infinite ease 1.5s;
-  animation: loading 2s infinite ease 1.5s;
-}
-.spinner:after {
-  width: 10.4px;
-  height: 10.2px;
-  background: #5469d4;
-  border-radius: 0 10.2px 10.2px 0;
-  top: -0.1px;
-  left: 10.2px;
-  -webkit-transform-origin: 0px 10.2px;
-  transform-origin: 0px 10.2px;
-  -webkit-animation: loading 2s infinite ease;
-  animation: loading 2s infinite ease;
+  top: 0;
+  left: 25%;
+  right: 25%;
+  padding: 20px 30px;
+  border-radius: 0 0 4px 4px;
+  box-sizing: border-box;
+  box-shadow: 0 50px 100px rgba(50, 50, 93, 0.1),
+  0 15px 35px rgba(50, 50, 93, 0.15), 0 5px 15px rgba(0, 0, 0, 0.1);
+  -webkit-transition: all 500ms ease-in-out;
+  transition: all 500ms ease-in-out;
+  transform: translateY(0);
+  opacity: 1;
+  background-color: white;
 }
 
-@-webkit-keyframes loading {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@keyframes loading {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+#stripe-token-handler.is-hidden {
+  opacity: 0;
+  transform: translateY(-80px);
 }
 
-@media only screen and (max-width: 600px) {
-  form {
-    width: 80vw;
-    min-width: initial;
-  }
+.h1_size {
+  font-size: 30px;
+  font-family: "Source Code Pro", monospace;
+  color: #32325d;
+}
+
+/**
+ * The CSS shown here will not be introduced in the Quickstart guide, but shows
+ * how you can use CSS to style your Element's container.
+ */
+
+.StripeElement {
+  background-color: white;
+  height: 40px;
+  padding: 35px 25px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+  -webkit-transition: box-shadow 150ms ease;
+  transition: box-shadow 150ms ease;
+  /* my style*/
+  min-width: 90% !important;
+}
+
+input {
+
+}
+
+.StripeElement--focus {
+  box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
 }

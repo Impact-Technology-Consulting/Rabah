@@ -5,11 +5,13 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
+from django.views.decorators.cache import cache_page
 from django.views.generic import ListView
 
 from rabah_events.forms import EventCreateForm, EventUpdateForm
 from rabah_events.models import Event, EventMember, MemberAttendance
 from rabah_events.tasks import create_event_for_repeat_count, create_event_for_until_date
+from rabah_events.utils import check_event_creation_limit
 from rabah_members.models import Member
 from rabah_members.utils import query_members
 from users.mixin import AuthAndAdminOrganizationMemberMixin
@@ -19,7 +21,6 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
     """
     this is the calendar page where users get access to view events using the calendar
     """
-
     def get(self, request):
         organisation_id = self.organisation_id
         form = EventCreateForm(organisation_id)
@@ -42,6 +43,14 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
         form = EventCreateForm(organisation_id, data=self.request.POST, files=self.request.FILES)
         if form.is_valid():
             event = form.save()
+
+            if event.repeat_end == "AFTER":
+                pass
+            elif event.repeat_end == "ON_DATE":
+                if not check_event_creation_limit(event.id):
+                    event.delete()
+                    messages.error(self.request, "Event creation limit reached")
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             #  create the event for the automation
             if event.repeat_end == "AFTER":
@@ -150,6 +159,11 @@ class MarkAttendancePageView(AuthAndAdminOrganizationMemberMixin, View):
         if not event:
             messages.error(request, "Event with this id does not exist in this organisation")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        if event.start_date > timezone.now():
+            messages.error(request, "Event has not started yet")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
         members = Member.objects.filter(organisation_id=self.organisation_id)
 
         if search:
@@ -175,8 +189,8 @@ class MarkAttendancePageView(AuthAndAdminOrganizationMemberMixin, View):
         context = {
             "members": members,
             "event": event,
-            "present_count":present_count,
-            "absent_count":absent_count
+            "present_count": present_count,
+            "absent_count": absent_count
         }
         return render(request, "dashboard/mark_attendance.html", context)
 

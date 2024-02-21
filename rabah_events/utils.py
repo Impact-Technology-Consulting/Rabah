@@ -1,31 +1,42 @@
-import operator
-from functools import reduce
+from datetime import timedelta
 
-from django.db.models import Q
+from dateutil.relativedelta import relativedelta
+
+from rabah_events.models import Event
 
 
-def query_member_attendance(search, item):
-    """
-    This query list is used to filter items more like a custom query that returns the queryset.
-    :param search:
-    :param status:
-    :param item:
-    :return:
-    """
-    query_list = search.split() if search else []
-    query_list = sorted(query_list, key=lambda x: x[-1])
+def check_event_creation_limit(event_id):
+    event = Event.objects.filter(id=event_id).first()
+    if not event.parent_event:
+        return False
 
-    # Build the Q object for search
-    search_query = reduce(
-        operator.or_,
-        (Q(user__email__icontains=x) |
-         Q(user__first_name__icontains=x) |
-         Q(user__last_name__icontains=x) |
-         Q(user__first_name=[x]) for x in query_list)
-    ) if query_list else Q()
+    event_count = 0  # Counter for the number of events that would be created
 
-    # Combine both search and status queries with AND condition
-    query = search_query & status_query
+    if event.repeat_end != "ON_DATE":
+        return False
 
-    object_list = item.filter(query).distinct()
-    return object_list
+    while True:
+        if event.repeat == "DAILY":
+            # For daily repetition, update start_date and end_date to the next day
+            event.start_date += timedelta(days=1)
+            event.end_date += timedelta(days=1)
+        elif event.repeat == "WEEKLY":
+            # For weekly repetition, update start_date and end_date to the same day of the next week
+            event.start_date += timedelta(weeks=1)
+            event.end_date += timedelta(weeks=1)
+        elif event.repeat == "MONTHLY":
+            # For monthly repetition, update start_date and end_date to the same day of the next month
+            event.start_date += relativedelta(months=1)
+            event.end_date += relativedelta(months=1)
+        elif event.repeat == "YEARLY":
+            # For yearly repetition, update start_date and end_date to the same day of the next year
+            event.start_date += relativedelta(years=1)
+            event.end_date += relativedelta(years=1)
+
+        event_count += 1
+        if event_count > 100:
+            # If the number of events to be created exceeds 100, return False
+            return False
+        if event.repeat_until_date and event.end_date.date() >= event.repeat_until_date:
+            break
+    return True

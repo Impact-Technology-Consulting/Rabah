@@ -28,101 +28,106 @@
             </div>
         </div>
         <div class="row mx-auto justify-content-center">
-            <div class="col-xxl-4 col-lg-6 col-sm-6 mb-30">
-                <div class="card h-100">
-                    <div class="card-body p-30">
-                        <div class="pricing d-flex align-items-center">
-                            <span class=" pricing__tag color-primary order-bg-opacity-primary rounded-pill ">Paid Plan</span>
-                        </div>
-                        <div class="pricing__price rounded">
-                            <p class="pricing_value display-3 color-dark d-flex align-items-center text-capitalize fw-600 mb-1">
-                                <sup>$</sup>19
-                                <small class="pricing_user">
-                                    One Time Payment</small>
-                            </p>
-                            <p class="pricing_subtitle mb-0">For Organisation</p>
-                        </div>
-                        <div class="pricing__features">
-                            <ul>
-                                <li>
-                                    <i class="uil uil-check"></i> User registration and authentication
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> User roles and permissions
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> User profiles
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Member data management
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Member directories
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Automated grouping of members based on certain
-                                    criteria
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Email messaging with stats tracking
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Scheduling messages for later sending
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Online and text giving capabilities
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Event registration forms
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Volunteer scheduling and reminders
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Event planning and coordination
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Service order planning
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Generating reports on church's financial health
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Generate reports on tithe and all
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Building custom church websites
-                                </li>
+            {% for subscription in subscriptions %}
+                {% if subscription.price > 0 %}
+                    <div class="col-xxl-4 col-lg-6 col-sm-6 mb-30">
+                        <div class="card h-100">
+                            <div class="card-body p-30">
+                                <div class="pricing d-flex align-items-center">
+                                    <span class=" pricing__tag color-primary order-bg-opacity-primary rounded-pill ">Paid Plan</span>
+                                </div>
+                                <div class="pricing__price rounded">
+                                    <p class="pricing_value display-3 color-dark d-flex align-items-center text-capitalize fw-600 mb-1">
+                                        <sup>$</sup>{{ subscription.price }}
+                                        <small class="pricing_user">
+                                            Recurring Payment / {{ subscription.subscription_duration|title }}</small>
+                                    </p>
+                                    <p class="pricing_subtitle mb-0">For Organisation</p>
+                                </div>
+                                <div class="pricing__features">
+                                    <ul>
+                                        <li>
+                                            <i class="uil uil-check"></i> User registration and authentication
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> User roles and permissions
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> User profiles
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Member data management
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Member directories
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Automated grouping of members based on certain
+                                            criteria
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Email messaging with stats tracking
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Scheduling messages for later sending
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Online and text giving capabilities
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Event registration forms
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Volunteer scheduling and reminders
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Event planning and coordination
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Service order planning
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Generating reports on church's financial
+                                            health
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Generate reports on tithe and all
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Building custom church websites
+                                        </li>
 
-                                <li>
-                                    <i class="uil uil-check"></i> Integration with Google Calendar to get info
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Conducting thorough testing of all modules
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Deploying the system
-                                </li>
-                                <li>
-                                    <i class="uil uil-check"></i> Training for church staff and volunteers
-                                </li>
-                            </ul>
+                                        <li>
+                                            <i class="uil uil-check"></i> Integration with Google Calendar to get info
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Conducting thorough testing of all modules
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Deploying the system
+                                        </li>
+                                        <li>
+                                            <i class="uil uil-check"></i> Training for church staff and volunteers
+                                        </li>
+                                    </ul>
 
+                                </div>
+                            </div>
+                            <div class="price_action d-flex pb-30 ps-30">
+                                {% if organisation_subscription.status == "ACTIVE"  and  subscription.id == organisation_subscription.subscription.id %}
+                                    <a  href="{% url "rabah_subscriptions:payment" subscription.id %}" class="btn btn-default btn-squared color-light btn-outline-light text-capitalize px-30 color-gray fw-500">
+                                        Current Plan
+                                    </a>
+                                {% else %}
+                                    <a class="btn btn-primary btn-default btn-squared text-capitalize px-30"
+                                       href="{% url 'rabah_subscriptions:billing_card' subscription.id %}">Get Started
+                                    </a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                    <div class="price_action d-flex pb-30 ps-30">
-                        {% if organisation_subscription.status == "INACTIVE" %}
-                            <a class="btn btn-primary btn-default btn-squared text-capitalize px-30" href="{%  url 'rabah_subscriptions:billing_info'  %}">Get Started
-                            </a>
-                        {% else %}
-                            <button class="btn btn-default btn-squared color-light btn-outline-light text-capitalize px-30 color-gray fw-500">
-                                Current Plan
-                            </button>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
+                {% endif %}
+            {% endfor %}
         </div>
 
     </div>

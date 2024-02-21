@@ -1,9 +1,9 @@
-{% load i18n %}{% autoescape off %}{% blocktrans with site_name=current_site.name %}Hello from Watson Home{% endblocktrans %}
+{% load i18n %}{% autoescape off %}{% blocktrans with site_name=current_site.name %}Hello from Rabah360{% endblocktrans %}
 
 {% block content %}{% endblock %}
 
 {% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
-Thank you for using Watson Home!
+Thank you for using Rabah360!
 
 {% endblocktrans %}
 {% endautoescape %}
