@@ -29,6 +29,7 @@ class Subscription(models.Model):
     name = models.CharField(max_length=250, blank=True, null=True)
     stripe_plan_id = models.CharField(max_length=250, blank=True, null=True)
     subscription_duration = models.CharField(choices=SUBSCRIPTION_DURATION, max_length=250, blank=True, null=True)
+    promo_code = models.CharField(max_length=250, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -83,6 +84,7 @@ def post_save_create_subscription(sender, instance, *args, **kwargs):
 post_save.connect(post_save_create_subscription, sender=Subscription)
 
 
+
 class BillingAddress(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
@@ -106,7 +108,6 @@ class OrganisationSubscription(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     subscription = models.ForeignKey(Subscription, on_delete=models.SET_NULL, blank=True, null=True)
-    free_tier_completed = models.BooleanField(default=False)
     stripe_customer_id = models.CharField(max_length=250, blank=True, null=True)
     stripe_subscription_id = models.CharField(max_length=250, blank=True, null=True)
     billing_subscription = models.ForeignKey(BillingAddress, on_delete=models.SET_NULL, blank=True, null=True)

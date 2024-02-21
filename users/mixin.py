@@ -3,7 +3,7 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 
 from rabah_members.models import Member, Organisation
-from rabah_subscriptions.models import OrganisationSubscription
+from rabah_subscriptions.models import OrganisationSubscription, Subscription
 
 
 class AuthAndOrganizationMixin:
@@ -20,7 +20,6 @@ class AuthAndOrganizationMixin:
         self.organisation_id = request.COOKIES.get('organisation_id')
 
         if not self.organisation_id:
-            messages.info(request, "Select a valid organisation")
             return redirect("rabah_dashboard:user_organisations")
 
         organisation = Organisation.objects.filter(id=self.organisation_id).first()
@@ -35,6 +34,13 @@ class AuthAndOrganizationMixin:
             organisation_subscription = OrganisationSubscription.objects.create(organisation=organisation,
                                                                                 status="INACTIVE")
 
+        #  check if the organisation has a trial and the subscription is not active
+        if organisation.has_trial and organisation_subscription.subscription_id is None:
+            trial_subscription = Subscription.objects.filter(subscription_duration="14_DAYS_TRIAL").first()
+            if trial_subscription:
+                return redirect("rabah_subscriptions:payment", trial_subscription.id)
+
+        # use the normal page where the user selects his payment plan
         if organisation_subscription.status == "INACTIVE" or organisation_subscription.subscription_id is None:
             messages.error(request, "Organisation subscription is inactive")
             return redirect("rabah_subscriptions:subscription_page")

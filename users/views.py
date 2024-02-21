@@ -9,6 +9,7 @@ from django.views import View
 
 from rabah_members.models import Member
 from rabah_organisations.models import Organisation
+from rabah_subscriptions.models import Subscription
 from users.forms import UserProfileUpdateForm, ChangePasswordForm, RabahSignupForm, RabahLoginForm
 from users.mixin import AuthAndOrganizationMixin
 from users.models import User, UserProfile
@@ -20,6 +21,7 @@ class RabahSignupView(View):
     template_name = 'account/signup.html'
 
     def get(self, request):
+
         # if the user is authenticated, redirect the user to dashboard page
         if self.request.user.is_authenticated:
             return redirect("rabah_dashboard:dashboard")
@@ -36,6 +38,7 @@ class RabahSignupView(View):
             organisation_name = form.cleaned_data.get("organisation_name")
             password = form.cleaned_data.get("password1")
             confirm_password = form.cleaned_data.get("password2")
+            promo_code = form.cleaned_data.get("promo_code")
             if password != confirm_password:
                 form.add_error("password", "Password and confirm password must be the same")
 
@@ -49,7 +52,16 @@ class RabahSignupView(View):
                 if not user:
                     return render(request, "account/signup.html", {"form": form})
 
+                # the user would be able to be part of the fourteen-days trial
                 organisation = Organisation.objects.create(name=organisation_name, owner=user)
+                # check if the promo code exists
+                if promo_code:
+                    subscription = Subscription.objects.filter(promo_code=promo_code,
+                                                               subscription_duration="14_DAYS_TRIAL").first()
+                    if subscription:
+                        organisation.has_trial = True
+                        organisation.save()
+
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect("rabah_dashboard:dashboard")
 
@@ -60,6 +72,8 @@ class RabahLoginView(View):
     template_name = 'account/login.html'
 
     def get(self, request):
+        # Delete the organisation_id cookie
+
         form = RabahLoginForm()
         # if the user is authenticated, redirect the user to dashboard page
         if self.request.user.is_authenticated:
@@ -222,4 +236,3 @@ class MemberCreatePasswordView(View):
             for error in form.errors:
                 messages.warning(request, f"{error}: {form.errors[error][0]}")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
