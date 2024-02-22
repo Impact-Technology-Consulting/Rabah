@@ -1,4 +1,3 @@
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -15,6 +14,9 @@ EXTERNAL_INSTALLED_APPS = [
     'allauth.socialaccount',
     'crispy_forms',
     'allauth.socialaccount.providers.google',
+
+    # for running tasks
+    'django_celery_beat',
 
 ]
 

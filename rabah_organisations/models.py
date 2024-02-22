@@ -13,6 +13,7 @@ class Organisation(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=250, blank=True, null=True)
+    has_trial = models.BooleanField(default=False)  # this is used only for users who signed up with promo code
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
