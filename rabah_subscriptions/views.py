@@ -186,20 +186,36 @@ class MakePaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             customer = stripe.Customer.retrieve(
                 organisation_subscription.stripe_customer_id)
 
-            stripe_subscription = stripe.Subscription.create(
-                customer=customer.id,
-                items=[
-                    {
-                        "price": subscription.stripe_plan_id,
-                    },
-                ],
-            )
+            if subscription.subscription_duration == "14_DAYS_TRIAL":
+                if organisation_subscription.stripe_subscription_id:
+                    messages.warning(request, "you already exceeded your 14 days trial")
+                    return redirect("rabah_subscriptions:subscription_page")
+                stripe_subscription = stripe.Subscription.create(
+                    customer=customer.id,
+                    cancel_at_period_end=True,
+                    items=[
+                        {
+                            "price": subscription.stripe_plan_id,
+                        },
+                    ],
+                )
+            else:
+                stripe_subscription = stripe.Subscription.create(
+                    customer=customer.id,
+                    items=[
+                        {
+                            "price": subscription.stripe_plan_id,
+                        },
+                    ],
+                )
 
-            # update the organization
+                # update the organization
             organisation_subscription.subscription_id = subscription_id
             organisation_subscription.stripe_subscription_id = stripe_subscription.id
             organisation_subscription.status = "ACTIVE"
             organisation_subscription.save()
+
+            print("the stripe subscription ", stripe_subscription)
 
             messages.success(request, "Successfully make payment for subscription ")
             return redirect("rabah_subscriptions:payment", subscription_id)
