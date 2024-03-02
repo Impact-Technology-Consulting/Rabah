@@ -8,8 +8,9 @@ from users.models import UserProfile, User
 class RabahSignupForm(SignupForm):
     first_name = forms.CharField(max_length=150)
     last_name = forms.CharField(max_length=150)
-    organisation_name = forms.CharField(max_length=150, required=False)
+    organisation_name = forms.CharField(max_length=150, required=True)
     email = forms.EmailField()
+    promo_code = forms.CharField(max_length=150, required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

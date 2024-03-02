@@ -9,11 +9,14 @@ click==8.1.7
 click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.3.0
+cron-descriptor==1.4.3
 cryptography==41.0.5
 defusedxml==0.7.1
 Django==4.2.7
 django-allauth==0.58.2
+django-celery-beat==2.5.0
 django-crispy-forms==1.14.0
+django-timezone-field==6.1.0
 et-xmlfile==1.1.0
 idna==3.4
 kombu==5.3.3
@@ -21,8 +24,10 @@ oauthlib==3.2.2
 openpyxl==3.1.2
 Pillow==10.1.0
 prompt-toolkit==3.0.40
+pycountry==23.12.11
 pycparser==2.21
 PyJWT==2.8.0
+python-crontab==3.0.0
 python-dateutil==2.8.2
 python-decouple==3.8
 python3-openid==3.2.0

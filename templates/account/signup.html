@@ -1,7 +1,7 @@
 {% extends "account/base.html" %}
+{% load crispy_forms_filters %}
 {% load static %}
 {% load socialaccount %}
-{% load crispy_forms_filters %}
 {% load i18n %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
@@ -10,7 +10,7 @@
     <div class="card border-0">
         <div class="card-header">
             <div class="edit-profile__title">
-                <h6>Sign Up </h6>
+                <h6>Join Rabah360: Simplify Event Management. Sign Up Now! </h6>
             </div>
         </div>
         <div class="card-body">
@@ -19,7 +19,22 @@
                 <div class="edit-profile__body">
                     <div class="edit-profile__body">
                         <input type="hidden" name="{{ redirect_field_name }}" value="/"/>
-                        {{ form|crispy }}
+                        {{ form.first_name|as_crispy_field }}
+                        {{ form.last_name|as_crispy_field }}
+                        {{ form.email|as_crispy_field }}
+                        {{ form.organisation_name|as_crispy_field }}
+                        {{ form.password1|as_crispy_field }}
+                        {{ form.password2|as_crispy_field }}
+
+                        <!-- Promo code input -->
+                        <div class="form-group">
+                            <label for="id_promo_code">Promo Code </label>
+                            <input type="text" class="form-control" id="id_promo_code" name="promo_code"
+                                   value="{{ request.GET.promo_code }}"
+                                   placeholder="Enter promo code if you have one">
+                            <small id="promoCodeHelp" class="form-text text-muted">Enjoy a 14-day trial! Enter a promo
+                                code if you have one.</small>
+                        </div>
 
                         <div class="admin-condition">
                             <div class="checkbox-theme-default custom-checkbox ">
@@ -71,3 +86,8 @@
 {% endblock %}
 
 
+{% block script %}
+    <script>
+        deleteCookie("organisation_id");
+    </script>
+{% endblock %}
