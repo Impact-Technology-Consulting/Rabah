@@ -1,5 +1,4 @@
 {% load static %}
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>RABAH</title>
+    <title>Rabah360</title>
 
     <!-- Favicon -->
     <link rel="icon" href="img/favicon.png">
@@ -58,395 +57,8 @@
 
 <header>
 
-    <!-- Topbar -->
-    <div class="topbar">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-md-5 col-12">
-                    <!-- Contact -->
-                    <ul class="top-link">
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Churches</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">FAQ</a></li>
-                    </ul>
-                    <!-- End Contact -->
-                </div>
-                <div class="col-lg-6 col-md-7 col-12">
-                    <!-- Top Contact -->
-                    <ul class="top-contact">
-                        <li><i class="fa fa-phone"></i>+880 1234 56789</li>
-                        <li><i class="fa fa-envelope"></i><a href="mailto:support@yourmail.com">rabah@gmail.com</a></li>
-                    </ul>
-                    <!-- End Top Contact -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Topbar -->
-
-    <div class="container">
-        <nav class="navigation">
-            <a href="{% url "rabah_dashboard:home_page" %}" class="logo">
-                <p style="color: blue; font-size: 27px; font-weight: 900;">RABAH</p>
-            </a>
-            <ul class="nav_menu">
-                <li class="nav_list nav_list_menu">
-                    <a href="#!" class="nav_link">
-                        <span>Features</span>
-                        <ion-icon name="chevron-down-outline"></ion-icon>
-                    </a>
-                    <div class="dropdown">
-                        <div class="dropdown-inner">
-                            <div class="dropdown-item">
-                                <h3 class="item-heading">Products</h3>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-1.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>People</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio,
-                                            consequatur.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-2.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Group Analytics</h4>
-                                        <p>Learn About Your Users</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-3.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Giving</h4>
-                                        <p>Lorem ipsum dolor sit amet.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-4.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <span class="info-badge">New</span>
-                                        <h4>Interactive reports</h4>
-                                        <p>Measure B2B account health.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="dropdown-item">
-                                <h3 class="item-heading">Use cases</h3>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-5.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Events & Check In</h4>
-                                        <p>Lorem ipsum dolor sit amet.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-6.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Engage</h4>
-                                        <p>Measure active usage.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-7.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Messaging</h4>
-                                        <p>Lorem ipsum dolor sit amet.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-8.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Service Planning</h4>
-                                        <p>Lorem ipsum dolor sit amet.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="dropdown-item">
-                                <h3 class="item-heading">Company</h3>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-13.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>About us</h4>
-                                        <p>Learn about our story.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-14.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Press</h4>
-                                        <p>News and press resources.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-15.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <span class="info-badge">We’re hiring!</span>
-                                        <h4>Careers</h4>
-                                        <p>Join our team!</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-16.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Legal</h4>
-                                        <p>All the boring stuff.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav_list nav_list_menu">
-                    <a href="#!" class="nav_link">
-                        <span>Resources</span>
-                        <ion-icon name="chevron-down-outline"></ion-icon>
-                    </a>
-                    <div class="dropdown">
-                        <div class="dropdown-inner">
-                            <div class="dropdown-item">
-                                <h3 class="item-heading">Products</h3>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-1.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Team dashboard</h4>
-                                        <p>Monitor your metrics.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-2.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Limitless segmentation</h4>
-                                        <p>Surface hidden trends.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-3.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Group analytics</h4>
-                                        <p>Learn about your users</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-4.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <span class="info-badge">New</span>
-                                        <h4>Interactive reports</h4>
-                                        <p>Measure B2B account health.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="dropdown-item">
-                                <h3 class="item-heading">Use cases</h3>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-5.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Convert</h4>
-                                        <p>Analyze conversion rates.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-6.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Engage</h4>
-                                        <p>Measure active usage.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-7.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Retain</h4>
-                                        <p>Find retention drivers.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-8.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Grow</h4>
-                                        <p>Grow your user base faster.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="dropdown-item">
-                                <h3 class="item-heading">Resources</h3>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-9.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Blog</h4>
-                                        <p>The latest industry news.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-10.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Customer stories</h4>
-                                        <p>Learn how our customers.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-11.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Video tutorials</h4>
-                                        <p>New features and techniques.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-12.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Documentation</h4>
-                                        <p>All the boring stuff.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="dropdown-item">
-                                <h3 class="item-heading">Company</h3>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-13.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>About us</h4>
-                                        <p>Learn about our story.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-14.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Press</h4>
-                                        <p>News and press resources.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-15.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <span class="info-badge">We’re hiring!</span>
-                                        <h4>Careers</h4>
-                                        <p>Join our team!</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-16.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Legal</h4>
-                                        <p>All the boring stuff.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav_list">
-                    <a href="#!" class="nav_link">
-                        <span>Pricing</span>
-                    </a>
-                </li>
-                <li class="nav_list">
-                    <a href="#!" class="nav_link">
-                        <span>Help</span>
-                    </a>
-                </li>
-                <li class="nav_list nav_list_menu">
-                    <a href="#!" class="nav_link">
-                        <span>Try it Out</span>
-                        <ion-icon name="chevron-down-outline"></ion-icon>
-                    </a>
-                    <div class="dropdown">
-                        <div class="dropdown-inner">
-                            <div class="dropdown-item">
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-1.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Guilded Product Tour</h4>
-                                        <p>Lorem ipsum dolor sit amet.</p>
-                                    </div>
-                                </div>
-                                <div class="item-list">
-                                    <div class="item-img">
-                                        <img src="{% static "home/images/icon-2.svg" %}" alt="Icon"/>
-                                    </div>
-                                    <div class="item-list-info">
-                                        <h4>Book A Live Demo Call</h4>
-                                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptate,
-                                            reprehenderit.</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-            <div class="nav_action text-light">
-                <a href="{% url "account_login" %}" class="btn text-light">Log in</a>
-                <a href="{% url "account_signup" %}" class="btn text-light">Sign up</a>
-                <div class="nav_toggle">
-                    <ion-icon name="menu-outline"></ion-icon>
-                </div>
-            </div>
-        </nav>
-    </div>
+    {% include "home/_topbar.html" %}
+    {% include "home/_navbar.html" %}
 </header>
 
 <!-- Navigation-end -->
@@ -478,7 +90,7 @@
             <div class="partner-left">
                 <p style="color: blue; font-size: 27px; font-weight: 900;" class="logo">RABAH</p>
                 <p class="text-dark">
-                    More than 500+ companies trust Rabah
+                    More than 500+ churches use Rabah
                 </p>
             </div>
             <div class="partner-right">
@@ -488,7 +100,7 @@
                 </p>
             </div>
         </div>
-        <div class="partner-bottom">
+        <!-- <div class="partner-bottom">
             <div>
                 <img src="{% static "home/images/client-1.png" %}" alt="company" class="partner-company">
             </div>
@@ -504,7 +116,7 @@
             <div>
                 <img src="{% static "home/images/client-5.png" %}" alt="company" class="partner-company">
             </div>
-        </div>
+        </div> -->
     </div>
 </section>
 <!-- partner-section-end -->
@@ -518,11 +130,11 @@
                     Designed for organization
                 </h3>
                 <h1 class="section-heading">
-                    Powerful church management software doesn’t have to be complicated to use
+                    Powerful church management software made simple
                 </h1>
                 <p class="paragraph">
-                    Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat
-                    duis enim velit mollit lorem ipsum dolor sit amet molit deserunt.
+                    Manage your church with ease using Rabah360. Our intuitive platform streamlines member management,
+                    contributions, events, and communication.
                 </p>
                 <a href="#!" class="btns btns-primary">
                     <span class="text-light">Read the docs</span>
@@ -534,15 +146,14 @@
                             <img src="{% static "home/images/icon1.svg" %}" alt="Icon">
                         </div>
                         <h4 class="item-heading">
-                            Service Planning
+                            Event Management
                         </h4>
                         <p class="paragraph">
-                            Our latest feature, Service Planning,
-                            allows you to build and communication comprehensive service plans to ensure everyone is on
-                            the same page
+                            Plan and coordinate church events effortlessly with Rabah360. From scheduling to check-in,
+                            our platform has you covered.
                         </p>
                         <a href="#!" class="btns">
-                            <span>See libraries</span>
+                            <span>Learn more</span>
                             <img src="{% static "home/images/arrow-2.svg" %}" alt="Arrow">
                         </a>
                     </div>
@@ -553,13 +164,40 @@
                         <h4 class="item-heading">
                             Member Management
                         </h4>
-                        <p class="paragraphs">
-                            Rabah offers customizable member data management,
-                            empowering your church to store relevant information easily and tailor the system to your
-                            specific needs.
+                        <p class="paragraph">
+                            Rabah360 provides customizable member data management, allowing you to store and organize
+                            member information efficiently.
                         </p>
                         <a href="#!" class="btns">
-                            <span>Explore partners</span>
+                            <span>Explore features</span>
+                        </a>
+                    </div>
+                    <div class="section-item">
+                        <div>
+                        </div>
+                        <h4 class="item-heading">
+                            Contributions Management
+                        </h4>
+                        <p class="paragraph">
+                            Track donations and contributions seamlessly with Rabah360. Our system simplifies financial
+                            management for your church.
+                        </p>
+                        <a href="#!" class="btns">
+                            <span>Get started</span>
+                        </a>
+                    </div>
+                    <div class="section-item">
+                        <div>
+                        </div>
+                        <h4 class="item-heading">
+                            Church Communications
+                        </h4>
+                        <p class="paragraph">
+                            Stay connected with your congregation using Rabah360's communication tools. Send announcements,
+                            newsletters, and messages effortlessly.
+                        </p>
+                        <a href="#!" class="btns">
+                            <span>Learn more</span>
                             <img src="{% static "home/images/arrow-2.svg" %}" alt="Arrow">
                         </a>
                     </div>
@@ -572,6 +210,7 @@
     </div>
 </section>
 
+
 <!-- Featured-Properties-section-start -->
 <section id="featured-properties">
     <div class="container">
@@ -579,7 +218,7 @@
             <div>
                 <h1 class="section-heading text-dark">Features</h1>
                 <p class="text-dark">
-                    Everything you need to know when you're looking
+                    Explore the key features of rabah360
                 </p>
             </div>
             <!-- <div>
@@ -592,33 +231,29 @@
             <div class="featured-item">
                 <img src="{% static "home/images/mem_mgt.webp" %}" alt="Featured" class="featured-img">
                 <div class="content-wrapper">
-                    <h3 class="text-dark">Check-In & Volunteer Management</h3>
-                    <p class="text-dark">Streamline your church events, volunteer scheduling,
-                        and attendee tracking with Rabah's comprehensive management tools, featuring insights,
-                        alerts, and calendar integration. </p>
-
+                    <h3 class="text-dark">Member Management</h3>
+                    <p class="text-dark">Effortlessly manage your church members' information and activities with Rabah360's robust management tools, including check-in and volunteer scheduling.</p>
                 </div>
             </div>
             <div class="featured-item">
                 <img src="{% static "home/images/giving.jpg" %}" alt="Featured" class="featured-img">
                 <div class="content-wrapper">
                     <h3 class="text-dark">Online Giving</h3>
-                    <p class="text-dark">Benefit from the value of Rabah in-house online and text giving capabilities,
-                        automatically linking donations to donors in your account at no extra cost.</p>
+                    <p class="text-dark">Enable online giving for your church community with Rabah360's secure and convenient in-house online and text giving capabilities.</p>
                 </div>
             </div>
             <div class="featured-item">
                 <img src="{% static "home/images/email.webp" %}" alt="Featured" class="featured-img">
                 <div class="content-wrapper">
                     <h3 class="text-dark">Drag-and-Drop Email Editor</h3>
-                    <p class="text-dark">Rabah new Email Editor allows you to create and send fully customizable
-                        emails.</p>
+                    <p class="text-dark">Create and send fully customizable emails with ease using Rabah360's intuitive drag-and-drop email editor.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 <!-- Featured-Properties-section-end -->
+
 
 <!-- Feature-02-section-start -->
 <section id="feature-two">
@@ -635,8 +270,7 @@
                     Click below to browse an interactive Guided Product Tour and instantly see Rabah's ChMS in action
                     using demo data. Then when you're ready to sign-up, start your 14-day free trial.
                 </p>
-
-                <a href="#!" class="btn btn-primary text-light">START GUIDED PRODUCT TOUR</a>
+                <a href="#!" class="btn btn-primary text-light">Request For System Demo</a>
             </div>
         </div>
     </div>
@@ -644,7 +278,7 @@
 <!-- Feature-02-section-end -->
 
 <!-- Pricing Section -->
-<div class="all">
+<!-- <div class="all">
     <div class="wrapper">
         <div class="table basic">
             <div class="price-section">
@@ -744,92 +378,80 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- Pricing Section End -->
 
 <!-- Support section -->
 <section class="featured" id="featured">
-    <h2>We’re here to support your church and make your job easier</h2>
+    <h2>Empowering Your Church Community</h2>
     <p class="section-desc">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam nesciunt praesentium tenetur
-        vitae provident fugit aut maiores rem laboriosam rerum, quia nostrum eius. Laborum, tempore.
+        Rabah360 is here to support your church and simplify your administrative tasks. Discover how we can make your job easier:
     </p>
     <div class="rowss">
         <div class="column">
             <i class="fas fa-star"></i>
-            <h3>Stress-free Move In
-                (We do it for you!)</h3>
+            <h3>Smooth Transition</h3>
             <p>
-                Moving your data to a new church management software can feel intimidating. That’s why we’ll do the work
-                for you–for free! Our import
-                team will work to export the data out of your existing system and import it into your new Breeze
-                account.
+                Transitioning to a new church management system can be daunting. We'll handle the migration process for you, ensuring a stress-free move to Rabah360. Our expert team will assist with importing your data, making the transition seamless.
             </p>
         </div>
         <div class="column">
             <i class="fas fa-thumbs-up"></i>
-            <h3>Free Support
-                When You Need It</h3>
+            <h3>Dedicated Support</h3>
             <p>
-                Email help support is great, but sometimes you just want to pick up the phone and talk through a
-                question. That’s why Breeze offers both email and phone support
-                with your account for no extra charge. Get the support you need, in whichever way is best for you.
+                Need assistance? We've got you covered. Rabah360 provides free email and phone support to address any questions or concerns you may have. Our support team is committed to helping you maximize your experience with our software.
             </p>
         </div>
         <div class="column">
             <i class="fas fa-graduation-cap"></i>
-            <h3>Increased Staff & Volunteer Usage</h3>
+            <h3>User-Friendly Design</h3>
             <p>
-                We believe powerful church management software shouldn’t require an IT degree to use. Breeze’s intuitive
-                design is built to help streamline work
-                processes and increase adoption by the entire church so everyone can benefit, and anyone can manage it.
+                You don't need an IT degree to manage your church effectively. Rabah360 features an intuitive interface designed to streamline workflows and encourage widespread adoption. Empower your staff and volunteers to utilize our platform with ease.
             </p>
         </div>
     </div>
 </section>
+
 <!-- support section end -->
 
 <!-- Testimonial -->
 <!------ Section: Testimonial ------>
 <section class="testimonial" id="testimonial">
-    <h2>Join 1000+ happy churches using Rabah ChMS.</h2>
+    <h2>Join 500+ satisfied churches using rabah360.</h2>
     <p class="section-desc">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-        Facilis eum esse tempore impedit doloremque animi eius eligendi voluptas beatae perferendis?
+        Discover why churches around the world trust rabah360 for their management needs.
     </p>
     <div class="rowss">
         <div class="column">
             <div class="testimonial-image">
-                <img src="{% static "home/images/person-1.jpg" %}"/>
+                <img src="{% static "home/images/person-1.jpg" %}" alt="Testimonial Image"/>
             </div>
             <p>
-                Rabah has opened the communication highway for our congregation and staff, with very little training.
-                Because members can update their own records and search easily for other members - and map their
-                locations,
-                send emails and text right from Rabah,
-                they love it and our data is more real-time accurate. Our ministries are stronger,
+                Rabah360 has transformed how we manage our church community. With minimal training, our members are
+                able to update their own records and easily connect with others. The real-time accuracy of our data
+                has strengthened our ministries, and the communication features have enhanced engagement among our
+                congregation and staff.
             </p>
             <h3>Mark King</h3>
-            <p>Eastern Baptist Church Kentucky</p>
-
+            <p>Eastern Baptist Church, Kentucky</p>
         </div>
         <div class="column">
             <div class="testimonial-image">
-                <img src="{% static "home/images/person-2.jpg" %}"/>
+                <img src="{% static "home/images/person-2.jpg" %}" alt="Testimonial Image"/>
             </div>
             <p>
-                I cannot say enough about Rabah. Their customer service is so friendly,
-                you feel like you have friends and family helping you get started,
-                they're prompt to reply and will do whatever they can to help you get things sorted out.
-                It's been so easy to learn,
-                our staff is loving it and best of all even our staff who are not computer savvy find it a rabah
+                We are thrilled with the experience of using rabah360. The customer service team is incredibly
+                friendly and supportive, making us feel like we have friends guiding us through the process. Learning
+                to use the platform has been seamless, even for staff members who are not tech-savvy. Rabah360 has
+                truly simplified our church management tasks.
             </p>
             <h3>Rose Smith</h3>
-            <p>Mercy Church Canada</p>
+            <p>Mercy Church, Canada</p>
         </div>
     </div>
 </section>
+
 
 <!-- End of testimonial -->
 
