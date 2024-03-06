@@ -1,9 +1,12 @@
 import json
 
 from django.contrib import messages
+from django.core.cache import cache
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import cache_page
 from django.views.generic import ListView
@@ -21,6 +24,7 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
     """
     this is the calendar page where users get access to view events using the calendar
     """
+
     def get(self, request):
         organisation_id = self.organisation_id
         form = EventCreateForm(organisation_id)
@@ -92,6 +96,10 @@ class EventUpdateView(AuthAndAdminOrganizationMemberMixin, View):
         form = EventUpdateForm(self.organisation_id, data=request.POST, files=request.FILES, instance=event)
         if form.is_valid():
             event = form.save()
+            # Invalidate cache for the event list page
+            cache_key = 'views.decorators.cache.cache_page.{0}.{1}'.format(cache_page.__module__,
+                                                                           reverse('rabah_events:event_list'))
+            cache.delete(cache_key)
             messages.success(request, "Event updated successfully")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
@@ -100,6 +108,7 @@ class EventUpdateView(AuthAndAdminOrganizationMemberMixin, View):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+@method_decorator(cache_page(24 * 60 * 60), name='dispatch')
 class EventListView(AuthAndAdminOrganizationMemberMixin, ListView):
     """
     this is used to list all the events available, and it only shows from future events or current events
