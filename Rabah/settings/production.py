@@ -47,7 +47,5 @@ sentry_sdk.init(
     send_default_pii=True
 )
 
-
-
 STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
