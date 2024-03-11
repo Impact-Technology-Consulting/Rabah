@@ -8,7 +8,7 @@ print('Using production')
 DEBUG = False
 SECRET_KEY = config("SECRET_KEY")
 
-ALLOWED_HOSTS = ["51.20.85.41"]
+ALLOWED_HOSTS = ["rabah360.com","www.rabah360.com"]
 
 #  read more https://docs.djangoproject.com/en/4.1/ref/middleware/#http-strict-transport-security
 CSRF_COOKIE_SECURE = True
