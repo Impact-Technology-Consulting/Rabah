@@ -18,6 +18,9 @@ EXTERNAL_INSTALLED_APPS = [
     # for running tasks
     'django_celery_beat',
 
+     # google captcha
+    'django_recaptcha',
+
 ]
 
 LOCAL_INSTALLED_APPS = [
