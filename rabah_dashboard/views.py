@@ -1,3 +1,5 @@
+from django.contrib import messages
+from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
@@ -23,6 +25,13 @@ class UserOrganisationsView(LoginRequiredMixin, View):
             response = redirect("rabah_dashboard:dashboard")
             response.set_cookie('organisation_id', member.first().organisation_id)
             return response
+
+        if member.count() == 0:
+            user = self.request.user
+            user.delete()
+            logout(request)
+            messages.error(request, "account have organisation attached to it please signup ")
+            return redirect('account_signup')
         return render(request, 'dashboard/organisation_list.html', {"members": member})
 
 
