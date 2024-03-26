@@ -43,7 +43,6 @@ class MemberManager(models.Manager):
             return False
         return member.is_admin_member
 
-
     def calculate_member_increment_percentage(self, organisation_id):
         # Calculate the date of the last month
         last_month = datetime.now() - timedelta(days=30)
@@ -60,8 +59,6 @@ class MemberManager(models.Manager):
         percentage_change = ((current_month_count - last_month_count) / last_month_count) * 100
 
         return percentage_change
-
-
 
 
 class Member(models.Model):
@@ -95,6 +92,7 @@ class Member(models.Model):
         self.family = family
         self.save()
         return
+
 
 def post_save_create_member(sender, instance, *args, **kwargs):
     """

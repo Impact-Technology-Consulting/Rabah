@@ -6,15 +6,57 @@ from django.views import View
 
 from rabah_contributions.models import Contribution, ContributionType
 from rabah_contributions.utils import total_contribution_amount
+from rabah_dashboard.forms import ContactUsForm
 from rabah_events.models import Event
 from rabah_members.models import Member
-from rabah_organisations.models import Group
+from rabah_organisations.models import Group, Organisation
+from rabah_subscriptions.models import Subscription
 from users.mixin import AuthAndOrganizationMixin
+from users.models import User
 
 
 class RabahHomePageView(View):
     def get(self, request):
-        return render(request, "home/index.html")
+        event_count = Event.objects.all().count()
+        member_count = Member.objects.all().count()
+        user_count = User.objects.all().count()
+        organisation_count = Organisation.objects.all().count()
+
+        subscription_monthly = Subscription.objects.filter(subscription_duration="MONTHLY").first()
+        subscription_quarterly = Subscription.objects.filter(subscription_duration="QUARTERLY").first()
+        subscription_yearly = Subscription.objects.filter(subscription_duration="YEARLY").first()
+
+        context = {
+            "event_count": event_count,
+            "member_count": member_count,
+            "user_count": user_count,
+            "organisation_count": organisation_count,
+            "subscription_monthly": subscription_monthly,
+            "subscription_quarterly": subscription_quarterly,
+            "subscription_yearly": subscription_yearly,
+        }
+
+        return render(request, "landing_page/index.html", context)
+
+
+class RabahContactUsPageView(View):
+    def get(self, request):
+        return render(request, "landing_page/contact-us.html")
+
+    def post(self, request):
+        form = ContactUsForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Message received we would get back to you")
+        else:
+            messages.error(request, "invalid message provided")
+
+        return redirect("rabah_dashboard:contact_us")
+
+
+class RabahAboutUsPageView(View):
+    def get(self, request):
+        return render(request, "landing_page/about-us.html")
 
 
 class UserOrganisationsView(LoginRequiredMixin, View):
