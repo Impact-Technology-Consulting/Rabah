@@ -66,7 +66,7 @@
                 <div class="row">
                     <div class="col-xl-2 col-lg-2 col-sm-6 col-6">
                         <div class="logo text-left">
-                            <a href="#"><h3>Rabah</h3></a>
+                            <a href="{% url "rabah_dashboard:home_page" %}"><h3>Rabah</h3></a>
                         </div>
                     </div>
                     <div class="col-xl-7 col-lg-7 col-sm-6 col-6">
@@ -77,9 +77,9 @@
                         </a>
                         <nav class="main-nav">
                             <div class="logo mobile-ham-logo d-lg-none d-block text-left">
-                                <a href="#">
-
-                                    <h3 style="color: gray">Rabah</h3></a>
+                                <a href="{% url "rabah_dashboard:home_page" %}">
+                                    <h3 style="color: gray">Rabah</h3>
+                                </a>
                             </div>
                             <ul>
                                 <li class="has-child-menu">
@@ -96,11 +96,16 @@
                             </div>
                         </nav>
                     </div>
-                    <div class="col-xl-3 col-lg-3 d-none d-lg-block">
+                    <div class="col-xl-3 col-lg-3  d-none d-lg-flex">
                         <div class="btn-wrap menu-btn-wrap">
-                            <a class="common-btn menu-btn" href="{% url "rabah_dashboard:contact_us" %}">Contact Us</a>
+                            <a class="common-btn menu-btn" href="{% url "account_login" %}">Login</a>
+                        </div>
+                        <div class="btn-wrap menu-btn-wrap">
+                            <a class="common-btn menu-btn" href="{% url "account_signup" %}">Sign Up</a>
                         </div>
                     </div>
+
+
                 </div>
             </div>
         </div>
@@ -189,7 +194,7 @@
                         <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
                             <div class="single-widget ">
                                 <div class="footer-logo">
-                                    <a href="#">
+                                    <a href="{% url "rabah_dashboard:home_page" %}">
                                         <h3 style="color: gray">Rabah </h3>
                                     </a>
                                     <p>Welcome to Rabah- A community dedicated to spreading love, faith, and compassion.
@@ -212,7 +217,7 @@
                                     <h4>Explore</h4>
                                     <div class="footer-link">
                                         <ul>
-                                            <li><a href="#">Home</a></li>
+                                            <li><a href="{% url "rabah_dashboard:home_page" %}">Home</a></li>
                                             <li><a href="{% url "rabah_dashboard:about_us" %}">About Us</a></li>
                                             <li><a href="#">Our Blog</a></li>
                                         </ul>
