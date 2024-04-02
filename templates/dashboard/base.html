@@ -63,7 +63,7 @@
     <nav class="navbar navbar-light">
         <div class="navbar-left">
             <div class="logo-area">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="{% url "rabah_dashboard:home_page" %}">
                     <img class=" dark" src="{% static 'img/logo-dark.png' %}" alt="logo">
                     <img class="light" src="{% static 'img/logo-white.png' %}" alt="logo">
                 </a>
@@ -142,11 +142,21 @@
                     {% if  request.user.is_authenticated %}
                         <li class="{% if request.resolver_match.view_name == 'rabah_dashboard:dashboard' %}active{% endif %}">
                             <a href="{% url "rabah_dashboard:dashboard" %}">
+                                <span class="nav-icon uil "></span>
+                                <span class="menu-text"
+                                      onclick="window.location={% url "rabah_dashboard:dashboard" %} ">
+
+                                </span>
+                            </a>
+                        </li>
+
+
+                        <li class="{% if request.resolver_match.view_name == 'rabah_dashboard:dashboard' %}active{% endif %}">
+                            <a href="{% url "rabah_dashboard:dashboard" %}">
                                 <span class="nav-icon uil uil-create-dashboard"></span>
                                 <span class="menu-text">Dashboard</span>
                             </a>
                         </li>
-
 
                         <li class="{% if request.resolver_match.view_name == 'rabah_organisations:groups' %}active{% endif %}">
                             <a href="{% url "rabah_organisations:groups" %}">

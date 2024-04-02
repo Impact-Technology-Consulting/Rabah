@@ -109,7 +109,7 @@
                             <p style="margin-bottom:0">Coordinate logistics, schedule volunteers, and ensure smooth
                                 execution of events.</p>
                             <div class="btn-wrap about-btn-wrap mt-50">
-                                <a class="common-btn about-btn" href="event-management.html">Learn More</a>
+                                <a class="common-btn about-btn" href="{% url "rabah_events:events" %}">Learn More</a>
                             </div>
                         </div>
                     </div>
@@ -142,7 +142,8 @@
                                     migration process for you, ensuring a stress-free move to Rabah360. Our expert team
                                     will
                                     assist with importing your data, making the transition seamless.</p>
-                                <a href="service-details.html">Read More<i class="flaticon-right-arrow"></i></a>
+                                <a href="{% url "rabah_dashboard:about_us" %}">Read More<i
+                                        class="flaticon-right-arrow"></i></a>
                             </div>
                         </div>
                         <div class="single-service-box">
@@ -156,7 +157,8 @@
                                     address any questions or concerns you may have. Our support team is committed to
                                     helping
                                     you maximize your experience with our software..</p>
-                                <a href="service-details.html">Read More<i class="flaticon-right-arrow"></i></a>
+                                <a href="{% url "rabah_dashboard:about_us" %}">Read More<i
+                                        class="flaticon-right-arrow"></i></a>
                             </div>
                         </div>
                         <div class="single-service-box">
@@ -169,7 +171,8 @@
                                     intuitive interface designed to streamline workflows and encourage widespread
                                     adoption.
                                     Empower your staff and volunteers to utilize our platform with ease.</p>
-                                <a href="service-details.html">Read More<i class="flaticon-right-arrow"></i></a>
+                                <a href="{% url "rabah_dashboard:about_us" %}">Read More<i
+                                        class="flaticon-right-arrow"></i></a>
                             </div>
                         </div>
                     </div>
@@ -269,7 +272,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" style="margin-top: 47px;">
+            <div class="row justify-content-center" style="margin-top: 47px;">
 
 
                 {% if subscription_monthly is not None %}
@@ -308,7 +311,9 @@
                                 </ul>
                             </div>
                             <div class="btn-wrap price-btn-wrap mt-50">
-                                <a class="common-btn price-btn" href="{% url 'rabah_subscriptions:billing_card' subscription_monthly.id %}">Purchase Now</a>
+                                <a class="common-btn price-btn"
+                                   href="{% url 'rabah_subscriptions:billing_card' subscription_monthly.id %}">Purchase
+                                    Now</a>
                             </div>
                             <img class="shape price-shape-top-left"
                                  src="{% static "landing_page/assets/images/price-shape.svg" %}" alt>
@@ -349,7 +354,9 @@
                                 </ul>
                             </div>
                             <div class="btn-wrap price-btn-wrap mt-50">
-                                <a class="common-btn price-btn" href="{% url 'rabah_subscriptions:billing_card' subscription_quarterly.id %}">Purchase Now</a>
+                                <a class="common-btn price-btn"
+                                   href="{% url 'rabah_subscriptions:billing_card' subscription_quarterly.id %}">Purchase
+                                    Now</a>
                             </div>
                             <img class="shape price-shape-top-left"
                                  src="{% static "landing_page/assets/images/price-shape.svg" %}" alt>
@@ -390,7 +397,9 @@
                                 </ul>
                             </div>
                             <div class="btn-wrap price-btn-wrap mt-50">
-                                <a class="common-btn price-btn" href="{% url 'rabah_subscriptions:billing_card' subscription_yearly.id %}">Purchase Now</a>
+                                <a class="common-btn price-btn"
+                                   href="{% url 'rabah_subscriptions:billing_card' subscription_yearly.id %}">Purchase
+                                    Now</a>
                             </div>
                             <img class="shape price-shape-top-left"
                                  src="{% static "landing_page/assets/images/price-shape.svg" %}" alt>
