@@ -159,7 +159,7 @@ ACCOUNT_FORMS = {
 # Send test mail and other bugs info
 ADMINS = [("Rabah ", ("support@rabah360.com"))]
 
-# Github Signup Setup
+# Google Signup Setup
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "APP": {
