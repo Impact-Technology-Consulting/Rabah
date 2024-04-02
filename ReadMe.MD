@@ -19,7 +19,7 @@
         - [Access the Django Admin](#access-the-django-admin)
         - [Run Celery for background tasks](#run-celery-for-background-tasks)
     - [GitHub Repository](#github-repository)
-
+3. [Database Models](#database-models)
 
 > This first part of the documentation contains instructions on how to run the project locally:
 
@@ -209,4 +209,6 @@ celery -A Rabah worker --loglevel=info
 You can find the project on GitHub: [Rabah GitHub Repository](git@github.com:Impact-Technology-Consulting/Rabah.git)
 
 
+# Database Models
 
+![ERP Diagram](./docs/rabah-db-postgres.png)
