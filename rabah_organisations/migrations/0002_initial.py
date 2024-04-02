@@ -11,18 +11,26 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('rabah_organisations', '0001_initial'),
+        ("rabah_organisations", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='organisation',
-            name='owner',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="organisation",
+            name="owner",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='group',
-            name='organisation',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='rabah_organisations.organisation'),
+            model_name="group",
+            name="organisation",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="rabah_organisations.organisation",
+            ),
         ),
     ]

@@ -22,10 +22,12 @@ class SubscriptionPageView(AuthAndAdminOrganizationNotSubscribedMixin, View):
     def get(self, request):
         subscriptions = Subscription.objects.all()
         organisation_subscription = OrganisationSubscription.objects.filter(
-            organisation_id=self.organisation_id).first()
+            organisation_id=self.organisation_id
+        ).first()
         if not organisation_subscription:
-            organisation_subscription = OrganisationSubscription.objects.create(organisation_id=self.organisation_id,
-                                                                                status="INACTIVE")
+            organisation_subscription = OrganisationSubscription.objects.create(
+                organisation_id=self.organisation_id, status="INACTIVE"
+            )
 
         context = {
             "organisation_subscription": organisation_subscription,
@@ -42,8 +44,10 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
     def get(self, request, subscription_id):
         member = get_member(self.request.user, self.organisation_id)
         if not member:
-            return render(request, '404.html')
-        billing_address, created = BillingAddress.objects.get_or_create(organisation=member.organisation)
+            return render(request, "404.html")
+        billing_address, created = BillingAddress.objects.get_or_create(
+            organisation=member.organisation
+        )
         billing_address_form = BillingAddressForm(instance=billing_address)
 
         subscription = Subscription.objects.filter(id=subscription_id).first()
@@ -52,9 +56,12 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             return redirect("rabah_subscriptions:subscription_page")
 
         organisation_subscription = OrganisationSubscription.objects.filter(
-            organisation_id=self.organisation_id).first()
+            organisation_id=self.organisation_id
+        ).first()
         if not organisation_subscription:
-            organisation_subscription = OrganisationSubscription.objects.create(organisation_id=self.organisation_id)
+            organisation_subscription = OrganisationSubscription.objects.create(
+                organisation_id=self.organisation_id
+            )
 
         context = {
             "stripe_public_key": STRIPE_PUBLIC_KEY,
@@ -67,7 +74,7 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
     def post(self, request, subscription_id):
         member = get_member(self.request.user, self.organisation_id)
         if not member:
-            return render(request, '404.html')
+            return render(request, "404.html")
 
         subscription = Subscription.objects.filter(id=subscription_id).first()
         if not subscription:
@@ -75,11 +82,16 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             return redirect("rabah_subscriptions:subscription_page")
 
         organisation_subscription = OrganisationSubscription.objects.filter(
-            organisation_id=self.organisation_id).first()
+            organisation_id=self.organisation_id
+        ).first()
         if not organisation_subscription:
-            organisation_subscription = OrganisationSubscription.objects.create(organisation_id=self.organisation_id)
+            organisation_subscription = OrganisationSubscription.objects.create(
+                organisation_id=self.organisation_id
+            )
 
-        billing_address, created = BillingAddress.objects.get_or_create(organisation=member.organisation)
+        billing_address, created = BillingAddress.objects.get_or_create(
+            organisation=member.organisation
+        )
 
         form = BillingAddressForm(instance=billing_address, data=self.request.POST)
         stripeToken = self.request.POST.get("stripeToken")
@@ -92,7 +104,9 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             billing_address.save()
 
             try:
-                customer = stripe.Customer.retrieve(organisation_subscription.stripe_customer_id)
+                customer = stripe.Customer.retrieve(
+                    organisation_subscription.stripe_customer_id
+                )
                 customer.source = stripeToken
                 customer.save()
 
@@ -106,17 +120,23 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
 
             except stripe.error.InvalidRequestError as e:
                 # Invalid parameters were supplied to Stripe's API
-                messages.warning(request, f"Invalid request to Stripe API: {e.error.message}")
+                messages.warning(
+                    request, f"Invalid request to Stripe API: {e.error.message}"
+                )
                 return redirect("rabah_subscriptions:billing_card", subscription_id)
 
             except stripe.error.AuthenticationError as e:
                 # Authentication with Stripe's API failed
-                messages.warning(request, f"Authentication error with Stripe: {e.error.message}")
+                messages.warning(
+                    request, f"Authentication error with Stripe: {e.error.message}"
+                )
                 return redirect("rabah_subscriptions:billing_card", subscription_id)
 
             except stripe.error.APIConnectionError as e:
                 # Network communication with Stripe failed
-                messages.warning(request, f"Network error with Stripe API: {e.error.message}")
+                messages.warning(
+                    request, f"Network error with Stripe API: {e.error.message}"
+                )
                 return redirect("rabah_subscriptions:billing_card", subscription_id)
 
             except stripe.error.StripeError as e:
@@ -140,20 +160,29 @@ class PaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             messages.warning(request, "Subscription not found")
             return redirect("rabah_subscriptions:subscription_page")
         organisation_subscription = OrganisationSubscription.objects.filter(
-            organisation_id=self.organisation_id).first()
+            organisation_id=self.organisation_id
+        ).first()
         if not organisation_subscription:
-            organisation_subscription = OrganisationSubscription.objects.create(organisation_id=self.organisation_id)
+            organisation_subscription = OrganisationSubscription.objects.create(
+                organisation_id=self.organisation_id
+            )
 
-        billing_address, created = BillingAddress.objects.get_or_create(organisation_id=self.organisation_id)
+        billing_address, created = BillingAddress.objects.get_or_create(
+            organisation_id=self.organisation_id
+        )
 
         stripe_customer = stripe.Customer.retrieve(
-            organisation_subscription.stripe_customer_id)
+            organisation_subscription.stripe_customer_id
+        )
         if not stripe_customer.default_source:
             messages.warning(request, "No card found for this organisation")
             return redirect("rabah_subscriptions:billing_card", subscription_id)
 
         # if the subscription id is trail and the user have the promocode and also the user have not used the trial add the user to the trial
-        if subscription.subscription_duration == "14_DAYS_TRIAL" and organisation_subscription.organisation.has_trial:
+        if (
+            subscription.subscription_duration == "14_DAYS_TRIAL"
+            and organisation_subscription.organisation.has_trial
+        ):
             if not organisation_subscription.subscription:
                 return redirect("rabah_subscriptions:make_payment", subscription_id)
 
@@ -177,14 +206,18 @@ class MakePaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             return redirect("rabah_subscriptions:subscription_page")
 
         organisation_subscription = OrganisationSubscription.objects.filter(
-            organisation_id=self.organisation_id).first()
+            organisation_id=self.organisation_id
+        ).first()
         if not organisation_subscription:
-            organisation_subscription = OrganisationSubscription.objects.create(organisation_id=self.organisation_id)
+            organisation_subscription = OrganisationSubscription.objects.create(
+                organisation_id=self.organisation_id
+            )
 
         try:
             #  charge the card
             customer = stripe.Customer.retrieve(
-                organisation_subscription.stripe_customer_id)
+                organisation_subscription.stripe_customer_id
+            )
 
             if subscription.subscription_duration == "14_DAYS_TRIAL":
                 if organisation_subscription.stripe_subscription_id:
@@ -227,17 +260,23 @@ class MakePaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
 
         except stripe.error.InvalidRequestError as e:
             # Invalid parameters were supplied to Stripe's API
-            messages.warning(request, f"Invalid request to Stripe API: {e.error.message}")
+            messages.warning(
+                request, f"Invalid request to Stripe API: {e.error.message}"
+            )
             return redirect("rabah_subscriptions:billing_card", subscription_id)
 
         except stripe.error.AuthenticationError as e:
             # Authentication with Stripe's API failed
-            messages.warning(request, f"Authentication error with Stripe: {e.error.message}")
+            messages.warning(
+                request, f"Authentication error with Stripe: {e.error.message}"
+            )
             return redirect("rabah_subscriptions:billing_card", subscription_id)
 
         except stripe.error.APIConnectionError as e:
             # Network communication with Stripe failed
-            messages.warning(request, f"Network error with Stripe API: {e.error.message}")
+            messages.warning(
+                request, f"Network error with Stripe API: {e.error.message}"
+            )
             return redirect("rabah_subscriptions:billing_card", subscription_id)
 
         except stripe.error.StripeError as e:
@@ -258,16 +297,23 @@ class CancelPaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             return redirect("rabah_subscriptions:subscription_page")
 
         organisation_subscription = OrganisationSubscription.objects.filter(
-            organisation_id=self.organisation_id).first()
+            organisation_id=self.organisation_id
+        ).first()
         if not organisation_subscription:
-            organisation_subscription = OrganisationSubscription.objects.create(organisation_id=self.organisation_id)
+            organisation_subscription = OrganisationSubscription.objects.create(
+                organisation_id=self.organisation_id
+            )
 
-        if not organisation_subscription.stripe_subscription_id or organisation_subscription.status == "INACTIVE":
+        if (
+            not organisation_subscription.stripe_subscription_id
+            or organisation_subscription.status == "INACTIVE"
+        ):
             messages.warning(request, "No subscription found for this organisation")
             return redirect("rabah_subscriptions:subscription_page")
 
         stripe_subscription = stripe.Subscription.retrieve(
-            organisation_subscription.stripe_subscription_id)
+            organisation_subscription.stripe_subscription_id
+        )
         stripe_subscription.delete()
 
         #  set the subscription to be inactive
@@ -275,5 +321,7 @@ class CancelPaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
         organisation_subscription.status = "INACTIVE"
         organisation_subscription.save()
 
-        messages.success(request, f"Successfully cancelled {subscription.name} subscription")
+        messages.success(
+            request, f"Successfully cancelled {subscription.name} subscription"
+        )
         return redirect("rabah_subscriptions:subscription_page")

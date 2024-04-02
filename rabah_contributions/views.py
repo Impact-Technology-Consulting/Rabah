@@ -13,17 +13,22 @@ from users.mixin import AuthAndAdminOrganizationMemberMixin
 
 # Create your views here.
 
+
 class ContributionTypeView(AuthAndAdminOrganizationMemberMixin, View):
     """
     this is used to create the contribution type
     """
 
     def get(self, request):
-        contribution_types = ContributionType.objects.filter(organisation_id=self.organisation_id)
+        contribution_types = ContributionType.objects.filter(
+            organisation_id=self.organisation_id
+        )
 
         # Paginate the contribution types
-        page = request.GET.get('page', 1)
-        paginator = Paginator(contribution_types, 10)  # Show 10 contribution types per page
+        page = request.GET.get("page", 1)
+        paginator = Paginator(
+            contribution_types, 10
+        )  # Show 10 contribution types per page
 
         try:
             contribution_types = paginator.page(page)
@@ -45,22 +50,25 @@ class ContributionTypeView(AuthAndAdminOrganizationMemberMixin, View):
             instance = form.save(commit=False)
             instance.organisation_id = self.organisation_id
             instance.save()
-            messages.success(self.request, "Contribution type has been added successfully")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.success(
+                self.request, "Contribution type has been added successfully"
+            )
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
             # Loop through form errors and add them as error messages
         for field, errors in form.errors.items():
             for error in errors:
                 messages.error(self.request, f"Error occurred in {field}: {error}")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class ContributionTypeUpdateView(AuthAndAdminOrganizationMemberMixin, View):
 
     def post(self, request, contribution_type_id):
-        instance = ContributionType.objects.filter(organisation_id=self.organisation_id,
-                                                   id=contribution_type_id).first()
+        instance = ContributionType.objects.filter(
+            organisation_id=self.organisation_id, id=contribution_type_id
+        ).first()
         if not instance:
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         form = ContributionTypeForm(data=self.request.POST, instance=instance)
         if form.is_valid():
             form.save()
@@ -68,20 +76,21 @@ class ContributionTypeUpdateView(AuthAndAdminOrganizationMemberMixin, View):
         for field, errors in form.errors.items():
             for error in errors:
                 messages.error(self.request, f"Error occurred in {field}: {error}")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class ContributionTypeDeleteView(AuthAndAdminOrganizationMemberMixin, View):
 
     def get(self, request, contribution_type_id):
-        instance = ContributionType.objects.filter(organisation_id=self.organisation_id,
-                                                   id=contribution_type_id).first()
+        instance = ContributionType.objects.filter(
+            organisation_id=self.organisation_id, id=contribution_type_id
+        ).first()
         if not instance:
             messages.error(request, "Invalid Contribution type ")
         else:
             instance.delete()
             messages.success(request, "Successfully deleted contribution type")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class GivingContributionView(AuthAndAdminOrganizationMemberMixin, View):
@@ -93,9 +102,7 @@ class GivingContributionView(AuthAndAdminOrganizationMemberMixin, View):
     def get(self, request):
         form = ContributionForm()
 
-        context = {
-            "form": form
-        }
+        context = {"form": form}
         return render(request, "dashboard/giving_transaction.html", context)
 
     def post(self, request):
@@ -108,32 +115,35 @@ class GivingContributionView(AuthAndAdminOrganizationMemberMixin, View):
             instance.organisation_id = member.organisation_id
             instance.save()
             messages.success(self.request, "Transaction has been added successfully")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
             # Loop through form errors and add them as error messages
         for field, errors in form.errors.items():
             for error in errors:
                 messages.error(self.request, f"Error occurred in {field}: {error}")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class ContributionsView(AuthAndAdminOrganizationMemberMixin, View):
     def get(self, request, contribution_type_id):
         query = self.request.GET.get("query")
-        contribution_type = ContributionType.objects.filter(id=contribution_type_id).first()
+        contribution_type = ContributionType.objects.filter(
+            id=contribution_type_id
+        ).first()
 
         if not contribution_type:
             messages.error(request, "No contribution type")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
-        contributions = Contribution.objects.filter(contribution_type=contribution_type,
-                                                    organisation_id=self.organisation_id)
+        contributions = Contribution.objects.filter(
+            contribution_type=contribution_type, organisation_id=self.organisation_id
+        )
 
         # Apply search query if provided
         if query:
             contributions = query_contributions(query=query, item=contributions)
 
         # Pagination logic
-        page = request.GET.get('page', 1)
+        page = request.GET.get("page", 1)
         paginator = Paginator(contributions, 10)  # Show 10 contributions per page
 
         try:
@@ -150,20 +160,21 @@ class ContributionsView(AuthAndAdminOrganizationMemberMixin, View):
         return render(request, "dashboard/contributions.html", context)
 
     def post(self, request):
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class ContributionDeleteView(AuthAndAdminOrganizationMemberMixin, View):
 
     def get(self, request, contribution_id):
-        instance = Contribution.objects.filter(organisation_id=self.organisation_id,
-                                               id=contribution_id).first()
+        instance = Contribution.objects.filter(
+            organisation_id=self.organisation_id, id=contribution_id
+        ).first()
         if not instance:
             messages.error(request, "Invalid Contribution  ")
         else:
             instance.delete()
             messages.success(request, "Successfully deleted contribution ")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class ContributionUpdateView(AuthAndAdminOrganizationMemberMixin, View):
@@ -172,14 +183,11 @@ class ContributionUpdateView(AuthAndAdminOrganizationMemberMixin, View):
         contribution = Contribution.objects.filter(id=contribution_id).first()
         if not contribution:
             messages.error(request, "Contribution with this id does not exists ")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
         form = ContributionForm(instance=contribution)
         contribution = contribution
-        context = {
-            "form": form,
-            "contribution": contribution
-        }
+        context = {"form": form, "contribution": contribution}
         return render(request, "dashboard/giving_transaction.html", context)
 
     def post(self, request, contribution_id):
@@ -187,7 +195,7 @@ class ContributionUpdateView(AuthAndAdminOrganizationMemberMixin, View):
         contribution = Contribution.objects.filter(id=contribution_id).first()
         if not contribution:
             messages.error(request, "Contribution with this id does not exists ")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
         form = ContributionForm(data=self.request.POST, instance=contribution)
         if form.is_valid():
@@ -195,9 +203,9 @@ class ContributionUpdateView(AuthAndAdminOrganizationMemberMixin, View):
             instance.organisation_id = member.organisation_id
             instance.save()
             messages.success(self.request, "Transaction has been added successfully")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
             # Loop through form errors and add them as error messages
         for field, errors in form.errors.items():
             for error in errors:
                 messages.error(self.request, f"Error occurred in {field}: {error}")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))

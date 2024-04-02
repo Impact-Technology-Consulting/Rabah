@@ -177,4 +177,3 @@ class ChangePasswordFormTest(TestCase):
         form = ChangePasswordForm(data=form_data)
         self.assertFalse(form.is_valid())
         self.assertIn("confirm_password", form.errors)
-

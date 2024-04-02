@@ -4,11 +4,13 @@ from celery import Celery
 from celery.schedules import crontab
 from decouple import config
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Rabah.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Rabah.settings")
 
 # used redis for saving task and running task
-app = Celery('Rabah', broker=config("CELERY_BROKER_URL"), backend=config("CELERY_BROKER_URL"))
-app.config_from_object('django.conf:settings')
+app = Celery(
+    "Rabah", broker=config("CELERY_BROKER_URL"), backend=config("CELERY_BROKER_URL")
+)
+app.config_from_object("django.conf:settings")
 
 # Load task modules from all registered Django app configs.
 app.conf.broker_url = config("CELERY_BROKER_URL")
@@ -18,13 +20,12 @@ app.conf.broker_url = config("CELERY_BROKER_URL")
 app.conf.beat_schedule = {
     #  This is used to check inactive subscription every 23 hours
     "check_and_cancel_inactive_subscription": {
-        "task": 'rabah_subscriptions.tasks.check_and_cancel_inactive_subscription',
+        "task": "rabah_subscriptions.tasks.check_and_cancel_inactive_subscription",
         "schedule": crontab(hour=23),
     }
-
 }
 
 
 @app.task
 def debug_task():
-    print(f'Request: ')
+    print(f"Request: ")

@@ -13,7 +13,10 @@ from django.views.generic import ListView
 
 from rabah_events.forms import EventCreateForm, EventUpdateForm
 from rabah_events.models import Event, EventMember, MemberAttendance
-from rabah_events.tasks import create_event_for_repeat_count, create_event_for_until_date
+from rabah_events.tasks import (
+    create_event_for_repeat_count,
+    create_event_for_until_date,
+)
 from rabah_events.utils import check_event_creation_limit
 from rabah_members.models import Member
 from rabah_members.utils import query_members
@@ -44,7 +47,9 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
 
     def post(self, request):
         organisation_id = self.organisation_id
-        form = EventCreateForm(organisation_id, data=self.request.POST, files=self.request.FILES)
+        form = EventCreateForm(
+            organisation_id, data=self.request.POST, files=self.request.FILES
+        )
         if form.is_valid():
             event = form.save()
 
@@ -54,7 +59,7 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
                 if not check_event_creation_limit(event.id):
                     event.delete()
                     messages.error(self.request, "Event creation limit reached")
-                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
             #  create the event for the automation
             if event.repeat_end == "AFTER":
@@ -63,11 +68,11 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
                 create_event_for_until_date.delay(event.id)
 
             messages.success(self.request, "Successfully create event")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         else:
             for error in form.errors:
                 messages.warning(request, f"{error}: {form.errors[error][0]}")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class EventUpdateView(AuthAndAdminOrganizationMemberMixin, View):
@@ -76,43 +81,52 @@ class EventUpdateView(AuthAndAdminOrganizationMemberMixin, View):
     """
 
     def get(self, request, event_id):
-        event = Event.objects.filter(id=event_id, organisation_id=self.organisation_id).first()
+        event = Event.objects.filter(
+            id=event_id, organisation_id=self.organisation_id
+        ).first()
         if not event:
-            messages.error(request, "Event with this id does not exist in this organisation")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(
+                request, "Event with this id does not exist in this organisation"
+            )
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         form = EventUpdateForm(self.organisation_id, instance=event)
-        context = {
-            "form": form,
-            "event": event
-        }
+        context = {"form": form, "event": event}
         return render(request, "dashboard/event_update.html", context)
 
     def post(self, request, event_id):
-        event = Event.objects.filter(id=event_id, organisation_id=self.organisation_id).first()
+        event = Event.objects.filter(
+            id=event_id, organisation_id=self.organisation_id
+        ).first()
         if not event:
-            messages.error(request, "Event with this id does not exist in this organisation")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(
+                request, "Event with this id does not exist in this organisation"
+            )
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
-        form = EventUpdateForm(self.organisation_id, data=request.POST, files=request.FILES, instance=event)
+        form = EventUpdateForm(
+            self.organisation_id, data=request.POST, files=request.FILES, instance=event
+        )
         if form.is_valid():
             event = form.save()
             # Invalidate cache for the event list page
-            cache_key = 'views.decorators.cache.cache_page.{0}.{1}'.format(cache_page.__module__,
-                                                                           reverse('rabah_events:event_list'))
+            cache_key = "views.decorators.cache.cache_page.{0}.{1}".format(
+                cache_page.__module__, reverse("rabah_events:event_list")
+            )
             cache.delete(cache_key)
             messages.success(request, "Event updated successfully")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         else:
             for error in form.errors:
                 messages.warning(request, f"{error}: {form.errors[error][0]}")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-@method_decorator(cache_page(24 * 60 * 60), name='dispatch')
+@method_decorator(cache_page(24 * 60 * 60), name="dispatch")
 class EventListView(AuthAndAdminOrganizationMemberMixin, ListView):
     """
     this is used to list all the events available, and it only shows from future events or current events
     """
+
     queryset = Event.objects.all()
     template_name = "dashboard/event_list.html"
     context_object_name = "events"
@@ -120,7 +134,9 @@ class EventListView(AuthAndAdminOrganizationMemberMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(organisation_id=self.organisation_id, start_date__gte=timezone.now())
+        return queryset.filter(
+            organisation_id=self.organisation_id, start_date__gte=timezone.now()
+        )
 
 
 class EventCalendarView(AuthAndAdminOrganizationMemberMixin, View):
@@ -134,12 +150,14 @@ class EventCalendarView(AuthAndAdminOrganizationMemberMixin, View):
         events = Event.objects.filter(organisation_id=organisation_id)
         data = []
         for event in events:
-            data.append({
-                'id': event.id,
-                'title': event.name,
-                'start': event.start_date.isoformat(),
-                'end': event.end_date.isoformat(),
-            })
+            data.append(
+                {
+                    "id": event.id,
+                    "title": event.name,
+                    "start": event.start_date.isoformat(),
+                    "end": event.end_date.isoformat(),
+                }
+            )
         return JsonResponse(data, safe=False)
 
 
@@ -149,13 +167,17 @@ class EventDeleteView(AuthAndAdminOrganizationMemberMixin, View):
     """
 
     def get(self, request, event_id):
-        event = Event.objects.filter(id=event_id, organisation_id=self.organisation_id).first()
+        event = Event.objects.filter(
+            id=event_id, organisation_id=self.organisation_id
+        ).first()
         if not event:
-            messages.error(request, "Event with this id does not exist in this organisation")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(
+                request, "Event with this id does not exist in this organisation"
+            )
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         event.delete()
         messages.success(request, "Event deleted successfully")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class MarkAttendancePageView(AuthAndAdminOrganizationMemberMixin, View):
@@ -164,42 +186,55 @@ class MarkAttendancePageView(AuthAndAdminOrganizationMemberMixin, View):
         search = request.GET.get("search")
         status = request.GET.get("status")
 
-        event = Event.objects.filter(id=event_id, organisation_id=self.organisation_id).first()
+        event = Event.objects.filter(
+            id=event_id, organisation_id=self.organisation_id
+        ).first()
         if not event:
-            messages.error(request, "Event with this id does not exist in this organisation")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(
+                request, "Event with this id does not exist in this organisation"
+            )
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
         if event.start_date > timezone.now():
             messages.error(request, "Event has not started yet")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
         members = Member.objects.filter(organisation_id=self.organisation_id)
 
         if search:
             members = query_members(search, members)
 
-        member_attendance = MemberAttendance.objects.filter(event_id=event_id, organisation_id=self.organisation_id)
+        member_attendance = MemberAttendance.objects.filter(
+            event_id=event_id, organisation_id=self.organisation_id
+        )
 
         if status == "PRESENT":
             # Get a list of member IDs with status "PRESENT"
-            present_member_ids = member_attendance.filter(status="PRESENT").values_list("member_id", flat=True)
+            present_member_ids = member_attendance.filter(status="PRESENT").values_list(
+                "member_id", flat=True
+            )
             # Filter members using the list of IDs
             members = members.filter(id__in=present_member_ids)
 
         elif status == "ABSENT":
             # Get a list of member IDs with status "PRESENT"
-            present_member_ids = member_attendance.filter(status="PRESENT").values_list("member_id", flat=True)
+            present_member_ids = member_attendance.filter(status="PRESENT").values_list(
+                "member_id", flat=True
+            )
             # Exclude members with the list of IDs
             members = members.exclude(id__in=present_member_ids)
 
         present_count = member_attendance.filter(status="PRESENT").count()
-        absent_count = Member.objects.filter(organisation_id=self.organisation_id).count() - present_count
+        absent_count = (
+            Member.objects.filter(organisation_id=self.organisation_id).count()
+            - present_count
+        )
 
         context = {
             "members": members,
             "event": event,
             "present_count": present_count,
-            "absent_count": absent_count
+            "absent_count": absent_count,
         }
         return render(request, "dashboard/mark_attendance.html", context)
 
@@ -214,32 +249,49 @@ class MarkMultipleMemberAttendanceView(AuthAndAdminOrganizationMemberMixin, View
         members_ids = data.get("checkedCheckboxes")
         if not members_ids:
             return JsonResponse({"message": "No members selected"}, status=400)
-        event = Event.objects.filter(id=event_id, organisation_id=self.organisation_id).first()
+        event = Event.objects.filter(
+            id=event_id, organisation_id=self.organisation_id
+        ).first()
         if not event:
-            messages.error(request, "Event with this id does not exist in this organisation")
+            messages.error(
+                request, "Event with this id does not exist in this organisation"
+            )
             return JsonResponse({"message": "No event "}, status=404)
-        event_member, created = EventMember.objects.get_or_create(event=event, organisation=event.organisation)
+        event_member, created = EventMember.objects.get_or_create(
+            event=event, organisation=event.organisation
+        )
 
         for member_id in members_ids:
-            member = Member.objects.filter(id=member_id.get("id"), organisation_id=self.organisation_id).first()
+            member = Member.objects.filter(
+                id=member_id.get("id"), organisation_id=self.organisation_id
+            ).first()
             if not member:
-                return JsonResponse({"message": "Member with this id does not exist in this organisation"},
-                                    status=400)
+                return JsonResponse(
+                    {
+                        "message": "Member with this id does not exist in this organisation"
+                    },
+                    status=400,
+                )
             # create the member attendance or get it
-            member_attendance = MemberAttendance.objects.filter(member=member,
-                                                                organisation=event.organisation,
-                                                                event=event).first()
+            member_attendance = MemberAttendance.objects.filter(
+                member=member, organisation=event.organisation, event=event
+            ).first()
             if not member_attendance:
-                member_attendance = MemberAttendance.objects.create(member=member,
-                                                                    organisation=event.organisation,
-                                                                    event=event)
+                member_attendance = MemberAttendance.objects.create(
+                    member=member, organisation=event.organisation, event=event
+                )
             if member_id.get("is_checked"):
                 member_attendance.status = "PRESENT"
                 member_attendance.save()
                 event_member.members_attendance.add(member_attendance)
-                return JsonResponse({"message": "Attendance marked successfully for PRESENT"}, status=200)
+                return JsonResponse(
+                    {"message": "Attendance marked successfully for PRESENT"},
+                    status=200,
+                )
             else:
                 member_attendance.status = "ABSENT"
                 member_attendance.save()
                 event_member.members_attendance.add(member_attendance)
-                return JsonResponse({"message": "Attendance marked successfully for ABSENT"}, status=200)
+                return JsonResponse(
+                    {"message": "Attendance marked successfully for ABSENT"}, status=200
+                )

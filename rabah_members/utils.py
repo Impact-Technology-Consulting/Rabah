@@ -13,7 +13,7 @@ from .models import Member
 
 
 def get_member(user, organisation_id):
-    """"
+    """ "
     This is used to get a member or an organisation
     """
     member = Member.objects.filter(user=user, organisation_id=organisation_id).first()
@@ -34,10 +34,13 @@ def query_members(query, item):
     query_list = sorted(query_list, key=lambda x: x[-1])
     query = reduce(
         operator.or_,
-        (Q(user__email__icontains=x) |
-         Q(user__first_name__icontains=x) |
-         Q(user__last_name__icontains=x) |
-         Q(user__first_name=[x]) for x in query_list)
+        (
+            Q(user__email__icontains=x)
+            | Q(user__first_name__icontains=x)
+            | Q(user__last_name__icontains=x)
+            | Q(user__first_name=[x])
+            for x in query_list
+        ),
     )
     object_list = item.filter(query).distinct()
     return object_list
@@ -81,9 +84,11 @@ def excel_to_dict_list(excel_file):
 def csv_to_dict_list(csv_file):
     data = []
 
-    reader = csv.reader(TextIOWrapper(csv_file, encoding='utf-8'))
+    reader = csv.reader(TextIOWrapper(csv_file, encoding="utf-8"))
     raw_headers = next(reader)  # Read the first row as headers
-    headers = [convert_string(header) for header in raw_headers]  # Clean the headers using convert_string function
+    headers = [
+        convert_string(header) for header in raw_headers
+    ]  # Clean the headers using convert_string function
     #  create custom header for check
     header_dictionary = []
     for item in raw_headers:
@@ -126,5 +131,5 @@ def convert_string(input_string):
         return input_string
 
     lowercase_string = input_string.lower()
-    cleaned_string = re.sub('[^a-z0-9]', '', lowercase_string)
+    cleaned_string = re.sub("[^a-z0-9]", "", lowercase_string)
     return cleaned_string
