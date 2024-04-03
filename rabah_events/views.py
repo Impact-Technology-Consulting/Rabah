@@ -169,7 +169,7 @@ class MarkAttendancePageView(AuthAndAdminOrganizationMemberMixin, View):
             messages.error(request, "Event with this id does not exist in this organisation")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-        if event.start_date > timezone.now():
+        if event.start_date.date() > timezone.now().date():
             messages.error(request, "Event has not started yet")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
