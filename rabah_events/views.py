@@ -44,7 +44,10 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
 
     def post(self, request):
         organisation_id = self.organisation_id
-        form = EventCreateForm(organisation_id, data=self.request.POST, files=self.request.FILES)
+
+        user_timezone = None
+
+        form = EventCreateForm(organisation_id, data=self.request.POST, files=self.request.FILES,initial={'user_timezone': user_timezone})
         if form.is_valid():
             event = form.save()
 
@@ -169,7 +172,7 @@ class MarkAttendancePageView(AuthAndAdminOrganizationMemberMixin, View):
             messages.error(request, "Event with this id does not exist in this organisation")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-        if event.start_date > timezone.now():
+        if event.start_date.date() > timezone.now().date():
             messages.error(request, "Event has not started yet")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

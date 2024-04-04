@@ -10,7 +10,7 @@
                     <div class="breadcrumb-content text-center">
                         <h1>About Us</h1>
                         <div class="breadcrumb-link">
-                            <p><a href="index.html">Home</a></p>
+                            <p><a href="{% url "rabah_dashboard:home_page" %}">Home</a></p>
                             <span></span>
                             <p>About Us</p>
                         </div>
@@ -34,10 +34,10 @@
                             <img src="assets/images/about-us-img.png" alt>
                         </div>
                         <div class="about-text-shape-wrap">
-                            <img src="assets/images/about-img-text-shape.svg" alt>
+                            <img src="{% static "landing_page/assets/images/blog/blog-img-1.png" %}" alt>
                             <div class="about-text-shape-content">
-                                <h3>12+ Years</h3>
-                                <h4>EXPERIENCE</h4>
+                                <h3>Expertise</h3>
+                                <h4>In Event Management</h4>
                             </div>
                         </div>
                     </div>
@@ -46,20 +46,21 @@
                     <div class="about-text-content-wrap">
                         <div class="section-title about-section-title section-title-one-design">
                             <h4>ABOUT US</h4>
-                            <h2>Strategic partnerships for <br> maximum impact.</h2>
+                            <h2>Empowering Events for Organizational Success</h2>
                         </div>
                         <div class="about-paragraph-content">
-                            <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor ametsint. Velit officia
-                                consequ mollit. Exercitation veniam consequat sunt nostrud amet.</p>
-                            <p style="margin-bottom:0">Amet minim mollit non deserunt ullamcot sit aliqua dolor do amet
-                                sint. Velit officia consequat duis.Amet minim mollit non deserunt ullamcot sit aliqua
-                                dolor do amet sint. Velit officia consequat duis.</p>
+                            <p>We specialize in creating unforgettable experiences that drive organizational success.
+                                Our events are meticulously planned to maximize impact and exceed expectations.</p>
+                            <p>From conferences to galas, we handle every detail with precision and professionalism. Let
+                                us help you bring your vision to life and make your next event a resounding success.</p>
                             <div class="btn-wrap about-btn-wrap mt-50">
-                                <a class="common-btn about-btn" href="about-us.html">Read More</a>
+                                <a class="common-btn about-btn" href="{% url "rabah_events:events" %}">Read
+                                    More</a>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -71,10 +72,14 @@
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                     <div class="mission-content-wrap">
                         <h3>Vision & Mission</h3>
-                        <p>Our vision is to create a thriving community where individuals come together to worship, grow spiritually, and serve others.
-                            We are committed to fostering an inclusive environment where everyone feels welcomed and valued.</p>
-                        <p>Our mission is to spread the message of love, hope, and compassion, guided by the teachings of our faith.
-                            Through meaningful worship, engaging ministries, and outreach efforts, we aim to make a positive impact
+                        <p>Our vision is to create a thriving community where individuals come together to worship, grow
+                            spiritually, and serve others.
+                            We are committed to fostering an inclusive environment where everyone feels welcomed and
+                            valued.</p>
+                        <p>Our mission is to spread the message of love, hope, and compassion, guided by the teachings
+                            of our faith.
+                            Through meaningful worship, engaging ministries, and outreach efforts, we aim to make a
+                            positive impact
                             in the lives of individuals and our surrounding community.</p>
                     </div>
                 </div>
