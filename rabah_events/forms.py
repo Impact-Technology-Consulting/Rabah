@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django import forms
 from django.forms import DateTimeInput, DateInput
+from django.utils import timezone
 
 from rabah_events.models import Event
 
@@ -50,6 +51,14 @@ class EventCreateForm(forms.ModelForm):
         start_date = cleaned_data.get("start_date")
         end_date = cleaned_data.get("end_date")
         repeat_until_date = cleaned_data.get("repeat_until_date")
+
+        user_timezone = cleaned_data.get("user_timezone")
+
+        # Convert start_date and end_date to user's timezone
+        if start_date and user_timezone:
+            start_date = start_date.astimezone(timezone(user_timezone))
+        if end_date and user_timezone:
+            end_date = end_date.astimezone(timezone(user_timezone))
 
         # Validate that start_date is before end_date
         if start_date and end_date and start_date >= end_date:

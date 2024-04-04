@@ -44,7 +44,10 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
 
     def post(self, request):
         organisation_id = self.organisation_id
-        form = EventCreateForm(organisation_id, data=self.request.POST, files=self.request.FILES)
+
+        user_timezone = None
+
+        form = EventCreateForm(organisation_id, data=self.request.POST, files=self.request.FILES,initial={'user_timezone': user_timezone})
         if form.is_valid():
             event = form.save()
 

@@ -27,6 +27,12 @@ class ContributionForm(forms.ModelForm):
             "is_anonymous",
         ]
 
+    def __init__(self, organisation_id, *args, **kwargs):
+        super(ContributionForm, self).__init__(*args, **kwargs)
+        # Filter contribution types based on the organization
+        self.fields['contribution_type'].queryset = ContributionType.objects.filter(organisation_id=organisation_id)
+
+
     def save(self, commit=True):
         is_anonymous = self.cleaned_data.get("is_anonymous")
         instance = super().save(commit=False)
