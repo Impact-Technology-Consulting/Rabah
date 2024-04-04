@@ -20,11 +20,13 @@ class MemberCreateForm(forms.Form):
     address = forms.CharField(max_length=150)
     career = forms.CharField(max_length=150)
     gender = forms.ChoiceField(choices=GENDER_CHOICES)
-    groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), required=False, widget=CheckboxSelectMultiple)
+    groups = forms.ModelMultipleChoiceField(queryset=Group.objects.none(), required=False,
+                                            widget=CheckboxSelectMultiple)
 
     def __init__(self, organisation_id, *args, **kwargs):
         super(MemberCreateForm, self).__init__(*args, **kwargs)
         self.fields['organisation_id'] = forms.CharField(widget=forms.HiddenInput(), initial=organisation_id)
+        self.fields['groups'].queryset = Group.objects.filter(organisation_id=organisation_id)
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -70,6 +72,10 @@ class MemberEditForm(forms.ModelForm):
         widgets = {
             'groups': CheckboxSelectMultiple(),
         }
+
+    def __init__(self, organisation_id, *args, **kwargs):
+        super(MemberEditForm, self).__init__(*args, **kwargs)
+        self.fields['groups'].queryset = Group.objects.filter(organisation_id=organisation_id)
 
 
 class AddExistingMemberToFamilyForm(forms.Form):

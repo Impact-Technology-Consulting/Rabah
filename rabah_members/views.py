@@ -177,7 +177,7 @@ class MemberDetailView(AuthAndOrganizationMixin, View):
         if not member:
             render(request, "404.html")
 
-        member_form = MemberEditForm(instance=member)
+        member_form = MemberEditForm(self.organisation_id, instance=member)
         user_form = UserProfileUpdateForm(instance=member.user.user_profile)
         member_create_form = MemberCreateForm(organisation_id)
         add_existing_member_form = AddExistingMemberToFamilyForm(organisation_id=organisation_id,
@@ -198,7 +198,7 @@ class MemberDetailView(AuthAndOrganizationMixin, View):
         member = Member.objects.filter(id=id).first()
         if not member:
             render(request, "404.html")
-        member_form = MemberEditForm(instance=member, data=self.request.POST)
+        member_form = MemberEditForm(self.organisation_id,instance=member, data=self.request.POST)
         if member_form.is_valid():
             member_form.save()
             messages.success(request, "successfully update member")
