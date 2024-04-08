@@ -91,7 +91,10 @@ def create_event_for_until_date(event_id):
             repeat_count=event.repeat_count,
             repeat_until_date=event.repeat_until_date,
         )
-        if event.repeat_until_date and new_event.end_date.date() >= event.repeat_until_date:
+        if (
+            event.repeat_until_date
+            and new_event.end_date.date() >= event.repeat_until_date
+        ):
             break
     return True
 
@@ -107,16 +110,16 @@ def create_multiple_members(data, organisation_id, groups):
             continue
 
         user = User.objects.create(
-            email=item.get('email'),
-            first_name=item.get('firstname', ""),
-            last_name=item.get('lastname', ""),
-            mobile=item.get('mobile')
+            email=item.get("email"),
+            first_name=item.get("firstname", ""),
+            last_name=item.get("lastname", ""),
+            mobile=item.get("mobile"),
         )
         try:
             instance = Member()
             user_profile = user.user_profile
-            user_profile.address = item.get('address')
-            user_profile.career = item.get('career')
+            user_profile.address = item.get("address")
+            user_profile.career = item.get("career")
             user_profile.gender = f"{item.get('gender')}".upper()
             user_profile.save()
             instance.organisation_id = organisation_id

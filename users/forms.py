@@ -14,7 +14,7 @@ class RabahSignupForm(SignupForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['password1'].help_text = None
+        self.fields["password1"].help_text = None
 
 
 class RabahLoginForm(forms.Form):
@@ -27,7 +27,7 @@ class UserProfileUpdateForm(forms.ModelForm):
     last_name = forms.CharField(max_length=150)
     mobile = forms.IntegerField(required=False)
     email = forms.EmailField()
-    date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    date_of_birth = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
     profile_image = forms.ImageField()
 
     class Meta:

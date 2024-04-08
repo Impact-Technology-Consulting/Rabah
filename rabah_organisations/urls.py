@@ -1,6 +1,11 @@
 from django.urls import path
 
-from rabah_organisations.views import GroupListView, GroupUpdateView, GroupDetailView, GroupDeleteView
+from rabah_organisations.views import (
+    GroupListView,
+    GroupUpdateView,
+    GroupDetailView,
+    GroupDeleteView,
+)
 
 app_name = "rabah_organisations"
 urlpatterns = [

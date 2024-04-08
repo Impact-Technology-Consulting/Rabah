@@ -9,40 +9,103 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('name', models.CharField(max_length=250)),
-                ('image', models.ImageField(blank=True, upload_to='events')),
-                ('description', models.TextField()),
-                ('repeat', models.CharField(blank=True, choices=[('DAILY', 'DAILY'), ('WEEKLY', 'WEEKLY'), ('MONTHLY', 'MONTHLY'), ('YEARLY', 'YEARLY')], max_length=250, null=True)),
-                ('repeat_end', models.CharField(blank=True, choices=[('AFTER', 'AFTER'), ('ON_DATE', 'ON_DATE')], max_length=250, null=True)),
-                ('start_date', models.DateTimeField()),
-                ('end_date', models.DateTimeField()),
-                ('repeat_count', models.IntegerField(blank=True, null=True)),
-                ('repeat_until_date', models.DateField(blank=True, null=True)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("name", models.CharField(max_length=250)),
+                ("image", models.ImageField(blank=True, upload_to="events")),
+                ("description", models.TextField()),
+                (
+                    "repeat",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("DAILY", "DAILY"),
+                            ("WEEKLY", "WEEKLY"),
+                            ("MONTHLY", "MONTHLY"),
+                            ("YEARLY", "YEARLY"),
+                        ],
+                        max_length=250,
+                        null=True,
+                    ),
+                ),
+                (
+                    "repeat_end",
+                    models.CharField(
+                        blank=True,
+                        choices=[("AFTER", "AFTER"), ("ON_DATE", "ON_DATE")],
+                        max_length=250,
+                        null=True,
+                    ),
+                ),
+                ("start_date", models.DateTimeField()),
+                ("end_date", models.DateTimeField()),
+                ("repeat_count", models.IntegerField(blank=True, null=True)),
+                ("repeat_until_date", models.DateField(blank=True, null=True)),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='EventMember',
+            name="EventMember",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='MemberAttendance',
+            name="MemberAttendance",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('status', models.CharField(choices=[('PRESENT', 'PRESENT'), ('ABSENT', 'ABSENT'), ('LATE', 'LATE')], max_length=250)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('event', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='rabah_events.event')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("PRESENT", "PRESENT"),
+                            ("ABSENT", "ABSENT"),
+                            ("LATE", "LATE"),
+                        ],
+                        max_length=250,
+                    ),
+                ),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
+                (
+                    "event",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="rabah_events.event",
+                    ),
+                ),
             ],
         ),
     ]
