@@ -36,6 +36,12 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet"/>
 
+    <style>
+        anchor_hover:hover {
+            color: #FD0053;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -83,20 +89,38 @@
                             </div>
                             <ul>
                                 <li class="has-child-menu">
-                                    <a class="active" href="javascript:void(0)">Home</a>
+                                    <a class="{% if request.resolver_match.view_name == 'rabah_dashboard:home_page' %}active{% endif %}"
+                                       href="{% url "rabah_dashboard:home_page" %}">Home</a>
 
                                 </li>
-                                <li><a href="{% url "rabah_dashboard:about_us" %}">About us</a></li>
+                                <li>
+                                    <a class="{% if request.resolver_match.view_name == 'rabah_dashboard:about_us' %}active{% endif %}"
+                                       href="{% url "rabah_dashboard:about_us" %}">About us</a>
+                                </li>
+
+                                <li><a href="{% url "rabah_dashboard:contact_us" %}"
+                                       class="d-none d-md-block {% if request.resolver_match.view_name == 'rabah_dashboard:contact_us' %}active{% endif %}">Contact
+                                    Us</a>
+                                </li>
 
 
                             </ul>
                             <div class="btn-wrap mobile-btn-wrap d-block d-lg-none">
-                                <a class="common-btn menu-btn" href="{% url "rabah_dashboard:contact_us" %}">Contact
-                                    Us</a>
+                                <div class="d-flex flex-column">
+                                    <a class=" menu-btn mb-4" href="{% url "account_login" %}"
+                                       style="color: whitesmoke;">Login
+                                    </a>
+                                    <a class=" menu-btn mb-4" href="{% url "account_signup" %}"
+                                       style="color: whitesmoke; ">Register
+                                    </a>
+
+                                    <a class="common-btn menu-btn" href="{% url "rabah_dashboard:contact_us" %}">Contact
+                                        Us</a>
+                                </div>
                             </div>
                         </nav>
                     </div>
-                    <div class="col-xl-3 col-lg-3  d-none d-lg-flex">
+                    <div class="col-xl-3 col-lg-3  d-none d-lg-flex justify-content-end">
                         <div class="btn-wrap menu-btn-wrap">
                             <a class="common-btn menu-btn" href="{% url "account_login" %}">Login</a>
                         </div>

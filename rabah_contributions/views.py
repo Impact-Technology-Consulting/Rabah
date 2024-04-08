@@ -100,7 +100,7 @@ class GivingContributionView(AuthAndAdminOrganizationMemberMixin, View):
     """
 
     def get(self, request):
-        form = ContributionForm()
+        form = ContributionForm(self.organisation_id)
 
         context = {"form": form}
         return render(request, "dashboard/giving_transaction.html", context)
@@ -108,7 +108,7 @@ class GivingContributionView(AuthAndAdminOrganizationMemberMixin, View):
     def post(self, request):
         member = get_member(self.request.user, self.organisation_id)
 
-        form = ContributionForm(data=self.request.POST)
+        form = ContributionForm(self.organisation_id, data=self.request.POST)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.created_by_id = member.id
@@ -185,7 +185,7 @@ class ContributionUpdateView(AuthAndAdminOrganizationMemberMixin, View):
             messages.error(request, "Contribution with this id does not exists ")
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
-        form = ContributionForm(instance=contribution)
+        form = ContributionForm(self.organisation_id, instance=contribution)
         contribution = contribution
         context = {"form": form, "contribution": contribution}
         return render(request, "dashboard/giving_transaction.html", context)
@@ -197,7 +197,7 @@ class ContributionUpdateView(AuthAndAdminOrganizationMemberMixin, View):
             messages.error(request, "Contribution with this id does not exists ")
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
-        form = ContributionForm(data=self.request.POST, instance=contribution)
+        form = ContributionForm(self.organisation_id, data=self.request.POST, instance=contribution)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.organisation_id = member.organisation_id
