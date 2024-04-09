@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
@@ -269,4 +271,17 @@ class MemberCreatePasswordView(View):
         else:
             for error in form.errors:
                 messages.warning(request, f"{error}: {form.errors[error][0]}")
-        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class SetTimeZone(View):
+
+    def post(self, request):
+        timezone_offset = json.loads(self.request.body).get("timezone_offset")
+        if timezone_offset:
+            request.session['timezone_offset'] = timezone_offset
+            return JsonResponse({'message': 'Timezone offset received successfully'})
+        else:
+            return JsonResponse({'error': 'Invalid request method'}, status=400)
+
