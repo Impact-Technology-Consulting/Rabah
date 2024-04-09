@@ -26,17 +26,13 @@ on the Rabah platform.<br/><br/>
 If you didn't register, please click
 <a href='#'>Unsubscribe</a>
         """
-    html_message = render_to_string(
-        'email_template.html',
-        {
-            'message': html_message
-        })
+    html_message = render_to_string("email_template.html", {"message": html_message})
     send_mail(
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=[email],
         subject="Member Account Activation",
         message=html_message,
         html_message=html_message,
-        fail_silently=False
+        fail_silently=False,
     )
     return True

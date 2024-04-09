@@ -10,9 +10,11 @@ from rabah_organisations.models import Organisation
 
 # Create your models here.
 
+
 class ContributionType(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     name = models.CharField(max_length=250)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -32,7 +34,7 @@ class ContributionType(models.Model):
 
     def total_contribution_amount(self, organisation_id):
         contributions = Contribution.objects.filter(organisation_id=organisation_id)
-        total_amount = contributions.aggregate(models.Sum('amount'))['amount__sum'] or 0
+        total_amount = contributions.aggregate(models.Sum("amount"))["amount__sum"] or 0
         return total_amount
 
 
@@ -61,35 +63,54 @@ class ContributionManager(models.Manager):
         last_month = datetime.now() - timedelta(days=30)
 
         # Sum the total contribution amounts in the current month
-        current_month_total = \
-            Contribution.objects.filter(timestamp__gte=last_month, organisation_id=organisation_id).aggregate(
-                Sum('amount'))[
-                'amount__sum'] or 0
+        current_month_total = (
+            Contribution.objects.filter(
+                timestamp__gte=last_month, organisation_id=organisation_id
+            ).aggregate(Sum("amount"))["amount__sum"]
+            or 0
+        )
 
         # Sum the total contribution amounts before the last month
-        last_month_total = \
-            Contribution.objects.filter(timestamp__lt=last_month, organisation_id=organisation_id).aggregate(
-                Sum('amount'))[
-                'amount__sum'] or 0
+        last_month_total = (
+            Contribution.objects.filter(
+                timestamp__lt=last_month, organisation_id=organisation_id
+            ).aggregate(Sum("amount"))["amount__sum"]
+            or 0
+        )
 
         # Calculate the percentage change
         if last_month_total == 0:
             return 100  # Handle the case where last month had no contributions to avoid division by zero
-        percentage_change = ((current_month_total - last_month_total) / last_month_total) * 100
+        percentage_change = (
+            (current_month_total - last_month_total) / last_month_total
+        ) * 100
 
         return percentage_change
 
 
 class Contribution(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     contribution_type = models.ForeignKey(ContributionType, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(Member, on_delete=models.SET_NULL, blank=True, null=True,
-                                   related_name="contribution_created_by")
-    member = models.ForeignKey(Member, on_delete=models.SET_NULL, blank=True, null=True,
-                               related_name="contribution_memeber")
-    method = models.CharField(max_length=250, choices=METHOD_CHOICES, blank=True, null=True)
+    created_by = models.ForeignKey(
+        Member,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="contribution_created_by",
+    )
+    member = models.ForeignKey(
+        Member,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="contribution_memeber",
+    )
+    method = models.CharField(
+        max_length=250, choices=METHOD_CHOICES, blank=True, null=True
+    )
     transaction_id = models.CharField(max_length=250, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)

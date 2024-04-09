@@ -25,10 +25,13 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class Subscription(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     name = models.CharField(max_length=250, blank=True, null=True)
     stripe_plan_id = models.CharField(max_length=250, blank=True, null=True)
-    subscription_duration = models.CharField(choices=SUBSCRIPTION_DURATION, max_length=250, blank=True, null=True)
+    subscription_duration = models.CharField(
+        choices=SUBSCRIPTION_DURATION, max_length=250, blank=True, null=True
+    )
     promo_code = models.CharField(max_length=250, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -43,7 +46,9 @@ def post_save_create_subscription(sender, instance, *args, **kwargs):
         if subscription:
             if subscription.stripe_plan_id:
 
-                plan_retrieve_response = stripe.Plan.retrieve(subscription.stripe_plan_id)
+                plan_retrieve_response = stripe.Plan.retrieve(
+                    subscription.stripe_plan_id
+                )
                 if plan_retrieve_response.amount != subscription.price:
                     # todo: cancel all current user subscribe to that plan and move them to the new plan for the next payment
                     pass
@@ -64,7 +69,9 @@ def post_save_create_subscription(sender, instance, *args, **kwargs):
                 else:
                     return
 
-                product_response = stripe.Product.create(name=f"{interval} Subscription")
+                product_response = stripe.Product.create(
+                    name=f"{interval} Subscription"
+                )
                 if subscription.price <= 0:
                     amount = 0
                 else:
@@ -84,12 +91,13 @@ def post_save_create_subscription(sender, instance, *args, **kwargs):
 post_save.connect(post_save_create_subscription, sender=Subscription)
 
 
-
 class BillingAddress(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     organisation = models.ForeignKey(
-        Organisation, on_delete=models.SET_NULL, blank=True, null=True)
+        Organisation, on_delete=models.SET_NULL, blank=True, null=True
+    )
     address = models.CharField(max_length=250, blank=True, null=True)
     city = models.CharField(max_length=250, blank=True, null=True)
     state = models.CharField(max_length=250, blank=True, null=True)
@@ -106,13 +114,19 @@ class BillingAddress(models.Model):
 
 class OrganisationSubscription(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
-    subscription = models.ForeignKey(Subscription, on_delete=models.SET_NULL, blank=True, null=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
+    subscription = models.ForeignKey(
+        Subscription, on_delete=models.SET_NULL, blank=True, null=True
+    )
     stripe_customer_id = models.CharField(max_length=250, blank=True, null=True)
     stripe_subscription_id = models.CharField(max_length=250, blank=True, null=True)
-    billing_subscription = models.ForeignKey(BillingAddress, on_delete=models.SET_NULL, blank=True, null=True)
+    billing_subscription = models.ForeignKey(
+        BillingAddress, on_delete=models.SET_NULL, blank=True, null=True
+    )
     organisation = models.OneToOneField(
-        Organisation, on_delete=models.CASCADE, blank=True, null=True)
+        Organisation, on_delete=models.CASCADE, blank=True, null=True
+    )
     status = models.CharField(choices=SUBSCRIPTION_STATUS, max_length=250)
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -123,10 +137,13 @@ def post_save_create_organisation(sender, instance, *args, **kwargs):
     :param instance:  the user created or updated
     """
     if instance:
-        organisation_subscription = OrganisationSubscription.objects.filter(organisation=instance).first()
+        organisation_subscription = OrganisationSubscription.objects.filter(
+            organisation=instance
+        ).first()
         if not organisation_subscription:
-            organisation_subscription = OrganisationSubscription.objects.create(organisation=instance,
-                                                                                status="INACTIVE")
+            organisation_subscription = OrganisationSubscription.objects.create(
+                organisation=instance, status="INACTIVE"
+            )
         if not organisation_subscription.stripe_customer_id:
             customer_response = stripe.Customer.create(email=instance.owner.email)
             organisation_subscription.stripe_customer_id = customer_response.id
@@ -159,15 +176,27 @@ METHOD_CHOICES = (
 
 class Transaction(models.Model):
     id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     organisation = models.ForeignKey(
-        Organisation, on_delete=models.SET_NULL, blank=True, null=True)
-    created_by = models.ForeignKey(Member, on_delete=models.SET_NULL, blank=True, null=True, related_name="created_by")
+        Organisation, on_delete=models.SET_NULL, blank=True, null=True
+    )
+    created_by = models.ForeignKey(
+        Member,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="created_by",
+    )
     member = models.ForeignKey(Member, on_delete=models.SET_NULL, blank=True, null=True)
-    method = models.CharField(max_length=250, choices=METHOD_CHOICES, blank=True, null=True)
+    method = models.CharField(
+        max_length=250, choices=METHOD_CHOICES, blank=True, null=True
+    )
     transaction_id = models.CharField(max_length=250, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
-    status = models.CharField(max_length=255, blank=True, null=True, choices=TRANSACTION_STATUS)
+    status = models.CharField(
+        max_length=255, blank=True, null=True, choices=TRANSACTION_STATUS
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     is_anonymous = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)

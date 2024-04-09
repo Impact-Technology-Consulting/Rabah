@@ -1,7 +1,9 @@
 from django.urls import path
 
+
 from .views import UserProfileView, ChangeUserPassword, CustomLogout, MemberUserProfileUpdateView, \
     MemberCreatePasswordView, SetTimeZone
+
 
 app_name = "user"
 urlpatterns = [
@@ -15,4 +17,5 @@ urlpatterns = [
     # member invited to an organisation and need to create a password
     path("custom_logout", CustomLogout.as_view(), name="custom_logout"),
     path("set_timezone", SetTimeZone.as_view(), name="set_timezone"),
+
 ]

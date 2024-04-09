@@ -15,9 +15,7 @@ def query_groups(query, item):
     query_list += query.split()
     query_list = sorted(query_list, key=lambda x: x[-1])
     query = reduce(
-        operator.or_,
-        (Q(name__icontains=x) |
-         Q(name=[x]) for x in query_list)
+        operator.or_, (Q(name__icontains=x) | Q(name=[x]) for x in query_list)
     )
     object_list = item.filter(query).distinct()
     return object_list

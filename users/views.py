@@ -12,15 +12,21 @@ from django.views import View
 from rabah_members.models import Member
 from rabah_organisations.models import Organisation
 from rabah_subscriptions.models import Subscription
-from users.forms import UserProfileUpdateForm, ChangePasswordForm, RabahSignupForm, RabahLoginForm
+from users.forms import (
+    UserProfileUpdateForm,
+    ChangePasswordForm,
+    RabahSignupForm,
+    RabahLoginForm,
+)
 from users.mixin import AuthAndOrganizationMixin
 from users.models import User, UserProfile
 
 
 # Create your views here.
 
+
 class RabahSignupView(View):
-    template_name = 'account/signup.html'
+    template_name = "account/signup.html"
 
     def get(self, request):
 
@@ -42,36 +48,45 @@ class RabahSignupView(View):
             confirm_password = form.cleaned_data.get("password2")
             promo_code = form.cleaned_data.get("promo_code")
             if password != confirm_password:
-                form.add_error("password", "Password and confirm password must be the same")
+                form.add_error(
+                    "password", "Password and confirm password must be the same"
+                )
 
             if User.objects.filter(email=email).exists():
                 form.add_error("email", "User with this email already exists")
             else:
                 # create the user
-                user = User.objects.create(email=email, last_name=last_name, first_name=first_name)
+                user = User.objects.create(
+                    email=email, last_name=last_name, first_name=first_name
+                )
                 user.set_password(password)
                 user.save()
                 if not user:
                     return render(request, "account/signup.html", {"form": form})
 
                 # the user would be able to be part of the fourteen-days trial
-                organisation = Organisation.objects.create(name=organisation_name, owner=user)
+                organisation = Organisation.objects.create(
+                    name=organisation_name, owner=user
+                )
                 # check if the promo code exists
                 if promo_code:
-                    subscription = Subscription.objects.filter(promo_code=promo_code,
-                                                               subscription_duration="14_DAYS_TRIAL").first()
+                    subscription = Subscription.objects.filter(
+                        promo_code=promo_code, subscription_duration="14_DAYS_TRIAL"
+                    ).first()
                     if subscription:
                         organisation.has_trial = True
                         organisation.save()
 
-                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                login(
+                    request, user, backend="django.contrib.auth.backends.ModelBackend"
+                )
                 return redirect("rabah_dashboard:dashboard")
 
         return render(request, "account/signup.html", {"form": form})
 
 
 class RabahLoginView(View):
-    template_name = 'account/login.html'
+    template_name = "account/login.html"
 
     def get(self, request):
         # Delete the organisation_id cookie
@@ -80,7 +95,7 @@ class RabahLoginView(View):
         # if the user is authenticated, redirect the user to dashboard page
         if self.request.user.is_authenticated:
             return redirect("rabah_dashboard:dashboard")
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {"form": form})
 
     def post(self, request):
         form = RabahLoginForm(request.POST)
@@ -96,18 +111,22 @@ class RabahLoginView(View):
                 # Check if the password is correct
                 if check_password(password, user.password):
 
-                    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                    login(
+                        request,
+                        user,
+                        backend="django.contrib.auth.backends.ModelBackend",
+                    )
                     # redirect to the dashboard
                     return redirect("rabah_dashboard:dashboard")
                 else:
                     form.add_error("password", "Invalid password")
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {"form": form})
 
 
 class CustomLogout(View):
     def get(self, request):
         logout(request)
-        return redirect('account_login')  # Redirect to the desired URL after logout
+        return redirect("account_login")  # Redirect to the desired URL after logout
 
 
 class UserProfileView(LoginRequiredMixin, View):
@@ -128,10 +147,12 @@ class UserProfileView(LoginRequiredMixin, View):
 
     def post(self, request):
         user_profile = self.request.user.user_profile
-        form = UserProfileUpdateForm(data=self.request.POST, files=self.request.FILES, instance=user_profile)
+        form = UserProfileUpdateForm(
+            data=self.request.POST, files=self.request.FILES, instance=user_profile
+        )
         if form.is_valid():
             form.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class MemberUserProfileUpdateView(AuthAndOrganizationMixin, View):
@@ -144,12 +165,20 @@ class MemberUserProfileUpdateView(AuthAndOrganizationMixin, View):
         user_profile = UserProfile.objects.filter(id=profile_id).first()
         if not user_profile:
             messages.error(request, "profile does not exists")
-        form = UserProfileUpdateForm(data=self.request.POST, files=self.request.FILES, instance=user_profile)
+        form = UserProfileUpdateForm(
+            data=self.request.POST, files=self.request.FILES, instance=user_profile
+        )
         if form.is_valid():
             form.save()
-            return JsonResponse({"success": True, "message": "member info successfully updated"})
+            return JsonResponse(
+                {"success": True, "message": "member info successfully updated"}
+            )
         else:
-            errors_list = [error for field, error_list in form.errors.items() for error in error_list]
+            errors_list = [
+                error
+                for field, error_list in form.errors.items()
+                for error in error_list
+            ]
             return JsonResponse({"errors": errors_list}, status=400)
 
 
@@ -162,19 +191,23 @@ class ChangeUserPassword(LoginRequiredMixin, View):
             confirm_password = form.cleaned_data.get("confirm_password")
             if password != confirm_password:
                 messages.error(request, "Password does not match")
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
             user = self.request.user
             user.set_password(password)
             user.save()
-            user = authenticate(request, username=user.username, password=password,
-                                backend='django.contrib.auth.backends.ModelBackend')
+            user = authenticate(
+                request,
+                username=user.username,
+                password=password,
+                backend="django.contrib.auth.backends.ModelBackend",
+            )
             if user is not None:
                 login(request, user)
             messages.info(request, "Successfully Update password")
         else:
             for error in form.errors:
                 messages.warning(request, f"{error}: {form.errors[error][0]}")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class MemberCreatePasswordView(View):
@@ -187,18 +220,15 @@ class MemberCreatePasswordView(View):
         user = User.verify_token(token)
         if not user:
             messages.error(request, "Invalid token")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
         member = Member.objects.filter(id=member_id).first()
         if not member:
             messages.error(request, "Invalid member")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
         form = ChangePasswordForm()
-        context = {
-            "form": form,
-            "user": user
-        }
+        context = {"form": form, "user": user}
         return render(request, "account/create_password.html", context)
 
     def post(self, request, token):
@@ -207,12 +237,12 @@ class MemberCreatePasswordView(View):
         user = User.verify_token(token)
         if not user:
             messages.error(request, "Invalid token")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
         member = Member.objects.filter(id=member_id).first()
         if not member:
             messages.error(request, "Invalid member")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
         form = ChangePasswordForm(data=request.POST)
         if form.is_valid():
@@ -220,7 +250,7 @@ class MemberCreatePasswordView(View):
             confirm_password = form.cleaned_data.get("confirm_password")
             if password != confirm_password:
                 messages.error(request, "Password does not match")
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
             user.set_password(password)
             user.save()
 
@@ -228,8 +258,12 @@ class MemberCreatePasswordView(View):
             member.is_admin_member = True
             member.save()
 
-            user = authenticate(request, email=user.email, password=password,
-                                backend='django.contrib.auth.backends.ModelBackend')
+            user = authenticate(
+                request,
+                email=user.email,
+                password=password,
+                backend="django.contrib.auth.backends.ModelBackend",
+            )
             if user is not None:
                 login(request, user)
             messages.info(request, "Successfully Update password")
@@ -237,6 +271,7 @@ class MemberCreatePasswordView(View):
         else:
             for error in form.errors:
                 messages.warning(request, f"{error}: {form.errors[error][0]}")
+
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -249,3 +284,4 @@ class SetTimeZone(View):
             return JsonResponse({'message': 'Timezone offset received successfully'})
         else:
             return JsonResponse({'error': 'Invalid request method'}, status=400)
+

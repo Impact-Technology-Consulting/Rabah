@@ -9,31 +9,70 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Family',
+            name="Family",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=250)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=250)),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Member',
+            name="Member",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('is_owner', models.BooleanField(default=False)),
-                ('is_admin_member', models.BooleanField(default=False)),
-                ('is_active', models.BooleanField(default=False)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('family_relationship', models.CharField(blank=True, choices=[('FATHER', 'Father'), ('MOTHER', 'Mother'), ('SISTER', 'Sister'), ('BROTHER', 'Brother'), ('SON', 'Son'), ('DAUGHTER', 'Daughter')], max_length=250, null=True)),
-                ('family', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='members', to='rabah_members.family')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("is_owner", models.BooleanField(default=False)),
+                ("is_admin_member", models.BooleanField(default=False)),
+                ("is_active", models.BooleanField(default=False)),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
+                (
+                    "family_relationship",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("FATHER", "Father"),
+                            ("MOTHER", "Mother"),
+                            ("SISTER", "Sister"),
+                            ("BROTHER", "Brother"),
+                            ("SON", "Son"),
+                            ("DAUGHTER", "Daughter"),
+                        ],
+                        max_length=250,
+                        null=True,
+                    ),
+                ),
+                (
+                    "family",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="members",
+                        to="rabah_members.family",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-timestamp'],
+                "ordering": ["-timestamp"],
             },
         ),
     ]

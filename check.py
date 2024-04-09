@@ -1,6 +1,6 @@
 import os
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Rabah.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Rabah.settings")
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -20,12 +20,12 @@ def send_email(subject, message, recipient_email):
     try:
         # Create a MIMEText object
         msg = MIMEMultipart()
-        msg['From'] = formataddr(('Rabah Support', DEFAULT_FROM_EMAIL))
-        msg['To'] = recipient_email
-        msg['Subject'] = subject
+        msg["From"] = formataddr(("Rabah Support", DEFAULT_FROM_EMAIL))
+        msg["To"] = recipient_email
+        msg["Subject"] = subject
 
         # Attach the message to the email
-        msg.attach(MIMEText(message, 'plain'))
+        msg.attach(MIMEText(message, "plain"))
 
         # Establish a connection to the SMTP server
         server = smtplib.SMTP_SSL(EMAIL_HOST, EMAIL_PORT)
