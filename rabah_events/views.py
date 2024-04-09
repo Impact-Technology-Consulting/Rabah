@@ -19,13 +19,16 @@ from rabah_members.models import Member
 from rabah_members.utils import query_members
 from users.mixin import AuthAndAdminOrganizationMemberMixin
 
-
+# fixme: later
+# @method_decorator(cache_page(24 * 60 * 60), name='dispatch')
 class EventView(AuthAndAdminOrganizationMemberMixin, View):
     """
     this is the calendar page where users get access to view events using the calendar
     """
 
     def get(self, request):
+        now = timezone.now()
+        print(now)
         organisation_id = self.organisation_id
         form = EventCreateForm(organisation_id)
 
@@ -79,6 +82,7 @@ class EventUpdateView(AuthAndAdminOrganizationMemberMixin, View):
     """
 
     def get(self, request, event_id):
+
         event = Event.objects.filter(id=event_id, organisation_id=self.organisation_id).first()
         if not event:
             messages.error(request, "Event with this id does not exist in this organisation")
@@ -100,9 +104,10 @@ class EventUpdateView(AuthAndAdminOrganizationMemberMixin, View):
         if form.is_valid():
             event = form.save()
             # Invalidate cache for the event list page
-            cache_key = 'views.decorators.cache.cache_page.{0}.{1}'.format(cache_page.__module__,
-                                                                           reverse('rabah_events:event_list'))
-            cache.delete(cache_key)
+            # fixme: fix later
+            # cache_key = 'views.decorators.cache.cache_page.{0}.{1}'.format(cache_page.__module__,
+            #                                                                reverse('rabah_events:event_list'))
+            # cache.delete(cache_key)
             messages.success(request, "Event updated successfully")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
@@ -111,7 +116,6 @@ class EventUpdateView(AuthAndAdminOrganizationMemberMixin, View):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-@method_decorator(cache_page(24 * 60 * 60), name='dispatch')
 class EventListView(AuthAndAdminOrganizationMemberMixin, ListView):
     """
     this is used to list all the events available, and it only shows from future events or current events

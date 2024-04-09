@@ -70,4 +70,36 @@
     <script>
         deleteCookie("organisation_id");
     </script>
+
+    <script>
+
+
+        // Function to send the timezone offset to the server
+        function sendTimezoneOffset() {
+            let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            console.log(timezone);
+            fetch('{% url "user:set_timezone" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token if using Django
+                },
+                body: JSON.stringify({timezone_offset: timezone})
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Timezone offset sent successfully');
+                } else {
+                    console.error('Failed to send timezone offset');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Get the timezone offset and send it to the server when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            sendTimezoneOffset();
+        });
+    </script>
+
 {% endblock %}
