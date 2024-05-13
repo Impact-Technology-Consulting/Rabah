@@ -17,7 +17,9 @@
 
 <!-- Add your content below the separator -->
 <p style="line-height: 25px;padding-left: 20px;  ">
-    {{ message|safe }}
+    {% block content %}
+
+    {% endblock %}
 
 </p>
 
