@@ -212,3 +212,7 @@ You can find the project on GitHub: [Rabah GitHub Repository](git@github.com:Imp
 # Database Models
 
 ![ERP Diagram](./docs/rabah-db-postgres.png)
+
+
+## Template Used on themeforest for landing page 
+https://themeforest.net/item/elency-multipurpose-corporate-business-html-template/34385404

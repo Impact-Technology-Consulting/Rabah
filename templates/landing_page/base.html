@@ -30,9 +30,19 @@
 
     <link rel="stylesheet" href="{% static "landing_page/assets/css/responsive.css" %}">
 
+
+
+    {% comment %} For font awesome {% endcomment %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
           integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+{% comment %} For boxicon{% endcomment %}
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <!-- or -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet"/>
 
@@ -42,6 +52,9 @@
         }
     </style>
 
+    {% block css %}
+    	R
+    {% endblock %}
 </head>
 
 <body>
@@ -88,7 +101,7 @@
                                 </a>
                             </div>
                             <ul>
-                                <li class="has-child-menu">
+                                <li >
                                     <a class="{% if request.resolver_match.view_name == 'rabah_dashboard:home_page' %}active{% endif %}"
                                        href="{% url "rabah_dashboard:home_page" %}">Home</a>
 
@@ -221,9 +234,7 @@
                                     <a href="{% url "rabah_dashboard:home_page" %}">
                                         <h3 style="color: gray">Rabah </h3>
                                     </a>
-                                    <p>Welcome to Rabah- A community dedicated to spreading love, faith, and compassion.
-                                        Join us in worship, fellowship, and service as we journey together in our
-                                        faith.</p>
+                                    <p>Tailored for churches, Rabah Event Management is designed to support you in capturing and managing your church data effectively. Its user-friendly capability, coupled with customized features ensures you have an overview of each aspect of your church at any point in time, from wherever you are.</p>
                                 </div>
                                 <div class="footer-social">
                                     <ul>
@@ -255,7 +266,7 @@
                                     <h4>Contact Us</h4>
                                     <div class="footer-address">
                                         <i class="bx bx-location-plus"></i>
-                                        <span>Location  <br> Europe </span>
+                                        <span>Australia  <br> </span>
                                     </div>
                                     <div class="footer-address">
                                         <i class="bx bx-phone"></i>
@@ -264,8 +275,8 @@
                                     <div class="footer-address">
                                         <i class="bx bx-envelope"></i>
                                         <span><a
-                                                href="/cdn-cgi/l/email-protection#bdd4d3dbd2fdd8c5dcd0cdd1d893ded2d0"><span
-                                                class="__cf_email__" data-cfemail="264f48404966435e474b564a430845494b">info@rabah360.com</span></a> <br>
+                                                href="mailto:support@rabah360.com"><span
+                                                class="__cf_email__" data-cfemail="264f48404966435e474b564a430845494b">support@rabah360.com</span></a> <br>
 
                                     </div>
                                 </div>

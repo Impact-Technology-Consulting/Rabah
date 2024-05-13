@@ -62,7 +62,8 @@ class RabahContactUsPageView(View):
 
 class RabahAboutUsPageView(View):
     def get(self, request):
-        return render(request, "landing_page/about-us.html")
+        return redirect("rabah_dashboard:home_page")
+        # return render(request, "landing_page/about-us.html")
 
 
 class UserOrganisationsView(LoginRequiredMixin, View):

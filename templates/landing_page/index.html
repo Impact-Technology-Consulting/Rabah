@@ -1,7 +1,20 @@
 {% extends "landing_page/base.html" %}
 {% load static %}
 
+{% block css %}
+	
+    <style>
+        .single-service-box{
+            min-height: 500px;
+        }
 
+        .check-icon {
+            font-size: 24px; /* Adjust the size as needed */
+            font-weight: bold; /* Make the icon bolder */
+            color:#8231d3;
+        }
+    </style>
+{% endblock %}
 {% block home_page %}
 
     <div class="hero-area-wrap d-lg-block d-none d-sm-none">
@@ -9,7 +22,7 @@
             <div class="row">
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                     <div class="hero-text-content">
-                        <h1>Easy-to-use Church Management Software.</h1>
+                        <h1> Church Management Software.</h1>
                         <p>Membership, check-in, integrated giving, service planning, and more!
                             <br/>
                             Start using powerful, yet intuitive, church management software that's been designed to help
@@ -25,9 +38,9 @@
                             <img src="{% static "landing_page/assets/images/background.png" %}" alt>
                         </div>
                         <div class="heor-time-shape">
-                            <div class="heor-time-text">
+                           {% comment %} <div class="heor-time-text">
                                 <p>Rabah <br> Event Management</p>
-                            </div>
+                            </div>{% endcomment %}
                         </div>
                     </div>
                 </div>
@@ -78,6 +91,7 @@
 {% endblock %}
 
 {% block content %}
+{% comment %}
 
     <div class="about-us-section mt-100">
         <div class="container">
@@ -117,15 +131,16 @@
             </div>
         </div>
     </div>
+{% endcomment %}
 
 
     <div class="service-area mt-100">
         <div class="container">
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <div class="section-title service-section-title section-title-one-design">
+                    <div class="{% comment %}section-title {% endcomment %}service-section-title section-title-one-design">
                         <h4>SERVICE</h4>
-                        <h2>What We’re Offering</h2>
+                        Features
                     </div>
                 </div>
             </div>
@@ -134,47 +149,106 @@
                     <div class="service-slide-wrap owl-carousel">
                         <div class="single-service-box">
                             <div class="service-icon">
-                                <i class="flaticon-computer"></i>
+                                <i class="fa fa-desktop"></i>
+
                             </div>
                             <div class="service-content">
-                                <h4>01.SMOOTH TRANSITIION</h4>
-                                <p>Transitioning to a new church management system can be daunting. We'll handle the
-                                    migration process for you, ensuring a stress-free move to Rabah360. Our expert team
-                                    will
-                                    assist with importing your data, making the transition seamless.</p>
-                                <a href="{% url "rabah_dashboard:about_us" %}">Read More<i
-                                        class="flaticon-right-arrow"></i></a>
+                                <h4>01.Church management software</h4>
+                                <p>Tailored for churches, Rabah Event Management is designed to support you in capturing and managing your church data effectively. Its user-friendly capability, coupled with customized features ensures you have an overview of each aspect of your church at any point in time, from wherever you are.
+                                    .</p>
+                           
                             </div>
                         </div>
                         <div class="single-service-box">
                             <div class="service-icon">
-                                <i class="flaticon-optimizing"></i>
+                             <i class="fa fa-cogs"></i>
+
                             </div>
                             <div class="service-content">
-                                <h4>02.Dedicated Support</h4>
-                                <p>Need assistance? We've got you covered. Rabah360 provides free email and phone
-                                    support to
-                                    address any questions or concerns you may have. Our support team is committed to
-                                    helping
-                                    you maximize your experience with our software..</p>
-                                <a href="{% url "rabah_dashboard:about_us" %}">Read More<i
-                                        class="flaticon-right-arrow"></i></a>
+                                <h4>02.People Management</h4>
+                                <p>Rabah360 takes member data management to the next level with a customizable approach that perfectly fits your church's unique needs. Easily store and access relevant information while enjoying the flexibility to tailor the system to match your specific requirements. Empower your ministry with Rabah360's tailored member management solution and streamline your administrative tasks with precision and ease.</p>
+                                
                             </div>
                         </div>
                         <div class="single-service-box">
                             <div class="service-icon">
-                                <i class="flaticon-code"></i>
+                                <i class="fa fa-users"></i>
+
                             </div>
                             <div class="service-content">
-                                <h4>03.User-Friendly Design</h4>
-                                <p>You don't need an IT degree to manage your church effectively. Rabah360 features an
-                                    intuitive interface designed to streamline workflows and encourage widespread
-                                    adoption.
-                                    Empower your staff and volunteers to utilize our platform with ease.</p>
-                                <a href="{% url "rabah_dashboard:about_us" %}">Read More<i
-                                        class="flaticon-right-arrow"></i></a>
+                                <h4>03.Attendance Precision: Know Your Participation</h4>
+                                <p>With Rabah360's Attendance Tracking feature, gain valuable insights into your church's engagement levels at every event, be it a regular service or a special program. Effortlessly monitor and analyze attendance figures to understand participation trends and ensure every member feels connected and valued in your church community. Stay informed, stay engaged, with Rabah360.</p>
+                                
                             </div>
                         </div>
+                        <div class="single-service-box">
+                            <div class="service-icon">
+                                <i class="fa fa-code"></i>
+
+                            </div>
+                            <div class="service-content">
+                                <h4>04.Effortless Check-Ins: Simplify Service Participation</h4>
+                                <p>Rabah360's Check-in feature revolutionizes event management by enabling seamless check-ins for both children and adults at the click of a button. Ensure smooth transitions and enhanced safety protocols while maximizing participation in your services and events. Simplify your check-in process with Rabah360 and focus on creating meaningful experiences for your congregation.</p>
+                                
+                            </div>
+                        </div>
+                        <div class="single-service-box">
+                            <div class="service-icon">
+                                <i class="fa fa-check-square"></i>
+
+                            </div>
+                            <div class="service-content">
+                                <h4>05.Streamlined Event Management: Plan with Precision</h4>
+                                <p>Rabah360 empowers your church to organize events and services effortlessly with our Manage Events and Services feature. Calendarize your entire year's schedule, keeping your members informed and engaged. Ensure everyone knows what to expect and can plan accordingly, fostering a vibrant and connected church community. Plan with precision and elevate your events with Rabah360. </p>
+
+                            </div>
+                        </div>
+                        <div class="single-service-box">
+                            <div class="service-icon">
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <div class="service-content">
+                                <h4>06.Fellowship Groups: Strengthen Community Bonds</h4>
+                                <p>Rabah360's Groups feature empowers your church to cultivate strong fellowship connections. Customize specific groups tailored to your church's needs, enabling targeted communication and personalized engagement. Track and monitor each member's participation within their respective groups to ensure meaningful engagement and foster a sense of belonging within your community. Strengthen your church's bonds and nurture a vibrant, connected fellowship with Rabah360. </p>
+
+                            </div>
+                        </div>
+                        <div class="single-service-box">
+                            <div class="service-icon">
+                                <i class="fa fa-cogs"></i>
+
+                            </div>
+                            <div class="service-content">
+                                <h4>07.Financial Stewardship: Transparency and Insight</h4>
+                                <p>Rabah360's Giving & Finances feature is your key to transparent and efficient financial management. Record and track member giving promptly, ensuring accurate and up-to-date financial records. Gain a comprehensive view of your church's financial health at any time and review progress towards your financial goals. With Rabah360, empower your church with the tools needed for responsible financial stewardship and strategic planning.
+                                </p>
+
+                            </div>
+                        </div>                    
+                        <div class="single-service-box">
+                            <div class="service-icon">
+                                <i class="fa fa-cogs"></i>
+
+                            </div>
+                            <div class="service-content">
+                                <h4>08.Efficient Collaboration: Seamless Church Administration</h4>
+                                <p>Rabah360's Giving & Finances feature is your key to transparent and efficient financial management. Record and track member giving promptly, ensuring accurate and up-to-date financial records. Gain a comprehensive view of your church's financial health at any time and review progress towards your financial goals. With Rabah360, empower your church with the tools needed for responsible financial stewardship and strategic planning.
+                                </p>
+
+                            </div>
+                        </div>                    
+                        <div class="single-service-box">
+                            <div class="service-icon">
+                                <i class="fa fa-line-chart"></i>
+
+                            </div>
+                            <div class="service-content">
+                                <h4>09.Data-Driven Insights</h4>
+                                <p>Rabah360's Analytics feature illuminates the path to a more informed and impactful ministry. Our comprehensive dashboard provides key figures and insights across various aspects of your database, empowering you to make data-driven decisions with confidence. Gain valuable insights into attendance trends, giving patterns, engagement levels, and more, all in one centralized location. With Rabah360's Analytics, unlock the power of data to enhance your ministry's effectiveness and nurture meaningful connections within your church community.
+                                </p>
+
+                            </div>
+                        </div>                    
                     </div>
                 </div>
             </div>
@@ -196,7 +270,8 @@
                                 <div class="statistics-box text-center">
                                     <div class="statistics-container d-table">
                                         <div class="statistics-icon d-table-cell">
-                                            <i class="flaticon-goal"></i>
+                                            <i class="fa fa-flag-checkered"></i>
+
                                         </div>
                                     </div>
                                     <div class="statistics-countcount">
@@ -209,7 +284,8 @@
                                 <div class="statistics-box text-center">
                                     <div class="statistics-container d-table">
                                         <div class="statistics-icon d-table-cell">
-                                            <i class="flaticon-rating"></i>
+                                            <i class="fa fa-star"></i>
+
                                         </div>
                                     </div>
                                     <div class="statistics-countcount">
@@ -222,7 +298,8 @@
                                 <div class="statistics-box text-center">
                                     <div class="statistics-container d-table">
                                         <div class="statistics-icon d-table-cell">
-                                            <i class="flaticon-gold"></i>
+                                            <i class="fa fa-trophy"></i>
+
                                         </div>
                                     </div>
                                     <div class="statistics-countcount">
@@ -235,7 +312,8 @@
                                 <div class="statistics-box text-center">
                                     <div class="statistics-container d-table">
                                         <div class="statistics-icon d-table-cell">
-                                            <i class="flaticon-gold"></i>
+                                            <i class="fa fa-users"></i>
+
                                         </div>
                                     </div>
                                     <div class="statistics-countcount">
@@ -276,51 +354,62 @@
 
 
                 {% if subscription_monthly is not None %}
-                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
-                        <div class="price-content-box text-center">
-                            <div class="price-top-content">
-                                <h1>Silver</h1>
-                                <h2 class="text2">${{ subscription_monthly.price }}/<sub>Per Month</sub></h2>
+                    <div class=" col-12">
+                        <div class="row  price-content-box text-center justify-content-center align-items-center">
+                            <div class="col-12 col-md-6">
+                                <div class="price-top-content ">
+                                    <h2 class="text2" style="font-size: 9rem">${{ subscription_monthly.price|floatformat:"0" }}</h2>
+                                    <div  style="font-size: 2rem; margin-bottom: 16px">per month</div>
+                                </div>
+                                
                             </div>
-                            <div class="price-list mt-50">
-                                <ul>
+                            <div class="col-12 col-md-6">
+                                <h2 style="margin-bottom: 24px;color: #8231d3;">One. Simple. Price.</h2>
+                                <div class="price-list mt-50  row  text-start">
+                                    <ul class="col-12 col-md-6">
 
-                                    <li>
-                                        User roles and permissions
-                                    </li>
-                                    <li>
-                                        Member data management
-                                    </li>
-                                    <li>
-                                        Online and text giving capabilities
-                                    </li>
-                                    <li>
-                                        Event registration forms
-                                    </li>
-                                    <li>
-                                        Volunteer scheduling and reminders
-                                    </li>
-                                    <li>
-                                        Event planning and coordination
-                                    </li>
+                                        <li>
+                                            <i class="fa fa-check check-icon"></i>  User roles and permissions
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-check check-icon"></i>  Member data management
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-check check-icon"></i>  Online and text giving capabilities
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-check check-icon"></i>   Event registration forms
+                                        </li>
+                                        
 
-                                    <li>
-                                        Building custom church websites
-                                    </li>
+                                    </ul>
+                                    <ul class="col-12 col-md-6">
+                                        <li>
+                                            <i class="fa fa-check check-icon"></i>  Volunteer scheduling and reminders
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-check check-icon"></i>  Event planning and coordination
+                                        </li>
 
-                                </ul>
+                                        <li>
+                                            <i class="fa fa-check check-icon"></i>  Building custom church websites
+                                        </li>
+
+                                    </ul>
+                                </div>
+                                <div class="btn-wrap price-btn-wrap mt-50">
+                                    <a class="common-btn price-btn"
+                                       href="{% url 'rabah_subscriptions:billing_card' subscription_monthly.id %}">Purchase
+                                        Now</a>
+                                </div>
+                                <img class="shape price-shape-top-left"
+                                     src="{% static "landing_page/assets/images/price-shape.svg" %}" alt>
                             </div>
-                            <div class="btn-wrap price-btn-wrap mt-50">
-                                <a class="common-btn price-btn"
-                                   href="{% url 'rabah_subscriptions:billing_card' subscription_monthly.id %}">Purchase
-                                    Now</a>
-                            </div>
-                            <img class="shape price-shape-top-left"
-                                 src="{% static "landing_page/assets/images/price-shape.svg" %}" alt>
+                           
                         </div>
                     </div>
                 {% endif %}
-                {% if subscription_quarterly is  not None %}
+               {% comment %} {% if subscription_quarterly is  not None %}
                     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
                         <div class="price-content-box text-center">
                             <div class="price-top-content">
@@ -405,14 +494,14 @@
                                  src="{% static "landing_page/assets/images/price-shape.svg" %}" alt>
                         </div>
                     </div>
-                {% endif %}
+                {% endif %}{% endcomment %}
 
             </div>
         </div>
     </div>
 
 
-    <div class="subscribe-area">
+  {% comment %}  <div class="subscribe-area">
         <div class="container">
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -468,5 +557,6 @@
         <img class="shape team-top-dot-shape" src="{% static "landing_page/assets/images/team/team-dot-shape.png" %}"
              alt>
     </div>
-
+{% endcomment %}
 {% endblock %}
+

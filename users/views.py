@@ -20,6 +20,7 @@ from users.forms import (
 )
 from users.mixin import AuthAndOrganizationMixin
 from users.models import User, UserProfile
+from users.tasks import send_welcome_email
 
 
 # Create your views here.
@@ -77,6 +78,8 @@ class RabahSignupView(View):
                         organisation.has_trial = True
                         organisation.save()
 
+                #  send welcome email
+                send_welcome_email.delay(user.email,user.first_name)
                 login(
                     request, user, backend="django.contrib.auth.backends.ModelBackend"
                 )
