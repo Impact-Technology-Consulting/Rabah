@@ -90,11 +90,7 @@ label {
   font-size: 10px;
 }
 
-/*
-.form-row {
-  width: 70%;
-  float: left;
-}*/
+
 
 .form-row {
   display: inherit !important;
