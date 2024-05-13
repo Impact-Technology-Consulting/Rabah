@@ -348,6 +348,7 @@ class MemberAddLoginPermissionView(AuthAndAdminOrganizationMemberMixin, View):
 
         print(activation_url)
         send_member_activate_account.delay(
+            self.request.user.first_name,
             activation_url,
             member.user.email,
             member.user.first_name,
