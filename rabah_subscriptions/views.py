@@ -110,8 +110,12 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
                 customer.source = stripeToken
                 customer.save()
 
+                # subscribe to a subscription by returning to the make payment page
                 messages.success(request, "Successfully updated billing info and card")
-                return redirect("rabah_subscriptions:payment", subscription_id)
+
+                return redirect("rabah_subscriptions:make_payment",subscription_id)
+                # messages.success(request, "Successfully updated billing info and card")
+                # return redirect("rabah_subscriptions:payment", subscription_id)
 
             except stripe.error.CardError as e:
                 # The card has been declined

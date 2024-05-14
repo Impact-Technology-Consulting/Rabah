@@ -82,7 +82,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.EmailField(_("email address"), unique=True)
-    mobile = models.IntegerField(blank=True, null=True)
+    mobile = models.BigIntegerField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
