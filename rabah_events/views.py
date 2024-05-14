@@ -31,7 +31,6 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
 
     def get(self, request):
         now = timezone.now()
-        print(now)
         organisation_id = self.organisation_id
         form = EventCreateForm(organisation_id)
 

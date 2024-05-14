@@ -25,7 +25,6 @@ Rabah360 Team
         """
     html_message = render_to_string("email_template.html", {"message": html_message})
     send_mail(
-        from_email=settings.EMAIL_HOST_USER,
         recipient_list=[email],
         subject="Invitation to Join Rabah360",
         message=html_message,
@@ -61,7 +60,6 @@ def send_welcome_email(email, first_name):
     Rabah360
     """
     send_mail(
-        from_email=settings.EMAIL_HOST_USER,
         recipient_list=[email],
         subject="Welcome to Rabah360: Your Church Management Solution",
         message=strip_tags(html_message),
