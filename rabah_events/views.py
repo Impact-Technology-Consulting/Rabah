@@ -1,14 +1,10 @@
 import json
 
 from django.contrib import messages
-from django.core.cache import cache
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
-from django.urls import reverse
 from django.utils import timezone
-from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.decorators.cache import cache_page
 from django.views.generic import ListView
 
 from rabah_events.forms import EventCreateForm, EventUpdateForm
@@ -22,8 +18,7 @@ from rabah_members.models import Member
 from rabah_members.utils import query_members
 from users.mixin import AuthAndAdminOrganizationMemberMixin
 
-# fixme: later
-# @method_decorator(cache_page(24 * 60 * 60), name='dispatch')
+
 class EventView(AuthAndAdminOrganizationMemberMixin, View):
     """
     this is the calendar page where users get access to view events using the calendar
@@ -51,7 +46,8 @@ class EventView(AuthAndAdminOrganizationMemberMixin, View):
         organisation_id = self.organisation_id
         user_timezone = None
 
-        form = EventCreateForm(organisation_id, data=self.request.POST, files=self.request.FILES,initial={'user_timezone': user_timezone})
+        form = EventCreateForm(organisation_id, data=self.request.POST, files=self.request.FILES,
+                               initial={'user_timezone': user_timezone})
         if form.is_valid():
             event = form.save()
 
@@ -84,7 +80,6 @@ class EventUpdateView(AuthAndAdminOrganizationMemberMixin, View):
 
     def get(self, request, event_id):
 
-
         event = Event.objects.filter(id=event_id, organisation_id=self.organisation_id).first()
 
         if not event:
@@ -111,12 +106,6 @@ class EventUpdateView(AuthAndAdminOrganizationMemberMixin, View):
         )
         if form.is_valid():
             event = form.save()
-            # Invalidate cache for the event list page
-
-            # fixme: fix later
-            # cache_key = 'views.decorators.cache.cache_page.{0}.{1}'.format(cache_page.__module__,
-            #                                                                reverse('rabah_events:event_list'))
-            # cache.delete(cache_key)
 
             messages.success(request, "Event updated successfully")
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
@@ -124,7 +113,6 @@ class EventUpdateView(AuthAndAdminOrganizationMemberMixin, View):
             for error in form.errors:
                 messages.warning(request, f"{error}: {form.errors[error][0]}")
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-
 
 
 class EventListView(AuthAndAdminOrganizationMemberMixin, ListView):
@@ -185,6 +173,27 @@ class EventDeleteView(AuthAndAdminOrganizationMemberMixin, View):
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
+class EventDetailAPIView(View):
+    """
+    this is used to get the event detail api view
+    """
+
+    def get(self, request, event_id):
+        event = Event.objects.filter(id=event_id).first()
+        if not event:
+            return JsonResponse(status=400,data={"error":"event does not exists what this id "})
+        return JsonResponse(status=200, data={
+            "name": event.name,
+            "description": event.description,
+            "repeat": event.repeat,
+            "repeat_end": event.repeat_end,
+            "start_date": event.start_date,
+            "end_date": event.end_date,
+            "repeat_count": event.repeat_count,
+            "repeat_until_date": event.repeat_until_date,
+        })
+
+
 class MarkAttendancePageView(AuthAndAdminOrganizationMemberMixin, View):
 
     def get(self, request, event_id):
@@ -231,8 +240,8 @@ class MarkAttendancePageView(AuthAndAdminOrganizationMemberMixin, View):
 
         present_count = member_attendance.filter(status="PRESENT").count()
         absent_count = (
-            Member.objects.filter(organisation_id=self.organisation_id).count()
-            - present_count
+                Member.objects.filter(organisation_id=self.organisation_id).count()
+                - present_count
         )
 
         context = {

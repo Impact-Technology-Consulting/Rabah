@@ -7,7 +7,7 @@ from .views import (
     EventDeleteView,
     MarkAttendancePageView,
     MarkMultipleMemberAttendanceView,
-    EventUpdateView,
+    EventUpdateView, EventDetailAPIView,
 )
 
 app_name = "rabah_events"
@@ -23,9 +23,8 @@ urlpatterns = [
         MarkAttendancePageView.as_view(),
         name="mark_attendance",
     ),
-    path(
-        "event_delete/<str:event_id>/", EventDeleteView.as_view(), name="event_delete"
-    ),
+    path("event_delete/<str:event_id>/", EventDeleteView.as_view(), name="event_delete" ),
+    path("get_event_detail/<str:event_id>/", EventDetailAPIView.as_view(), name="event_delete" ),
     path(
         "mark_multiple_attendance/<str:event_id>/",
         MarkMultipleMemberAttendanceView.as_view(),

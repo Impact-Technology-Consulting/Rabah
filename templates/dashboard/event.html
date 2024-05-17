@@ -175,114 +175,7 @@
         </div>
     </div>
 
-    {% for event in events %}
-        <div class="e-info-modal-{{ event.id }} e-info-modal modal fade" id="e-info-modal-{{ event.id }}" tabindex="-1"
-             role="dialog"
-             aria-hidden="true">
-            <div class="modal-dialog modal-sm e-info-dialog modal-dialog-centered" id="c-event" role="document">
-                <div class="modal-content">
-                    <div class="modal-header e-info-header bg-primary">
-                        <h6 class="modal-title e-info-title">{{ event.name }}</h6>
-                        <div class="e-info-action">
-                            <a href="{% url "rabah_events:event_update" event.id %}" class="btn-icon">
-                                <img class="svg" src="{% static "img/svg/edit.svg" %}" alt="edit">
-                            </a>
-
-                            <button class="btn-icon">
-                                <a href="{% url "rabah_events:event_delete" event.id %}" class="svg">
-                                    <img class="svg"
-                                         src="{% static 'img/svg/trash-2.svg' %}"
-                                         alt="trash">
-                                </a>
-                            </button>
-                            <button type="button" class="btn-icon btn-closed" data-bs-dismiss="modal"
-                                    aria-label="Close">
-                                <i class="uil uil-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-6 d-flex flex-column justify-content-center align-center">
-                                <img src="{% static "img/service_plan.png" %}" alt=""
-                                     style="object-fit: contain; height: 50%; width: 50%; margin-bottom: 10px">
-                                <a href="{% url "rabah_events:mark_attendance" event.id %}"
-                                   class="btn btn-lg btn-secondary" style="width: 100%; max-height: 10px">Check
-                                    In
-                                </a>
-                            </div>
-                            <div class="col-6 d-flex flex-column justify-content-center align-center  ">
-                                <img src="{% static "img/event_detail.png" %}" alt=""
-                                     style="object-fit: contain; height: 50%; width: 50%; margin-bottom: 10px">
-
-                                <button class="btn btn-lg btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#e-info-modal-detail-{{ event.id }}"
-                                        style="width: 100%; max-height: 10px">Event
-                                    Detail
-                                </button>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="e-info-modal-detail-{{ event.id }} e-info-modal modal fade" id="e-info-modal-detail-{{ event.id }}"
-             tabindex="-1"
-             role="dialog"
-             aria-hidden="true">
-            <div class="modal-dialog modal-sm e-info-dialog modal-dialog-centered" id="c-event" role="document">
-                <div class="modal-content">
-                    <div class="modal-header e-info-header bg-primary">
-                        <h6 class="modal-title e-info-title">{{ event.name }}</h6>
-                        <div class="e-info-action">
-                            <button class="btn-icon">
-                                <img class="svg" src="{% static "img/svg/edit.svg" %}" alt="edit">
-                            </button>
-
-                            <button class="btn-icon">
-                                <a href="{% url "rabah_events:event_delete" event.id %}" class="svg">
-                                    <img class="svg"
-                                         src="{% static 'img/svg/trash-2.svg' %}"
-                                         alt="trash">
-                                </a>
-                            </button>
-                            <button type="button" class="btn-icon btn-closed" data-bs-dismiss="modal"
-                                    aria-label="Close">
-                                <i class="uil uil-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="modal-body" style="min-height: 50vh">
-                        <ul class="e-info-list">
-                            <li>
-                                <img class="svg" src="{% static 'img/svg/chevron-right.svg' %}" alt="chevron-right.svg">
-                                <span class="list-line">
-                                <span class="list-label">Start Date :</span>
-                                <span class="list-meta"> {{ event.start_date }}</span>
-                                </span>
-                            </li>
-                            <li>
-                                <img class="svg" src="{% static 'img/svg/chevron-right.svg' %}" alt="chevron-right.svg">
-                                <span class="list-line">
-                                <span class="list-label">End Date :</span>
-                                <span class="list-meta"> {{ event.end_date }}</span>
-                                </span>
-                            </li>
-                            <li>
-                                <img class="svg" src="{% static 'img/svg/align-left.svg' %}" alt="align-left">
-                                <span class="list-line">
-                <span class="list-text"> {{ event.description|linebreaks }}</span>
-                </span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    {% endfor %}
+   
 
 
 
@@ -291,87 +184,6 @@
 {% block script %}
 
 
-
-    {% comment %} Calender{% endcomment %}
-    <script>
-
-
-        var calendar;  // Declare the calendar variable in an accessible scope
-
-        var calendarEl = document.getElementById("full-event-calendar");
-        if (calendarEl) {
-            // Initialize calendar variable before the AJAX request
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                headerToolbar: {
-                    left: "today,prev,title,next",
-                    right: "timeGridDay,timeGridWeek,dayGridMonth,listMonth"
-                },
-                views: {
-                    listMonth: {
-                        buttonText: "List",
-                        titleFormat: {
-                            month: "short",
-                            weekday: "short"
-                        }
-                    }
-                },
-                listDayFormat: true,
-                listDayAltFormat: true,
-                allDaySlot: false,
-                editable: true,
-                contentHeight: 800,
-                initialView: "timeGridDay",
-                eventDidMount: function (event) {
-                    $(".fc-list-day").each(function () {
-                    });
-                },
-                eventClick: function (event) {
-                    console.log(event.event.id);
-
-                    // Get the clicked date
-                    var clickedDate = event.event.start;
-
-
-                    // Move the calendar to the clicked date
-                    calendar.gotoDate(clickedDate);
-
-                    var modal_id = "#e-info-modal-" + event.event.id;
-                    var modal = $(modal_id);
-                    modal.modal("show");
-                    console.log(modal.find(".e-info-title"));
-                    modal.find(".e-info-title").text(event.event.title);
-
-
-                }
-            });
-
-            // AJAX request to fetch event data
-            $.ajax({
-                url: `{% url "rabah_events:event_calendar" %}`,
-                type: "GET",
-                success: function (data) {
-                    // Clear existing events before adding new ones
-                    calendar.getEvents().forEach(function (event) {
-                        event.remove();
-                    });
-
-                    // Add new events
-                    calendar.addEventSource(data);
-
-                    // Render the calendar after clearing existing events and adding new ones
-                    calendar.render();
-                    $(".fc-button-group .fc-listMonth-button").prepend('<i class="las la-list"></i>');
-
-
-                },
-                error: function (error) {
-                    console.error("Error fetching events:", error);
-                }
-            });
-        }
-
-
-    </script>
 
 
     {% comment %} Calender date {% endcomment %}
@@ -467,6 +279,252 @@
             });
         });
     </script>
+
+
+
+ 
+
+   
+
+   <!-- JavaScript function to load event detail for modal preview  -->
+    <script>
+       function loadEventContent(eventId) {
+            // AJAX request to fetch event details
+            $.ajax({
+                url: '/event/get_event_detail/'+eventId,  // URL to your Django endpoint
+                method: 'GET',
+                data: {event_id: eventId},
+                success: function (data) {
+                    // Create modal dynamically with fetched event details
+                    var modalContent = `
+                    <div class="e-info-modal-${eventId} e-info-modal modal fade" id="e-info-modal-${eventId}" tabindex="-1"
+             role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-sm e-info-dialog modal-dialog-centered" id="c-event" role="document">
+                <div class="modal-content">
+                    <div class="modal-header e-info-header bg-primary">
+                        <h6 class="modal-title e-info-title">${data.name}</h6>
+                        <div class="e-info-action">
+                            <a href="/event/event_update/${eventId}/" class="btn-icon">
+                                <img class="svg" src="{% static "img/svg/edit.svg" %}" alt="edit">
+                            </a>
+
+                            <button class="btn-icon">
+                                <a href="/event/event_delete/${eventId}" class="svg">
+                                    <img class="svg"
+                                         src="{% static 'img/svg/trash-2.svg' %}"
+                                         alt="trash">
+                                </a>
+                            </button>
+                            <button type="button" class="btn-icon btn-closed" data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                <i class="uil uil-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-6 d-flex flex-column justify-content-center align-center">
+                                <img src="{% static "img/service_plan.png" %}" alt=""
+                                     style="object-fit: contain; height: 50%; width: 50%; margin-bottom: 10px">
+                                <a href="/event/mark_attendance/${eventId}"
+                                   class="btn btn-lg btn-secondary" style="width: 100%; max-height: 10px">Check
+                                    In
+                                </a>
+                            </div>
+                            <div class="col-6 d-flex flex-column justify-content-center align-center  ">
+                                <img src="{% static "img/event_detail.png" %}" alt=""
+                                     style="object-fit: contain; height: 50%; width: 50%; margin-bottom: 10px">
+
+                                <button class="btn btn-lg btn-primary" data-bs-toggle="modal"
+                                 onclick="loadEventDetail('${eventId}')"
+                                        
+                                        style="width: 100%; max-height: 10px">Event
+                                    Detail
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+                    // Remove existing detail modal if it exists
+                    $('#e-info-modal-' + eventId).remove();
+
+                    // Append new modal to the body
+                    $('body').append(modalContent);
+
+                    // Show the modal
+                    $(`#e-info-modal-${eventId}`).modal('show');
+                },
+                error: function (error) {
+                    console.error('Error fetching event details:', error);
+                }
+            });
+        }
+        
+        function loadEventDetail(eventId) {
+            // AJAX request to fetch event details
+            $.ajax({
+                url: '/event/get_event_detail/'+eventId,  // URL to your Django endpoint
+                method: 'GET',
+                data: {event_id: eventId},
+                success: function (data) {
+                    // Create modal dynamically with fetched event details
+                    var modalContent = `
+                    <div class="e-info-modal-detail-${eventId}  e-info-modal modal fade" id="e-info-modal-detail-${eventId}"
+             tabindex="-1"
+             role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-sm e-info-dialog modal-dialog-centered" id="c-event" role="document">
+                <div class="modal-content">
+                    <div class="modal-header e-info-header bg-primary">
+                        <h6 class="modal-title e-info-title">${data.name}</h6>
+                        <div class="e-info-action">
+                            <button class="btn-icon">
+                                <img class="svg" src="{% static "img/svg/edit.svg" %}" alt="edit">
+                            </button>
+
+                            <button class="btn-icon">
+                                <a href="/event/event_delete/${eventId}" class="svg">
+                                    <img class="svg"
+                                         src="{% static 'img/svg/trash-2.svg' %}"
+                                         alt="trash">
+                                </a>
+                            </button>
+                            <button type="button" class="btn-icon btn-closed" data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                <i class="uil uil-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body" style="min-height: 50vh">
+                        <ul class="e-info-list">
+                            <li>
+                                <img class="svg" src="{% static 'img/svg/chevron-right.svg' %}" alt="chevron-right.svg">
+                                <span class="list-line">
+                                <span class="list-label">Start Date :</span>
+                                <span class="list-meta"> ${data.start_date}</span>
+                                </span>
+                            </li>
+                            <li>
+                                <img class="svg" src="{% static 'img/svg/chevron-right.svg' %}" alt="chevron-right.svg">
+                                <span class="list-line">
+                                <span class="list-label">End Date :</span>
+                                <span class="list-meta"> ${data.end_date}</span>
+                                </span>
+                            </li>
+                            <li>
+                                <img class="svg" src="{% static 'img/svg/align-left.svg' %}" alt="align-left">
+                                <span class="list-line">
+                <span class="list-text"> ${data.description}</span>
+                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+                    // Remove existing detail modal if it exists
+                    $('#e-info-modal-detail-' + eventId).remove();
+
+                    // Append new modal to the body
+                    $('body').append(modalContent);
+
+                    // Show the modal
+                    $(`#e-info-modal-detail-${eventId}`).modal('show');
+                },
+                error: function (error) {
+                    console.error('Error fetching event details:', error);
+                }
+            });
+        }
+    </script>
+
+
+    {% comment %} Calender{% endcomment %}
+    <script>
+
+        console.log("{{ events }}")
+        
+
+
+        var calendar;  // Declare the calendar variable in an accessible scope
+
+        var calendarEl = document.getElementById("full-event-calendar");
+        if (calendarEl) {
+            // Initialize calendar variable before the AJAX request
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                headerToolbar: {
+                    left: "today,prev,title,next",
+                    right: "timeGridDay,timeGridWeek,dayGridMonth,listMonth"
+                },
+                views: {
+                    listMonth: {
+                        buttonText: "List",
+                        titleFormat: {
+                            month: "short",
+                            weekday: "short"
+                        }
+                    }
+                },
+                listDayFormat: true,
+                listDayAltFormat: true,
+                allDaySlot: false,
+                editable: true,
+                contentHeight: 800,
+                initialView: "timeGridDay",
+                eventDidMount: function (event) {
+                    $(".fc-list-day").each(function () {
+                    });
+                },
+                eventClick: function (event) {
+                    console.log(event.event.id);
+
+                    // Get the clicked date
+                    var clickedDate = event.event.start;
+
+
+                    // Move the calendar to the clicked date
+                    calendar.gotoDate(clickedDate);
+
+                    loadEventContent(event.event.id);
+
+
+                }
+            });
+
+            // AJAX request to fetch event data
+            $.ajax({
+                url: `{% url "rabah_events:event_calendar" %}`,
+                type: "GET",
+                success: function (data) {
+                    // Clear existing events before adding new ones
+                    calendar.getEvents().forEach(function (event) {
+                        event.remove();
+                    });
+
+                    // Add new events
+                    calendar.addEventSource(data);
+
+                    // Render the calendar after clearing existing events and adding new ones
+                    calendar.render();
+                    $(".fc-button-group .fc-listMonth-button").prepend('<i class="las la-list"></i>');
+
+
+                },
+                error: function (error) {
+                    console.error("Error fetching events:", error);
+                }
+            });
+        }
+
+
+    </script>
+
 
 
 {% endblock %}

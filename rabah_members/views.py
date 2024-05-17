@@ -352,7 +352,7 @@ class MemberAddLoginPermissionView(AuthAndAdminOrganizationMemberMixin, View):
             activation_url,
             member.user.email,
             member.user.first_name,
-            member.user.last_name,
+            member.user.last_name
         )
         messages.success(request, "Successfully send activation link to member")
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
