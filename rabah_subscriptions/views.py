@@ -34,7 +34,6 @@ class SubscriptionPageView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             "organisation_subscription": organisation_subscription,
             "subscriptions": subscriptions,
         }
-        send_welcome_email.delay(self.request.user.email, self.request.user.first_name)
         return render(request, "dashboard/subscription.html", context)
 
 
