@@ -7,6 +7,7 @@ from django.views import View
 from rabah_members.utils import get_member
 from rabah_subscriptions.forms import BillingAddressForm
 from users.mixin import AuthAndAdminOrganizationNotSubscribedMixin
+from users.tasks import send_welcome_email
 from .models import BillingAddress, Subscription
 from .models import OrganisationSubscription
 
@@ -33,6 +34,7 @@ class SubscriptionPageView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             "organisation_subscription": organisation_subscription,
             "subscriptions": subscriptions,
         }
+        send_welcome_email.delay(self.request.user.email, self.request.user.first_name)
         return render(request, "dashboard/subscription.html", context)
 
 
