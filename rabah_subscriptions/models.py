@@ -3,10 +3,12 @@ import uuid
 import stripe
 from django.conf import settings
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 
 from rabah_members.models import Member
 from rabah_organisations.models import Organisation
+from django.utils import timezone
 
 # Create your models here.
 SUBSCRIPTION_STATUS = (
@@ -32,6 +34,7 @@ class Subscription(models.Model):
     subscription_duration = models.CharField(
         choices=SUBSCRIPTION_DURATION, max_length=250, blank=True, null=True
     )
+    #  only used for the trail. The old implementation for promo code
     promo_code = models.CharField(max_length=250, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -98,6 +101,8 @@ class BillingAddress(models.Model):
     organisation = models.ForeignKey(
         Organisation, on_delete=models.SET_NULL, blank=True, null=True
     )
+    promo_code = models.ForeignKey("PromoCode",on_delete=models.SET_NULL, blank=True, null=True)
+
     address = models.CharField(max_length=250, blank=True, null=True)
     city = models.CharField(max_length=250, blank=True, null=True)
     state = models.CharField(max_length=250, blank=True, null=True)
@@ -200,3 +205,72 @@ class Transaction(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     is_anonymous = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+
+PROMOCODE_DURATION = (
+    ('once', 'Once'),
+    ('forever', 'Forever'),
+    ('repeating', 'Repeating'),
+)
+
+class PromoCode(models.Model):
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
+    code = models.CharField(max_length=50, unique=True)
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    duration = models.CharField(max_length=50,choices=PROMOCODE_DURATION, default='once')
+    expiration_date = models.DateTimeField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Code: {self.code} -- Discount: {self.discount_percentage}% -- Duration: {self.duration} -- Expiry Date: {self.expiration_date}"
+
+
+    def promo_code_is_valid(self):
+        """
+        Check if the promo code is valid
+        """
+        try:
+            coupon = stripe.Coupon.retrieve(self.code)
+            if not coupon.redeem_by:
+                return False
+            if coupon.redeem_by < timezone.now().timestamp():
+                return False
+            return True
+        except :
+            return False
+
+
+@receiver(post_save, sender=PromoCode)
+def post_save_create_or_update_promo_code(sender, instance, **kwargs):
+    """
+    Create or update the promo code on Stripe when a new promo code is created or updated in Django
+    """
+    if instance:
+        try:
+            stripe.Coupon.retrieve(instance.code)
+            # Update existing coupon
+            stripe.Coupon.modify(
+                instance.code
+            )
+        except stripe.error.InvalidRequestError:
+            # Create new coupon if it doesn't exist
+            stripe.Coupon.create(
+                id=instance.code,
+                percent_off=instance.discount_percentage,
+                duration=instance.duration,
+                redeem_by=int(instance.expiration_date.timestamp())
+            )
+
+
+@receiver(post_delete, sender=PromoCode)
+def post_delete_promo_code(sender, instance, **kwargs):
+    """
+    Delete the promo code on Stripe when a promo code is deleted in Django
+    """
+    try:
+        stripe.Coupon.delete(instance.code)
+    except stripe.error.InvalidRequestError:
+        # The promo code might already be deleted or never existed
+        pass

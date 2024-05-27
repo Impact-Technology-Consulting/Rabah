@@ -1,15 +1,16 @@
 import stripe
 from django.conf import settings
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
 
 from rabah_members.utils import get_member
 from rabah_subscriptions.forms import BillingAddressForm
 from users.mixin import AuthAndAdminOrganizationNotSubscribedMixin
-from users.tasks import send_welcome_email
-from .models import BillingAddress, Subscription
+from .models import BillingAddress, Subscription, PromoCode
 from .models import OrganisationSubscription
+from django.utils import  timezone
 
 STRIPE_SECRET_KEY = settings.STRIPE_SECRET_KEY
 STRIPE_PUBLIC_KEY = settings.STRIPE_PUBLIC_KEY
@@ -99,10 +100,19 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
         if not stripeToken:
             messages.warning(request, "stripe card not provided or invalid token")
             return redirect("rabah_subscriptions:billing_card")
+
+        coupon = self.request.POST.get("coupon")
+
+
         if form.is_valid():
             form.save()
             billing_address.is_billing_verified = True
             billing_address.save()
+            if coupon:
+                promo_code = PromoCode.objects.filter(code=coupon).first()
+                if promo_code and promo_code.promo_code_is_valid():
+                    billing_address.promo_code = promo_code
+                    billing_address.save()
 
             try:
                 customer = stripe.Customer.retrieve(
@@ -114,7 +124,7 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
                 # subscribe to a subscription by returning to the make payment page
                 messages.success(request, "Successfully updated billing info and card")
 
-                return redirect("rabah_subscriptions:make_payment",subscription_id)
+                return redirect("rabah_subscriptions:make_payment", subscription_id)
                 # messages.success(request, "Successfully updated billing info and card")
                 # return redirect("rabah_subscriptions:payment", subscription_id)
 
@@ -185,8 +195,8 @@ class PaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
 
         # if the subscription id is trail and the user have the promocode and also the user have not used the trial add the user to the trial
         if (
-            subscription.subscription_duration == "14_DAYS_TRIAL"
-            and organisation_subscription.organisation.has_trial
+                subscription.subscription_duration == "14_DAYS_TRIAL"
+                and organisation_subscription.organisation.has_trial
         ):
             if not organisation_subscription.subscription:
                 return redirect("rabah_subscriptions:make_payment", subscription_id)
@@ -209,6 +219,13 @@ class MakePaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
         if not subscription:
             messages.warning(request, "Subscription not found")
             return redirect("rabah_subscriptions:subscription_page")
+
+        billing_info = BillingAddress.objects.filter(organisation_id=self.organisation_id).first()
+        if not billing_info:
+            return redirect("rabah_subscriptions:billing_card", subscription_id)
+
+        #  Get the user promo code if it exists
+        promo_code = billing_info.promo_code
 
         organisation_subscription = OrganisationSubscription.objects.filter(
             organisation_id=self.organisation_id
@@ -238,16 +255,21 @@ class MakePaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
                     ],
                 )
             else:
-                stripe_subscription = stripe.Subscription.create(
-                    customer=customer.id,
-                    items=[
-                        {
-                            "price": subscription.stripe_plan_id,
-                        },
-                    ],
-                )
+                # Prepare subscription data
+                subscription_data = {
+                    "customer": customer.id,
+                    "items": [{"price": subscription.stripe_plan_id}],
+                }
 
-                # update the organization
+                # Check if a promo code exists and apply it to the subscription data
+                if billing_info.promo_code:
+                    if billing_info.promo_code.promo_code_is_valid():
+                        subscription_data["coupon"] = billing_info.promo_code.code
+                        messages.success(request, "Promo code applied successfully")
+
+                stripe_subscription = stripe.Subscription.create(**subscription_data)
+
+            # update the organization
             organisation_subscription.subscription_id = subscription_id
             organisation_subscription.stripe_subscription_id = stripe_subscription.id
             organisation_subscription.status = "ACTIVE"
@@ -310,8 +332,8 @@ class CancelPaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             )
 
         if (
-            not organisation_subscription.stripe_subscription_id
-            or organisation_subscription.status == "INACTIVE"
+                not organisation_subscription.stripe_subscription_id
+                or organisation_subscription.status == "INACTIVE"
         ):
             messages.warning(request, "No subscription found for this organisation")
             return redirect("rabah_subscriptions:subscription_page")
@@ -330,3 +352,25 @@ class CancelPaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             request, f"Successfully cancelled {subscription.name} subscription"
         )
         return redirect("rabah_subscriptions:subscription_page")
+
+
+class PromoCodeValidateAPIView(AuthAndAdminOrganizationNotSubscribedMixin, View):
+    """
+    this is used to validate the promo code subscription
+    """
+
+    def get(self, request):
+        coupon = self.request.GET.get("coupon")
+        if not coupon:
+            return JsonResponse({"error": "promo code is required"}, status=400)
+        promo_code_instance = PromoCode.objects.filter(code=coupon).first()
+        if not promo_code_instance:
+            return JsonResponse({"error": "promo code not found"}, status=400)
+        if promo_code_instance.expiration_date <= timezone.now():
+            return JsonResponse({"error": "promo code is expired"}, status=400)
+        return JsonResponse({"success": "promo code is valid", "data": {
+            "code": promo_code_instance.code,
+            "discount_percentage": promo_code_instance.discount_percentage,
+            "duration": promo_code_instance.duration,
+            "expiration_date": promo_code_instance.expiration_date,
+        }}, status=200)

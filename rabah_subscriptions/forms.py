@@ -5,9 +5,11 @@ from rabah_subscriptions.models import BillingAddress
 
 
 class BillingAddressForm(forms.ModelForm):
+    coupon = forms.CharField(required=False)
+
     class Meta:
         model = BillingAddress
-        fields = ("address", "city", "state", "country", "zip_code")
+        fields = ("coupon","address", "city", "state", "country", "zip_code")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

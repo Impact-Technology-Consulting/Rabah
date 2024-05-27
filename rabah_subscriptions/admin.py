@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Subscription, BillingAddress, OrganisationSubscription, Transaction
+from .models import Subscription, BillingAddress, OrganisationSubscription, Transaction, PromoCode
 
 
 @admin.register(Subscription)
@@ -65,3 +65,12 @@ class TransactionAdmin(admin.ModelAdmin):
         "status",
     )
     list_filter = ("method", "status", "timestamp")
+
+
+
+@admin.register(PromoCode)
+class PromoCodeAdmin(admin.ModelAdmin):
+    list_display = ('code', 'discount_percentage', 'duration', 'expiration_date', 'timestamp')
+    search_fields = ('code',)
+    list_filter = ('duration', 'expiration_date')
+    readonly_fields = ('timestamp',)

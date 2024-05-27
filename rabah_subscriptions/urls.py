@@ -5,7 +5,7 @@ from .views import (
     SubscriptionPageView,
     MakePaymentView,
     CancelPaymentView,
-    PaymentView,
+    PaymentView, PromoCodeValidateAPIView,
 )
 
 app_name = "rabah_subscriptions"
@@ -27,4 +27,5 @@ urlpatterns = [
         CancelPaymentView.as_view(),
         name="cancel_subscription",
     ),
+    path("promo_code_validate/", PromoCodeValidateAPIView.as_view(), name="promo_code_validate"),
 ]
