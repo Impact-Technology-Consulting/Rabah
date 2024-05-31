@@ -184,12 +184,13 @@ class PaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             organisation_id=self.organisation_id
         )
 
-        stripe_customer = stripe.Customer.retrieve(
-            organisation_subscription.stripe_customer_id
-        )
-        if not stripe_customer.default_source:
-            messages.warning(request, "No card found for this organisation")
-            return redirect("rabah_subscriptions:billing_card", subscription_id)
+        #  commented  this and added it on  the make payment page
+        # stripe_customer = stripe.Customer.retrieve(
+        #     organisation_subscription.stripe_customer_id
+        # )
+        # if not stripe_customer.default_source:
+        #     messages.warning(request, "No card found for this organisation")
+        #     return redirect("rabah_subscriptions:billing_card", subscription_id)
 
         # if the subscription id is trail and the user have the promocode and also the user have not used the trial add the user to the trial
         if (
@@ -230,6 +231,15 @@ class MakePaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             organisation_subscription = OrganisationSubscription.objects.create(
                 organisation_id=self.organisation_id
             )
+
+
+        stripe_customer = stripe.Customer.retrieve(
+            organisation_subscription.stripe_customer_id
+        )
+        if not stripe_customer.default_source:
+            messages.warning(request, "No card found for this organisation")
+            return redirect("rabah_subscriptions:billing_card", subscription_id)
+
 
         try:
             #  charge the card
