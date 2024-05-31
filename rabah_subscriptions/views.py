@@ -9,7 +9,7 @@ from rabah_members.utils import get_member
 from rabah_subscriptions.forms import BillingAddressForm
 from users.mixin import AuthAndAdminOrganizationNotSubscribedMixin
 from .models import BillingAddress, Subscription, PromoCode
-from .models import OrganisationSubscription
+from rabah_subscriptions.models import OrganisationSubscription
 from django.utils import  timezone
 
 STRIPE_SECRET_KEY = settings.STRIPE_SECRET_KEY
@@ -115,9 +115,7 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
                     billing_address.save()
 
             try:
-                customer = stripe.Customer.retrieve(
-                    organisation_subscription.stripe_customer_id
-                )
+                customer = stripe.Customer.retrieve(organisation_subscription.stripe_customer_id)
                 customer.source = stripeToken
                 customer.save()
 
@@ -224,8 +222,6 @@ class MakePaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
         if not billing_info:
             return redirect("rabah_subscriptions:billing_card", subscription_id)
 
-        #  Get the user promo code if it exists
-        promo_code = billing_info.promo_code
 
         organisation_subscription = OrganisationSubscription.objects.filter(
             organisation_id=self.organisation_id
@@ -275,7 +271,6 @@ class MakePaymentView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             organisation_subscription.status = "ACTIVE"
             organisation_subscription.save()
 
-            print("the stripe subscription ", stripe_subscription)
 
             messages.success(request, "Successfully make payment for subscription ")
             return redirect("rabah_subscriptions:payment", subscription_id)
