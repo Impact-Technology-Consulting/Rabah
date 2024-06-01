@@ -53,7 +53,6 @@ def post_save_create_subscription(sender, instance, *args, **kwargs):
                     subscription.stripe_plan_id
                 )
                 if plan_retrieve_response.amount != subscription.price:
-                    # todo: cancel all current user subscribe to that plan and move them to the new plan for the next payment
                     pass
             else:
                 # Subscription doesn't exist on Stripe, so create it
@@ -274,3 +273,4 @@ def post_delete_promo_code(sender, instance, **kwargs):
     except stripe.error.InvalidRequestError:
         # The promo code might already be deleted or never existed
         pass
+

@@ -3,14 +3,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.views import View
 
 from rabah_members.utils import get_member
 from rabah_subscriptions.forms import BillingAddressForm
-from users.mixin import AuthAndAdminOrganizationNotSubscribedMixin
-from .models import BillingAddress, Subscription, PromoCode
+from rabah_subscriptions.models import BillingAddress, Subscription, PromoCode
 from rabah_subscriptions.models import OrganisationSubscription
-from django.utils import  timezone
+from users.mixin import AuthAndAdminOrganizationNotSubscribedMixin
 
 STRIPE_SECRET_KEY = settings.STRIPE_SECRET_KEY
 STRIPE_PUBLIC_KEY = settings.STRIPE_PUBLIC_KEY
@@ -123,8 +123,6 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
                 messages.success(request, "Successfully updated billing info and card")
 
                 return redirect("rabah_subscriptions:make_payment", subscription_id)
-                # messages.success(request, "Successfully updated billing info and card")
-                # return redirect("rabah_subscriptions:payment", subscription_id)
 
             except stripe.error.CardError as e:
                 # The card has been declined
@@ -155,6 +153,9 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
             except stripe.error.StripeError as e:
                 # Something else happened, completely unrelated to Stripe
                 messages.warning(request, f"Stripe error occurred: {e.error.message}")
+                return redirect("rabah_subscriptions:billing_card", subscription_id)
+            except Exception as a:
+                messages.warning(request, f"error occurred: {a}")
                 return redirect("rabah_subscriptions:billing_card", subscription_id)
 
         for error in form.errors:
@@ -379,3 +380,4 @@ class PromoCodeValidateAPIView(AuthAndAdminOrganizationNotSubscribedMixin, View)
             "duration": promo_code_instance.duration,
             "expiration_date": promo_code_instance.expiration_date,
         }}, status=200)
+
