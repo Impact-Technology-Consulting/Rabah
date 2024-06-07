@@ -6,9 +6,6 @@ from django.db import models
 from users.models import User
 
 
-# Create your models here.
-
-
 class Organisation(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
@@ -18,7 +15,51 @@ class Organisation(models.Model):
     has_trial = models.BooleanField(
         default=False
     )  # this is used only for users who signed up with promo code
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True, related_name='children')
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-timestamp"]
+
+    @property
+    def member_count(self):
+        return self.member_set.all().count()
+
+    @property
+    def group_count(self):
+        return self.group_set.all().count()
+
+    @property
+    def subscription_status(self):
+        if not self.organisationsubscription.id:
+            return False
+        return self.organisationsubscription.status == "ACTIVE"
+
+
+class Invitation(models.Model):
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
+    email = models.EmailField()
+    inviting_organisation = models.ForeignKey(
+        Organisation, on_delete=models.SET_NULL, related_name="invitations_sent", blank=True, null=True
+    )
+    invited_organisation = models.ForeignKey(
+        Organisation, on_delete=models.SET_NULL, related_name="invitations_received", blank=True, null=True
+    )
+    status = models.CharField(
+        max_length=20, choices=[("PENDING", "PENDING"), ("ACCEPTED", "ACCEPTED"), ("DECLINED", "DECLINED")],
+        default="PENDING"
+    )
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def accept(self):
+        self.status = "ACCEPTED"
+        self.save()
+
+    def decline(self):
+        self.status = "DECLINED"
+        self.save()
 
     class Meta:
         ordering = ["-timestamp"]
@@ -44,8 +85,8 @@ class GroupManager(models.Manager):
         if last_month_count == 0:
             return 100  # Handle the case where last month had no groups to avoid division by zero
         percentage_change = (
-            (current_month_count - last_month_count) / last_month_count
-        ) * 100
+                                    (current_month_count - last_month_count) / last_month_count
+                            ) * 100
 
         return percentage_change
 

@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="card-body">
-            <form method="post" action="{% url 'account_signup' %}">
+            <form method="post" action=".">
                 {% csrf_token %}
                 <div class="edit-profile__body">
                     <div class="edit-profile__body">
@@ -34,6 +34,14 @@
                                    placeholder="Enter promo code if you have one">
                             <small id="promoCodeHelp" class="form-text text-muted">Enjoy a 14-day trial! Enter a promo
                                 code if you have one.</small>
+                        </div>   <!-- Invitation ID input -->
+                        
+                        <div class="form-group" style="display: none">
+                            <label for="id_invitation_id">Invitation ID</label>
+                            <input type="text" class="form-control" id="id_invitation_id" name="invitation_id"
+                                   value="{{ request.GET.invitation_id }}"
+                                   placeholder="Enter your invitation ID">
+                            <small id="invitationIdHelp" class="form-text text-muted">Enter the invitation ID you received in the email to proceed with the registration.</small>
                         </div>
 
                         <div class="admin-condition">

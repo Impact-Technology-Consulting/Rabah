@@ -46,13 +46,13 @@ class AuthAndOrganizationMixin:
 
         # use the normal page where the user selects his payment plan
         if (
-            organisation_subscription.status == "INACTIVE"
-            or organisation_subscription.subscription_id is None
+                organisation_subscription.status == "INACTIVE"
+                or organisation_subscription.subscription_id is None
         ):
             messages.error(request, "Organisation subscription is inactive")
             return redirect("rabah_subscriptions:subscription_page")
 
-        member = Member.objects.is_member_user(request.user, self.organisation_id)
+        member = Member.objects.is_member_user(request.user, organisation)
         if not member:
             # log the user out
             logout(request)
@@ -92,13 +92,13 @@ class AuthAndAdminOrganizationMemberMixin:
             )
 
         if (
-            organisation_subscription.status == "INACTIVE"
-            or organisation_subscription.subscription_id is None
+                organisation_subscription.status == "INACTIVE"
+                or organisation_subscription.subscription_id is None
         ):
             messages.error(request, "Organisation subscription is inactive")
             return redirect("rabah_subscriptions:subscription_page")
 
-        is_admin = Member.objects.is_admin_user(request.user, self.organisation_id)
+        is_admin = Member.objects.is_admin_user(request.user, organisation)
 
         if not is_admin:
             messages.error(
@@ -131,7 +131,7 @@ class AuthAndAdminOrganizationNotSubscribedMixin:
         if not organisation:
             return redirect("rabah_dashboard:user_organisations")
 
-        is_admin = Member.objects.is_admin_user(request.user, self.organisation_id)
+        is_admin = Member.objects.is_admin_user(request.user, organisation)
 
         if not is_admin:
             return redirect("rabah_dashboard:user_organisations")

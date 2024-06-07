@@ -73,6 +73,8 @@ class UserOrganisationsView(LoginRequiredMixin, View):
         if member.count() == 1:
             response = redirect("rabah_dashboard:dashboard")
             response.set_cookie("organisation_id", member.first().organisation_id)
+            if not request.COOKIES.get("parent_organisation_id"):
+                response.set_cookie("parent_organisation_id", member.first().organisation_id)
             return response
 
         if member.count() == 0:

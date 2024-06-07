@@ -21,7 +21,7 @@ from users.forms import (
 from users.mixin import AuthAndOrganizationMixin
 from users.models import User, UserProfile
 from users.tasks import send_welcome_email
-
+from rabah_organisations.models import Invitation
 
 # Create your views here.
 
@@ -40,6 +40,7 @@ class RabahSignupView(View):
     def post(self, request):
         form = RabahSignupForm(self.request.POST)
 
+
         if form.is_valid():
             first_name = form.cleaned_data.get("first_name")
             last_name = form.cleaned_data.get("last_name")
@@ -48,6 +49,7 @@ class RabahSignupView(View):
             password = form.cleaned_data.get("password1")
             confirm_password = form.cleaned_data.get("password2")
             promo_code = form.cleaned_data.get("promo_code")
+            invitation_id = form.cleaned_data.get("invitation_id")
             if password != confirm_password:
                 form.add_error(
                     "password", "Password and confirm password must be the same"
@@ -77,6 +79,15 @@ class RabahSignupView(View):
                     if subscription:
                         organisation.has_trial = True
                         organisation.save()
+
+                if invitation_id:
+                    invitation = Invitation.objects.filter(id=invitation_id,status="PENDING").first()
+                    invitation.invited_organisation = organisation
+                    invitation.status = "ACCEPTED"
+                    invitation.save()
+
+                    organisation.parent = invitation.inviting_organisation
+                    organisation.save()
 
                 #  send welcome email
                 send_welcome_email.delay(user.email,user.first_name)
@@ -128,8 +139,15 @@ class RabahLoginView(View):
 
 class CustomLogout(View):
     def get(self, request):
+        # Logout the user
         logout(request)
-        return redirect("account_login")  # Redirect to the desired URL after logout
+
+        # Create the response to redirect to the login page
+        response = redirect("account_login")
+        # Clear all cookies
+        for cookie in request.COOKIES:
+            response.delete_cookie(cookie)
+        return response
 
 
 class UserProfileView(LoginRequiredMixin, View):

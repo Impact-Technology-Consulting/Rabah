@@ -11,6 +11,7 @@ class RabahSignupForm(SignupForm):
     organisation_name = forms.CharField(max_length=150, required=True)
     email = forms.EmailField()
     promo_code = forms.CharField(max_length=150, required=False)
+    invitation_id = forms.UUIDField(required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

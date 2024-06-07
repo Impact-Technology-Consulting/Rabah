@@ -1,0 +1,192 @@
+{% extends "dashboard/base.html" %}
+{% load custom_filters %}
+{% load crispy_forms_filters %}
+
+{% block css %}
+
+    <style>
+        .table-container {
+            height: 80vh; /* Set the desired height */
+            overflow-y: scroll; /* Enable vertical scrolling */
+            scrollbar-width: thin; /* Set the width of the scrollbar */
+            scrollbar-color: #888888 #f0f0f0; /* Set the color of the scrollbar */
+        }
+
+    </style>
+{% endblock %}
+
+{% block title %}
+    Sub Organisations | Rabah
+{% endblock %}
+{% block content %}
+    <div class="container-fluid ">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-main user-member justify-content-sm-between ">
+                    <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
+                        <div class="d-flex align-items-center user-member__title justify-content-center me-sm-25">
+                            <h4 class="text-capitalize fw-500 breadcrumb-title"><a
+                                    href="{% url "rabah_organisations:groups" %}" style="color: #0c0a09">Invitations</a>
+                            </h4>
+                            <span class="sub-title ms-sm-25 ps-sm-25"> <a href="{% url "rabah_dashboard:dashboard" %}"
+                                                                          style="color: #0c0a09"></a> </span>
+                        </div>
+
+                    </div>
+                    <div class="action-btn">
+                        <a href="#" class="btn px-15 btn-primary" data-bs-toggle="modal" data-bs-target="#new-member">
+                            <i class="las la-plus fs-16"></i>invite organisation</a>
+
+                        <div class="modal fade new-member " id="new-member" role="dialog" tabindex="-1"
+                             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content  radius-xl">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title fw-500" id="staticBackdropLabel">Invitation</h6>
+                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                            <i class="uil uil-multiply"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="new-member-modal">
+                                            <form method="post" action="." enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                {{ form|crispy }}
+                                                <div class="button-group d-flex pt-25">
+                                                    <button class="btn btn-primary btn-default btn-squared text-capitalize"
+                                                            type="submit">
+                                                        invite organisation
+                                                    </button>
+                                                    <button type="button"
+                                                            class="btn btn-light btn-default btn-squared fw-400 text-capitalize b-light color-light"
+                                                            data-bs-dismiss="modal">cancel
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-lg-12">
+                <div class="userDatatable global-shadow border-light-0 p-30 bg-white radius-xl w-100 mb-30">
+                    <div class="table-responsive">
+                        <div class="table-container">
+                            <table class="table mb-0 table-borderless">
+                                <thead>
+                                <tr class="userDatatable-header">
+                                    <th>
+                                        <div class="d-flex align-items-center">
+                                            <div class="custom-checkbox  check-all">
+                                                <label for="check-44">
+                                                    <span class="checkbox-text userDatatable-title">Email</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <span class="userDatatable-title">Invited Organisation</span>
+                                    </th>
+                                    <th>
+                                        <span class="userDatatable-title">Status</span>
+                                    </th>
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for invitation in invitations %}
+                                    <tr>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ invitation.email }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ invitation.invited_organisation.name }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                            
+                                                <div class="userDatatable-content">
+                                                    {% if invitation.status == "PENDING" %}
+                                                        <span class="bg-opacity-success  color-warning rounded-pill userDatatable-content-status">Pending</span>
+                                                    {% elif invitation.status == "ACCEPTED" %}
+                                                        <span class="bg-opacity-success  color-success rounded-pill userDatatable-content-status">Accepted</span>
+                                                    {% elif invitation.status == "DECLINED" %}
+                                                        <span class="bg-opacity-success  color-danger rounded-pill userDatatable-content-status">Declined</span>
+                                                    {% endif %}
+                                                </div>                                                
+                                            </div>
+                                        </td>
+
+
+                                    </tr>
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end pt-30">
+                        <nav class="dm-page ">
+                            <ul class="dm-pagination d-flex">
+                                {% if is_paginated %}
+                                    <li class="dm-pagination__item">
+                                        {% if page_obj.has_previous %}
+                                            <a href="{% paginate_url page_obj.previous_page_number 'page' request.GET.urlencode %}"
+                                               class="dm-pagination__link pagination-control"><span
+                                                    class="la la-angle-left"></span></a>
+                                        {% else %}
+                                            <a href="#" class="dm-pagination__link pagination-control"><span
+                                                    class="la la-angle-left"></span></a>
+                                        {% endif %}
+                                        {% get_proper_elided_page_range paginator page_obj.number as page_range %}
+                                        {% for i in page_range %}
+                                            {% if page_obj.number == i %}
+                                                <a href="#" class="dm-pagination__link active"><span
+                                                        class="page-number">{{ i }}</span></a>
+                                            {% else %}
+                                                <a href="{% paginate_url i 'page' request.GET.urlencode %}"
+                                                   class="dm-pagination__link"><span
+                                                        class="page-number">{{ i }}</span></a>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if page_obj.has_next %}
+                                            <a href="{% paginate_url page_obj.next_page_number 'page' request.GET.urlencode %}"
+                                               class="dm-pagination__link pagination-control"><span
+                                                    class="la la-angle-right"></span></a>
+                                        {% else %}
+                                            <a href="#" class="dm-pagination__link pagination-control"><span
+                                                    class="la la-angle-right"></span></a>
+
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+{% endblock %}
+
+
+{% block script %}
+
+{% endblock %}

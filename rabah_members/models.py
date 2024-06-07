@@ -28,25 +28,42 @@ FAMILY_RELATIONSHIP_CHOICES = [
 
 class MemberManager(models.Manager):
 
-    def is_admin_user(self, user, organisation_id):
+    def is_admin_user(self, user, organisation):
         # check if the user is active and an admin user
         member = self.filter(
             user=user,
-            organisation_id=organisation_id,
+            organisation=organisation,
             is_active=True,
             is_admin_member=True,
         ).first()
         if not member:
-            return False
+            # also check if the member is from the parent
+            if organisation.parent:
+                member = self.filter(
+                    user=user,
+                    organisation=organisation.parent,
+                    is_active=True,
+                    is_admin_member=True,
+                ).first()
+                if not member:
+                    return False
+
         return member.is_admin_member
 
-    def is_member_user(self, user, organisation_id):
+    def is_member_user(self, user, organisation):
         # check if the user is active and an admin user
         member = self.filter(
-            user=user, organisation_id=organisation_id, is_active=True
+            user=user, organisation=organisation, is_active=True
         ).first()
         if not member:
-            return False
+            #  also check if the member is from the parent
+            if organisation.parent:
+                member = self.filter(
+                    user=user, organisation=organisation.parent, is_active=True
+                ).first()
+                if not member:
+                    return False
+
         return member.is_admin_member
 
     def calculate_member_increment_percentage(self, organisation_id):

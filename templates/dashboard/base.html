@@ -71,6 +71,11 @@
                     <img class="svg" src="{% static 'img/svg/align-center-alt.svg' %}" alt="img"></a>
             </div>
 
+            <a href="#" class="customizer-trigger" id="customizer-trigger">
+                <i class="uil uil-edit-alt"></i>
+                <span>Organisation...</span>
+            </a>
+
 
         </div>
 
@@ -218,6 +223,15 @@
 
                             </ul>
                         </li>
+
+                        <li class="{% if request.resolver_match.view_name == 'rabah_organisations:invited_organisations' %}active{% endif %}">
+                            <a href="{% url "rabah_organisations:invited_organisations" %}">
+                                <span class="nav-icon uil uil-credit-card-search"></span>
+                                <span class="menu-text">Invitations</span>
+                            </a>
+                        </li>
+
+
                     {% endif %}
 
                     {% if not request.user.is_authenticated %}
@@ -303,6 +317,61 @@
 <div class="overlay-dark-sidebar"></div>
 <div class="customizer-overlay"></div>
 
+
+<div class="customizer-wrapper  ">
+    <div class="customizer">
+        <div class="customizer__head">
+            <h4 class="customizer__title">Sub-Organisations</h4>
+            <span class="customizer__sub-title pt-3">These are the list of sub organisations under yours.</span>
+            <a href="#" class="customizer-close" id="customizer-close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="svg replaced-svg" style="color: #ff4d4f;">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </a>
+        </div>
+        <div class="customizer__body">
+
+            <div class="row">
+                {% if sub_organisations %}
+                    {% for sub_organisation in sub_organisations %}
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ sub_organisation.name|capfirst }}</h5>
+                                    <p class="card-text" style=" font-size: 14px">Subscription
+                                        Status: {{ sub_organisation.subscription_status|yesno:"Active,In Active" }}</p>
+                                    <p class="card-text" style=" font-size: 14px">Member
+                                        Count: {{ sub_organisation.member_count }}</p>
+                                    <p class="card-text" style=" font-size: 14px">Group
+                                        Count: {{ sub_organisation.group_count }}</p>
+                                    {% if sub_organisation.subscription_status %}
+
+                                        {% if request.COOKIES.organisation_id != sub_organisation.id|stringformat:"s" %}
+                                            <a href="#" class="btn btn-primary float-end btn-sm"
+                                               onclick="setAndRedirect(`{{ sub_organisation.id }}`)">Switch</a>
+                                        {% else %}
+                                            <a href="#" class="btn btn-danger float-end btn-sm"
+                                               onclick="setAndRedirect(`{{ request.COOKIES.parent_organisation_id }}`)">Revert</a>
+                                        {% endif %}
+                                    {% else %}
+                                        <a href="#" class="btn btn-gray float-end btn-sm">Switch</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
 <script src="{% static "js/plugins.min.js" %}"></script>
 <script src="{% static "js/script.min.js" %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -311,7 +380,32 @@
     toastr.options.timeOut = 10000; // 3s
     toastr.options.progressBar = true; // 3s
 </script>
+
+<script>
+
+    document.getElementById('customizer-trigger').addEventListener('click', function () {
+        document.querySelector('.customizer-wrapper').classList.toggle('show');
+    });
+    document.getElementById('customizer-close').addEventListener('click', function () {
+        document.querySelector('.customizer-wrapper').classList.toggle('show');
+    });
+
+</script>
+
+<script>
+    function setAndRedirect(organisation_id) {
+        // Set the organization ID in a cookie
+        document.cookie = `organisation_id=${organisation_id}; path=/`;
+
+        // Redirect to the dashboard or any other URL
+        window.location.href = '{% url "rabah_dashboard:dashboard" %}';
+    }
+</script>
+
+
 {% block script %}
+
+
 
 {% endblock %}
 

@@ -6,9 +6,13 @@ from django.views import View
 from django.views.generic import ListView
 
 from users.mixin import AuthAndAdminOrganizationMemberMixin
-from .forms import GroupForm  # Replace with the actual import path
-from .models import Group  # Replace with the actual import path
-from .utils import query_groups  # Replace with the actual import path for query_groups
+from rabah_organisations.forms import GroupForm, InvitationForm
+from rabah_organisations.models import Group, Organisation, Invitation
+from rabah_organisations.utils import query_groups
+from rabah_organisations.tasks import send_invite_create_organisation
+from django.urls import reverse
+
+from users.models import User
 
 
 class GroupListView(AuthAndAdminOrganizationMemberMixin, ListView):
@@ -95,3 +99,50 @@ class GroupDeleteView(AuthAndAdminOrganizationMemberMixin, View):
             return redirect(request.META.get("HTTP_REFERER"))
         group.delete()
         return redirect(request.META.get("HTTP_REFERER"))
+
+
+class InvitedOrganisationsView(AuthAndAdminOrganizationMemberMixin, ListView):
+    template_name = "dashboard/invited_organisations.html"
+    model = Invitation
+    context_object_name = "invitations"
+    paginate_by = 5
+
+    def get_queryset(self):
+        organisation_id = self.organisation_id
+        queryset = Invitation.objects.filter(inviting_organisation_id=organisation_id)
+
+        print(f"{self.request.build_absolute_uri(reverse('account_signup'))}?organisation_id={organisation_id}")
+
+        ordering = self.get_ordering()
+        if ordering:
+            if isinstance(ordering, str):
+                ordering = (ordering,)
+            queryset = queryset.order_by(*ordering)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = InvitationForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        organisation_id = self.organisation_id
+        form = InvitationForm(request.POST)
+        if form.is_valid():
+            if User.objects.filter(email=form.cleaned_data.get("email")).exists():
+                messages.error(request, "organisation with this mail already exists")
+                return redirect(request.META.get("HTTP_REFERER"))
+
+            invitation = Invitation.objects.create(
+                inviting_organisation_id=organisation_id,
+                email=form.cleaned_data.get("email"),
+            )
+
+            url = f"{request.build_absolute_uri(reverse('account_signup'))}?invitation_id={invitation.id}"
+            send_invite_create_organisation.delay(self.request.user.first_name, url, form.cleaned_data.get("email"))
+
+            messages.success(request, "successfully invited organisation")
+            return redirect(request.META.get("HTTP_REFERER"))
+        else:
+            return render(request, "dashboard/invited_organisations.html", {"form": form})

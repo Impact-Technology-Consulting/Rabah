@@ -20,3 +20,7 @@ class GroupForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+class InvitationForm(forms.Form):
+    email = forms.EmailField()
