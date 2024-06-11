@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.widgets import CheckboxSelectMultiple
 
-from rabah_members.models import Member
+from rabah_members.models import Member, MemberInvitation
 from rabah_organisations.models import Group
 from users.models import GENDER_CHOICES, User
 from .models import FAMILY_RELATIONSHIP_CHOICES
@@ -10,6 +10,23 @@ from .models import FAMILY_RELATIONSHIP_CHOICES
 class MemberUploadCreateForm(forms.Form):
     member_file = forms.FileField()
     groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), required=False, widget=CheckboxSelectMultiple)
+
+    def __init__(self, organisation_id, *args, **kwargs):
+        super(MemberUploadCreateForm, self).__init__(*args, **kwargs)
+        self.fields['groups'].queryset = Group.objects.filter(organisation_id=organisation_id)
+
+
+class MemberInvitationForm(forms.ModelForm):
+    groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), required=False, widget=CheckboxSelectMultiple)
+
+    class Meta:
+        model = MemberInvitation
+        fields = ["groups"]
+
+    def __init__(self, organisation_id, *args, **kwargs):
+        super(MemberInvitationForm, self).__init__(*args, **kwargs)
+        self.fields['organisation_id'] = forms.CharField(widget=forms.HiddenInput(), initial=organisation_id)
+        self.fields['groups'].queryset = Group.objects.filter(organisation_id=organisation_id)
 
 
 class MemberCreateForm(forms.Form):
@@ -121,3 +138,13 @@ class UpdateExistingMemberFamilyRelationShipForm(forms.Form):
         member.family_relationship = self.cleaned_data["family_relationship"]
         member.save()
         return member
+
+
+class MemberInvitationAcceptForm(forms.Form):
+    first_name = forms.CharField(max_length=150)
+    last_name = forms.CharField(max_length=150)
+    mobile = forms.IntegerField()
+    email = forms.EmailField()
+    address = forms.CharField(max_length=250)
+    career = forms.CharField(max_length=250)
+    gender = forms.ChoiceField(choices=GENDER_CHOICES)

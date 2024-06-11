@@ -10,7 +10,7 @@ from .views import (
     AddExistingMemberToFamilyView,
     UpdateExistingMemberFamilyRelationShipView,
     MemberUploadCreateView,
-    MemberAddLoginPermissionView,
+    MemberAddLoginPermissionView, MemberInvitationCreateView, MemberAcceptInvitationView,
 )
 
 app_name = "rabah_members"
@@ -51,4 +51,7 @@ urlpatterns = [
         MemberDetailView.as_view(),
         name="group_member_detail",
     ),
+
+    path("member-invitation-create/", MemberInvitationCreateView.as_view(), name="member-invitation-create"),
+    path("member-accept-invitation/<str:member_invitation_id>/", MemberAcceptInvitationView.as_view(), name="member-accept-invitation"),
 ]

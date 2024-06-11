@@ -12,15 +12,16 @@ from rabah_members.forms import (
     MemberEditForm,
     AddExistingMemberToFamilyForm,
     UpdateExistingMemberFamilyRelationShipForm,
-    MemberUploadCreateForm,
+    MemberUploadCreateForm, MemberInvitationForm, MemberInvitationAcceptForm,
 )
-from rabah_members.models import Member, FAMILY_RELATIONSHIP_CHOICES
+from rabah_members.models import Member, FAMILY_RELATIONSHIP_CHOICES, MemberInvitation
 from rabah_members.utils import query_members
 from rabah_organisations.models import Group
 from users.forms import UserProfileUpdateForm
 from users.mixin import AuthAndAdminOrganizationMemberMixin, AuthAndOrganizationMixin
+from users.models import User
 from users.tasks import send_member_activate_account
-from .utils import convert_file_to_dictionary
+from .utils import convert_file_to_dictionary, generate_qr_code
 
 
 class MemberAutocompleteView(AuthAndAdminOrganizationMemberMixin, View):
@@ -84,8 +85,10 @@ class MembersDashboardView(AuthAndAdminOrganizationMemberMixin, ListView):
         context = super().get_context_data(**kwargs)
 
         # Create an instance of form and pass it to the context
-        form = MemberUploadCreateForm()
+        form = MemberUploadCreateForm(self.organisation_id)
+        member_invitation_form = MemberInvitationForm(self.organisation_id)
         context["member_upload_create"] = form
+        context["member_invitation_form"] = member_invitation_form
         return context
 
 
@@ -160,7 +163,7 @@ class MemberUploadCreateView(AuthAndAdminOrganizationMemberMixin, View):
     """
 
     def post(self, request):
-        form = MemberUploadCreateForm(request.POST, request.FILES)
+        form = MemberUploadCreateForm(self.organisation_id, request.POST, request.FILES)
         if form.is_valid():
             member_file = form.cleaned_data.get("member_file")
             groups = form.cleaned_data.get("groups")
@@ -217,7 +220,7 @@ class MemberDetailView(AuthAndOrganizationMixin, View):
         member = Member.objects.filter(id=id).first()
         if not member:
             render(request, "404.html")
-        member_form = MemberEditForm(self.organisation_id,instance=member, data=self.request.POST)
+        member_form = MemberEditForm(self.organisation_id, instance=member, data=self.request.POST)
         if member_form.is_valid():
             member_form.save()
             messages.success(request, "successfully update member")
@@ -340,13 +343,12 @@ class MemberAddLoginPermissionView(AuthAndAdminOrganizationMemberMixin, View):
 
         # Generate activation URL for the MemberCreatePasswordView
         activation_url = (
-            request.build_absolute_uri(
-                reverse("user:member_create_password", kwargs={"token": token})
-            )
-            + f"?member_id={member_id}"
+                request.build_absolute_uri(
+                    reverse("user:member_create_password", kwargs={"token": token})
+                )
+                + f"?member_id={member_id}"
         )  # Pass member_id as a query parameter
 
-        print(activation_url)
         send_member_activate_account.delay(
             self.request.user.first_name,
             activation_url,
@@ -355,4 +357,91 @@ class MemberAddLoginPermissionView(AuthAndAdminOrganizationMemberMixin, View):
             member.user.last_name
         )
         messages.success(request, "Successfully send activation link to member")
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+
+class MemberInvitationCreateView(AuthAndAdminOrganizationMemberMixin, View):
+    """
+    this is used to create member invitation and also link to be shared to the user
+    """
+
+    def post(self, request):
+        form = MemberInvitationForm(self.organisation_id, request.POST)
+        if form.is_valid():
+            instance = MemberInvitation.objects.invitation_exists(organisation_id=self.organisation_id,
+                                                                  groups=form.cleaned_data['groups'])
+            if not instance:
+                instance = form.save(commit=False)
+                instance.organisation_id = self.organisation_id
+                instance.save()
+                instance.groups.set(form.cleaned_data['groups'])
+
+            url = reverse('rabah_members:member-accept-invitation', kwargs={'member_invitation_id': instance.id})
+            url = f"{request.build_absolute_uri('/')}{url[1:]}"
+            image = generate_qr_code(url)
+            return JsonResponse({"success": True, "image": image, "url": url})
+        else:
+            for error in form.errors:
+                messages.warning(request, f"{error}: {form.errors[error][0]}")
+        return JsonResponse({"success": True})
+
+
+class MemberAcceptInvitationView(View):
+    """
+    this page is used by non-logged-in user that are invited
+    """
+
+    def get(self, request, member_invitation_id):
+        form = MemberInvitationAcceptForm()
+        context = {
+            "form": form,
+            "member_invitation_id": member_invitation_id
+
+        }
+        return render(request, "dashboard/member_invite.html", context)
+
+    def post(self, request, member_invitation_id):
+        member_invitation = MemberInvitation.objects.filter(id=member_invitation_id).first()
+        if not member_invitation:
+            messages.error(request, "an invalid id is passed ")
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+        form = MemberInvitationAcceptForm(request.POST)
+        if form.is_valid():
+            first_name = form.cleaned_data.get("first_name")
+            last_name = form.cleaned_data.get("last_name")
+            mobile = form.cleaned_data.get("mobile")
+            address = form.cleaned_data.get("address")
+            career = form.cleaned_data.get("career")
+            email = form.cleaned_data.get("email")
+            gender = form.cleaned_data.get("gender")
+
+            if User.objects.filter(email=email).exists():
+                # todo: need to have meet with rabah to fix this
+                messages.error(request,"a user with this mail already exist in the system")
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+            user = User.objects.create(
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                mobile=mobile
+            )
+            user_profile = user.user_profile
+            user_profile.address = address
+            user_profile.career = career
+            user_profile.gender = gender
+            user_profile.save()
+
+            instance = Member()
+            instance.user = user
+            instance.organisation_id = member_invitation.organisation_id
+            instance.save()
+            instance.groups.set(member_invitation.groups.all())
+
+            messages.success(request, "successfully join the organisation")
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+        else:
+            for error in form.errors:
+                messages.warning(request, f"{error}: {form.errors[error][0]}")
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))

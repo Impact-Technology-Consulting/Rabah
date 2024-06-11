@@ -132,5 +132,6 @@ class Group(models.Model):
             return admin_member
         return None
 
+
     def __str__(self):
         return self.name

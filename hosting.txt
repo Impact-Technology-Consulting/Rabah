@@ -7,10 +7,10 @@ Requires=gunicorn.socket
 After=network.target
 
 [Service]
-User=ubuntu
+User=rabah
 Group=www-data
 WorkingDirectory=/home/ubuntu/Rabah
-ExecStart=/home/ubuntu/Rabah/venv/bin/gunicorn \
+ExecStart=/home/rabah/Rabah/venv/bin/gunicorn \
         --access-logfile - \
         --workers 3 \
         --bind unix:/run/gunicorn.sock \
@@ -25,14 +25,14 @@ sudo nano /etc/nginx/sites-available/Rabah
 # Nginx Configuration
 server {
     listen 80;
-    server_name 51.20.85.41 rabah360.com  www.rabah360.com;
+    server_name 164.92.124.80 rabah360.com  www.rabah360.com;
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location /static/ {
-        root /home/ubuntu/Rabah;
+        root /home/rabah/Rabah;
     }
     location /media/ {
-        root /home/ubuntu/Rabah;
+        root /home/rabah/Rabah;
     }
 
     location / {
@@ -40,6 +40,8 @@ server {
         proxy_pass http://unix:/run/gunicorn.sock;
     }
 }
+
+sudo ln -s /etc/nginx/sites-available/Rabah /etc/nginx/sites-enabled
 
 
 Celery Configuration systemd confuration in
@@ -50,10 +52,10 @@ Description=Celery Service
 After=network.target
 
 [Service]
-User=ubuntu
+User=rabah
 Group=www-data
-WorkingDirectory=/home/ubuntu/Rabah
-ExecStart=/home/ubuntu/Rabah/venv/bin/celery -A Rabah worker  --loglevel=info
+WorkingDirectory=/home/rabah/Rabah
+ExecStart=/home/rabah/Rabah/venv/bin/celery -A Rabah worker  --loglevel=info
 
 [Install]
 WantedBy=multi-user.target

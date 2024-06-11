@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from django.db import models
 from django.db.models import Sum
 
-from rabah_members.models import Member
+from rabah_members.models import Member,Group
 from rabah_organisations.models import Organisation
 
 
@@ -64,28 +64,37 @@ class ContributionManager(models.Manager):
 
         # Sum the total contribution amounts in the current month
         current_month_total = (
-            Contribution.objects.filter(
-                timestamp__gte=last_month, organisation_id=organisation_id
-            ).aggregate(Sum("amount"))["amount__sum"]
-            or 0
+                Contribution.objects.filter(
+                    timestamp__gte=last_month, organisation_id=organisation_id
+                ).aggregate(Sum("amount"))["amount__sum"]
+                or 0
         )
 
         # Sum the total contribution amounts before the last month
         last_month_total = (
-            Contribution.objects.filter(
-                timestamp__lt=last_month, organisation_id=organisation_id
-            ).aggregate(Sum("amount"))["amount__sum"]
-            or 0
+                Contribution.objects.filter(
+                    timestamp__lt=last_month, organisation_id=organisation_id
+                ).aggregate(Sum("amount"))["amount__sum"]
+                or 0
         )
 
         # Calculate the percentage change
         if last_month_total == 0:
             return 100  # Handle the case where last month had no contributions to avoid division by zero
         percentage_change = (
-            (current_month_total - last_month_total) / last_month_total
-        ) * 100
+                                    (current_month_total - last_month_total) / last_month_total
+                            ) * 100
 
         return percentage_change
+
+    def get_group_contributions(self, group_id):
+        try:
+            members = Group.objects.get(id=group_id).member_set.all()
+
+            total_contributions = Contribution.objects.filter(member__in=members).aggregate(Sum('amount'))['amount__sum']
+            return total_contributions or 0
+        except Exception as a:
+            return 0
 
 
 class Contribution(models.Model):

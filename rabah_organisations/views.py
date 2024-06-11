@@ -5,6 +5,7 @@ from django.views import View
 # Create your views here.
 from django.views.generic import ListView
 
+from rabah_contributions.models import Contribution
 from users.mixin import AuthAndAdminOrganizationMemberMixin
 from rabah_organisations.forms import GroupForm, InvitationForm
 from rabah_organisations.models import Group, Organisation, Invitation
@@ -79,10 +80,12 @@ class GroupDetailView(AuthAndAdminOrganizationMemberMixin, View):
             return redirect(request.META.get("HTTP_REFERER"))
         members = group.member_set.all()
         group_update_form = GroupForm(organisation_id, instance=group)
+        group_contribution = Contribution.objects.get_group_contributions(group.id)
         context = {
             "group": group,
             "members": members,
             "group_update_form": group_update_form,
+            "group_contribution": group_contribution,
         }
         return render(request, "dashboard/group_detail.html", context)
 

@@ -47,6 +47,8 @@ class MemberManager(models.Manager):
                 ).first()
                 if not member:
                     return False
+            else:
+                return False
 
         return member.is_admin_member
 
@@ -63,6 +65,8 @@ class MemberManager(models.Manager):
                 ).first()
                 if not member:
                     return False
+            else:
+                return False
 
         return member.is_admin_member
 
@@ -84,8 +88,8 @@ class MemberManager(models.Manager):
         if last_month_count == 0:
             return 100  # Handle the case where last month had no members to avoid division by zero
         percentage_change = (
-            (current_month_count - last_month_count) / last_month_count
-        ) * 100
+                                    (current_month_count - last_month_count) / last_month_count
+                            ) * 100
 
         return percentage_change
 
@@ -155,3 +159,30 @@ def post_save_create_member(sender, instance, *args, **kwargs):
 
 
 post_save.connect(post_save_create_member, sender=Organisation)
+
+
+class MemberInvitationManager(models.Manager):
+    def invitation_exists(self, organisation_id, groups):
+        """
+        Check if an invitation with the exact given organisation and groups already exists.
+        """
+
+        # Filter invitations by the organisation
+        invitations = self.filter(organisation_id=organisation_id)
+        # Iterate through filtered invitations to find an exact match
+        for invitation in invitations:
+
+            if set(invitation.groups.all().values_list("id", flat=True)) == set(groups.values_list("id", flat=True)):
+                return invitation  # Exact match found
+
+        return None  # No exact match found
+
+
+class MemberInvitation(models.Model):
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
+    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
+    groups = models.ManyToManyField(Group, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    objects = MemberInvitationManager()

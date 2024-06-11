@@ -217,12 +217,23 @@
                                 </button>
 
                             </div>
+                            <div class="col-6 d-flex flex-column justify-content-center align-center mx-auto ">
+                                <img src="{% static "img/event_detail.png" %}" alt=""
+                                     style="object-fit: contain; height: 50%; width: 50%; margin-bottom: 10px">
+
+                                <button class="btn btn-lg btn-warning" data-bs-toggle="modal"
+                                        data-bs-target="#new-invitation-link" onclick="closeUploadModal()"
+                                        style="width: 100%; max-height: 10px">Invitation Link
+                                </button>
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="modal fade new-member " id="new-member-upload" role="dialog" tabindex="-1"
          aria-labelledby="staticBackdropLabel" aria-hidden="true" style="min-height: 45vh">
         <div class="modal-dialog modal-dialog-centered">
@@ -263,7 +274,65 @@
                                 </button>
                                 <button class="btn btn-primary btn-default btn-squared text-capitalize"
                                         type="submit">
-                                    add new group
+                                    add members
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade new-member " id="new-invitation-link" role="dialog" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true" style="min-height: 45vh">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content  radius-xl">
+                <div class="modal-header">
+                    <h6 class="modal-title fw-500" id="staticBackdropLabel">Add Member</h6>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="uil uil-multiply"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="new-member-modal">
+                        <form method="post" action="{% url "rabah_members:member-invitation-create" %}"
+                              enctype="multipart/form-data" id="new-invitation-link-form">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    {{ member_invitation_form|crispy }}
+                                </div>
+                                
+                                <div class="col-12 col-md-6">
+                                    <img id="qr-code-image" src="{% static 'img/qrcode.png' %}" alt="QrCode Image" style="width: 200px; height: 200px">
+                                    <div id="share-links" style="display: none; margin-top: 10px;">
+                                        <a id="share-link-whatsapp" href="#" target="_blank" class="btn btn-success" style="margin-bottom: 10px">
+                                            <i class="uil uil-whatsapp"></i> Share to WhatsApp
+                                        </a>
+                                        <a id="share-link-twitter" href="#" target="_blank" class="btn btn-info"  style="margin-bottom: 10px">
+                                            <i class="uil uil-twitter"></i> Share to Twitter
+                                        </a>
+                                        <a id="share-link-facebook" href="#" target="_blank" class="btn btn-primary"  style="margin-bottom: 10px">
+                                            <i class="uil uil-facebook"></i>Share to Facebook
+                                        </a>
+                                        <button id="web-share-button" class="btn btn-secondary">
+                                            <i class="uil uil-share"></i> Share
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="button-group d-flex pt-25">
+
+                                <button type="button"
+                                        class="btn btn-light btn-default btn-squared fw-400 text-capitalize b-light color-light"
+                                        data-bs-dismiss="modal">cancel
+                                </button>
+                                <button class="btn btn-primary btn-default btn-squared text-capitalize"
+                                        type="submit">
+                                    Create Link
                                 </button>
                             </div>
                         </form>
@@ -280,6 +349,109 @@
     <script>
         function closeUploadModal() {
             document.getElementById("upload-cancel-id").click()
+        }
+    </script>
+
+
+    <script>
+        {% comment %} This is used to create invitation link {% endcomment %}
+        document.getElementById('new-invitation-link-form').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const form = event.target;
+            const formData = new FormData(form); // Create a FormData object from the form
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest', // Optional: Used to indicate that this is an AJAX request
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+
+                const data = await response.json(); // Assuming the server returns JSON
+                // Handle the response data here
+                console.log(data);
+                if (data.success) {
+                    // Update the QR code image
+                    document.getElementById('qr-code-image').src = 'data:image/png;base64,' + data.image;
+
+                    // Update the Share links and display them
+                    const shareLinks = document.getElementById('share-links');
+                    shareLinks.style.display = 'block';
+
+                    const whatsappLink = document.getElementById('share-link-whatsapp');
+                    whatsappLink.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(data.url)}`;
+
+                    const twitterLink = document.getElementById('share-link-twitter');
+                    twitterLink.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(data.url)}&text=Check this out!`;
+
+                    const facebookLink = document.getElementById('share-link-facebook');
+                    facebookLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(data.url)}`;
+
+                    // Add Web Share API functionality
+                    const webShareButton = document.getElementById('web-share-button');
+                    webShareButton.onclick = () => {
+                        if (navigator.share) {
+                            const shareData = {
+                                title: 'Member Invitation',
+                                text: 'Check out this invitation link',
+                            };
+
+                            // Check if the image is available
+                            if (data.image) {
+                                // Convert the Base64-encoded image to a Blob
+                                const blob = b64toBlob(data.image.split(',')[1], 'image/png');
+
+                                // Create a file object from the Blob
+                                const file = new File([blob], 'invitation.png', { type: 'image/png' });
+
+                                // Include the file in the share data
+                                shareData.files = [file];
+                            }
+
+                            // Share the data
+                            navigator.share(shareData).catch((error) => console.error('Error sharing:', error));
+                        } else {
+                            alert('Web Share API is not supported in your browser.');
+                        }
+                    };
+                } else {
+                    console.error('Form submission failed:', data.errors);
+                    alert('Form submission failed. Check the console for details.');
+                }
+
+            } catch (error) {
+                console.error('There has been a problem with your fetch operation:', error);
+                // Handle any errors that occurred during the fetch
+            }
+        });
+
+
+        // Function to convert Base64 to Blob
+        function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
+            const byteCharacters = atob(b64Data);
+            const byteArrays = [];
+
+            for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+
+                const byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+
+            const blob = new Blob(byteArrays, { type: contentType });
+            return blob;
         }
     </script>
 

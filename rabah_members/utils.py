@@ -1,11 +1,13 @@
+import base64
 import csv
 import json
 import operator
 import re
 from datetime import datetime
 from functools import reduce
-from io import TextIOWrapper
+from io import TextIOWrapper, BytesIO
 
+import qrcode
 from django.db.models import Q
 from openpyxl import load_workbook
 
@@ -133,3 +135,29 @@ def convert_string(input_string):
     lowercase_string = input_string.lower()
     cleaned_string = re.sub("[^a-z0-9]", "", lowercase_string)
     return cleaned_string
+
+
+def generate_qr_code(url):
+    """
+    This is used to generate a QR code with the link provided.
+    """
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    # Convert the image to a bytes buffer
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    buffer.seek(0)
+
+    # Encode the bytes to a base64 string
+    img_str = base64.b64encode(buffer.read()).decode('utf-8')
+    return img_str
