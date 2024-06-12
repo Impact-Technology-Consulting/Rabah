@@ -32,11 +32,12 @@ class MemberInvitationForm(forms.ModelForm):
 class MemberCreateForm(forms.Form):
     first_name = forms.CharField(max_length=150)
     last_name = forms.CharField(max_length=150)
-    email = forms.EmailField()
-    mobile = forms.IntegerField()
-    address = forms.CharField(max_length=150)
-    career = forms.CharField(max_length=150)
+    email = forms.EmailField(required=False)
+    mobile = forms.IntegerField(required=False)
+    address = forms.CharField(max_length=150, required=False)
+    career = forms.CharField(max_length=150, required=False)
     gender = forms.ChoiceField(choices=GENDER_CHOICES)
+    date_of_birth = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}), required=False)
     groups = forms.ModelMultipleChoiceField(queryset=Group.objects.none(), required=False,
                                             widget=CheckboxSelectMultiple)
 
@@ -49,24 +50,39 @@ class MemberCreateForm(forms.Form):
         email = self.cleaned_data.get('email')
 
         # Check if the email is already used
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError('This email is already in use. Please use a different email.')
+        if email:
+            if User.objects.filter(email=email).exists():
+                raise forms.ValidationError('This email is already in use. Please use a different email.')
 
         return email
 
     def save(self, commit=True):
-        user = User.objects.create(
-            email=self.cleaned_data['email'],
-            first_name=self.cleaned_data['first_name'],
-            last_name=self.cleaned_data['last_name'],
-            mobile=self.cleaned_data['mobile']
-        )
+        user = None
+        email = self.cleaned_data.get("email")
+        if email == "":
+            email = None
+
+        if email is not None:
+            user = User.objects.filter(email=email).first()
+
+        if not user:
+            user = User.objects.create(
+                email=email,
+                first_name=self.cleaned_data['first_name'],
+                last_name=self.cleaned_data['last_name'],
+                mobile=self.cleaned_data['mobile']
+            )
+
         try:
+            if Member.objects.filter(user=user, organisation_id=self.cleaned_data['organisation_id']).exists():
+                return None
+
             instance = Member()
             user_profile = user.user_profile
             user_profile.address = self.cleaned_data['address']
             user_profile.career = self.cleaned_data['career']
             user_profile.gender = self.cleaned_data["gender"]
+            user_profile.date_of_birth = self.cleaned_data["date_of_birth"]
             user_profile.save()
             instance.organisation_id = self.cleaned_data['organisation_id']
             instance.user = user
@@ -141,10 +157,11 @@ class UpdateExistingMemberFamilyRelationShipForm(forms.Form):
 
 
 class MemberInvitationAcceptForm(forms.Form):
-    first_name = forms.CharField(max_length=150)
-    last_name = forms.CharField(max_length=150)
-    mobile = forms.IntegerField()
-    email = forms.EmailField()
-    address = forms.CharField(max_length=250)
-    career = forms.CharField(max_length=250)
+    first_name = forms.CharField(max_length=150, required=True)
+    last_name = forms.CharField(max_length=150, required=True)
+    mobile = forms.IntegerField(required=False)
+    email = forms.EmailField(required=False)
+    address = forms.CharField(max_length=250, required=False)
+    career = forms.CharField(max_length=250, required=False)
+    date_of_birth = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}), required=False)
     gender = forms.ChoiceField(choices=GENDER_CHOICES)

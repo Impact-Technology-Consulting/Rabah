@@ -401,6 +401,8 @@ class MemberAcceptInvitationView(View):
         return render(request, "dashboard/member_invite.html", context)
 
     def post(self, request, member_invitation_id):
+        user = None
+
         member_invitation = MemberInvitation.objects.filter(id=member_invitation_id).first()
         if not member_invitation:
             messages.error(request, "an invalid id is passed ")
@@ -415,22 +417,31 @@ class MemberAcceptInvitationView(View):
             career = form.cleaned_data.get("career")
             email = form.cleaned_data.get("email")
             gender = form.cleaned_data.get("gender")
+            date_of_birth = form.cleaned_data.get("date_of_birth")
 
-            if User.objects.filter(email=email).exists():
-                # todo: need to have meet with rabah to fix this
-                messages.error(request,"a user with this mail already exist in the system")
+            if email == "":
+                email = None
+
+            if email is not None:
+                user = User.objects.filter(email=email).first()
+
+            if not user:
+                user = User.objects.create(
+                    email=email,
+                    first_name=first_name,
+                    last_name=last_name,
+                    mobile=mobile
+                )
+
+            if Member.objects.filter(user=user,organisation_id=member_invitation.organisation.id).exists():
+                messages.error(request, "user is already a member of this organisation")
                 return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
-            user = User.objects.create(
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-                mobile=mobile
-            )
             user_profile = user.user_profile
             user_profile.address = address
             user_profile.career = career
             user_profile.gender = gender
+            user_profile.date_of_birth = date_of_birth
             user_profile.save()
 
             instance = Member()

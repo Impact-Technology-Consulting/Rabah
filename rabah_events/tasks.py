@@ -101,21 +101,26 @@ def create_event_for_until_date(event_id):
 
 @shared_task
 def create_multiple_members(data, organisation_id, groups):
+    user = None
+
     for item in data:
 
-        user = User.objects.filter(email=item.get("email")).first()
-        if user:
-            continue
-        if not item.get("email"):
-            continue
+        if item.get("email") != "" and item.get("email") is not None:
+            user = User.objects.filter(email=item.get("email")).first()
 
-        user = User.objects.create(
-            email=item.get("email"),
-            first_name=item.get("firstname", ""),
-            last_name=item.get("lastname", ""),
-            mobile=item.get("mobile"),
-        )
+        if not user:
+            user = User.objects.create(
+                email=item.get("email"),
+                first_name=item.get("firstname", ""),
+                last_name=item.get("lastname", ""),
+                mobile=item.get("mobile"),
+            )
+        if not user:
+            return False
         try:
+            if Member.objects.filter(user=user,organisation_id=organisation_id).exists():
+                return False
+
             instance = Member()
             user_profile = user.user_profile
             user_profile.address = item.get("address")
