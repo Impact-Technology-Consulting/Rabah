@@ -1,0 +1,76 @@
+/* Dark Theme - when dark-mode class is active */
+body.dark-mode {
+    background-color: black;
+    color: white;
+}
+
+.second-container.dark-mode {
+    background: var(--black-Main, #000000);
+    color: azure;
+}
+
+.third-container.dark-mode {
+    background: var(--black-Main, #000000);
+}
+
+.quickly-div.dark-mode {
+    background: var(--White-Main, #424242);
+    color: white;
+}
+
+.start-div.dark-mode, .flex-div.dark-mode, .person.dark-mode, .second-grouped-div.dark-mode {
+    background: var(--White-Main, #424242);
+    color: white;
+}
+
+.sixth-grouped-div.dark-mode, .comment-container.dark-mode {
+    background: var(--White-Main, #424242);
+    color: white;
+}
+
+.msg-div.dark-mode,.forth-grouped-div.dark-mode{
+    background: var(--White-Main, #424242);
+    color: white;
+}
+
+.quickly-look-div.dark-mode {
+    background: var(--White-Main, #424242);
+    color: white;
+}
+
+.grps-div.dark-mode {
+    background: var(--White-Main, #424242);
+    color: white;
+}
+
+.event-div.dark-mode {
+    background: var(--White-Main, #424242);
+    color: white;
+}
+
+.giving-div.dark-mode,.sixth-grouped-div .person.dark-mode , .help-container div.dark-mode, .help-container div a.dark-mode {
+    background: var(--White-Main, #424242);
+    color: white;
+}
+
+.quickly-look-div.dark-mode p {
+    color: #fff;
+}
+
+/* about */
+.first-container.dark-mode {
+    background: var(--White-Main, #000000);
+    color: white;
+}
+
+.our-story.dark-mode,.cs-div.dark-mode, .form.dark-mode, .service-div.form.dark-mode {
+    background: var(--White-Main, #424242);
+    color: white;
+}
+
+body.dark-mode, .fifth-groupd-div.dark-mode, .cs-div.dark-mode, .faq.dark-mode, 
+.first-div-contact.dark-mode,.form input.dark-mode,.form textarea.dark-mode, .first-service-container.dark-mode {
+    background: var(--White-Main, #000000);
+    color: #fff;
+    
+}

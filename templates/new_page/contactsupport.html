@@ -1,0 +1,34 @@
+{% extends "new_page/base.html" %}
+
+
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="cs-div">
+        <h1>Contact Support</h1>
+        <form class="form" action="post" method="post">
+            <div class="form-container">
+                <label for="name">Name</label>
+                <input type="text" name="name" placeholder="Iboytech" id="">
+            </div>
+            <div class="form-container">
+                <label for="email">Email</label>
+                <input type="text" name="email" placeholder="Enter your mail" id="">
+            </div>
+            <div class="form-container">
+                <label for="mobile">Mobile (Optional)</label>
+                <input type="text" name="mobile" placeholder="Enter your number (Optional)" id="">
+            </div>
+            <div class="form-container">
+                <label for="msg">Message</label>
+                <textarea name="msg" placeholder="How can we help you?" id=""></textarea>
+                <img src="./images/captcha.png" alt="captcha" id="captcha">
+                <input type="text" name="captcha" placeholder="Enter the captcha" id="captcha-input">
+                <input type="submit" value="    Send Message" id="submit-btn">
+            </div>
+        </form>
+
+    </div>
+{% endblock %}

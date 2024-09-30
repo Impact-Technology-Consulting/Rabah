@@ -42,12 +42,12 @@ class RabahHomePageView(View):
             "subscription_yearly": subscription_yearly,
         }
 
-        return render(request, "landing_page/index.html", context)
+        return render(request, "new_page/index.html", context)
 
 
 class RabahContactUsPageView(View):
     def get(self, request):
-        return render(request, "landing_page/contact-us.html")
+        return render(request, "new_page/contact.html")
 
     def post(self, request):
         form = ContactUsForm(data=request.POST)
@@ -62,8 +62,12 @@ class RabahContactUsPageView(View):
 
 class RabahAboutUsPageView(View):
     def get(self, request):
-        return redirect("rabah_dashboard:home_page")
-        # return render(request, "landing_page/about-us.html")
+        return render(request, "new_page/about.html")
+
+
+class RabahServicesPageView(View):
+    def get(self, request):
+        return render(request, "new_page/service.html")
 
 
 class UserOrganisationsView(LoginRequiredMixin, View):

@@ -1,0 +1,210 @@
+/* Light theme */
+.light-mode {
+    background-color: white;
+    color: black;
+}
+.second-contrainer.light-mode {
+    background: var(--white-Main, #ffffff);
+    color: black;
+}
+.third-container.light-mode {
+    background: var(--white-Main, #ffffff);
+}
+.quickly-div {
+    background: var(--Gray-Main, #e0e0e0);
+    color: black;
+}
+.start-div, .flex-div, .person, .second-grouped-div {
+    background: var(--Gray-Main, #e0e0e0);
+    color: black;
+}
+.sixth-grouped-div, .comment-container {
+    background: var(--Gray-Main, #e0e0e0);
+    color: black;/* Light Theme - when dark-mode class is not active */
+body {
+    background-color: white;
+    color: black;
+}
+
+.second-container {
+    background: var(--white-Main, #ffffff);
+    color: black;
+}
+
+.third-container {
+    background: var(--white-Main, #ffffff);
+}
+
+.quickly-div {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.start-div, .flex-div, .person, .second-grouped-div {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.sixth-grouped-div, .comment-container {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.msg-div {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.quickly-look-div {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.grps-div {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.event-div {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.giving-div, .help-container div, .help-container div a {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.quickly-look-div p {
+    color: #000;
+}
+
+/* about */
+.first-container {
+    background: var(--white-Main, #ffffff);
+    color: black;
+}
+
+.our-story, .service-div.form {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+body, .fifth-groupd-div, .cs-div, .faq, 
+.first-div-contact, .first-service-container {
+    background: var(--white-Main, #ffffff);
+    color: #000;
+}
+
+}
+.msg-div {
+    background: var(--Gray-Main, #e0e0e0);
+    color: black;
+}
+.quickly-look-div {
+    background: var(--Gray-Main, #e0e0e0);
+    color: black;
+}
+.grps-div {
+    background: var(--Gray-Main, #e0e0e0);
+    color: black;
+}
+.event-div {
+    background: var(--Gray-Main, #e0e0e0);
+    color: black;
+}
+.giving-div, .help-container div, .help-container div a {
+    background: var(--Gray-Main, #e0e0e0);
+    color: black;
+}
+.quickly-look-div p {
+    color: #000;
+}
+/* about */
+.first-container {
+    background: var(--white-Main, #ffffff);
+    color: black;
+}
+.our-story, .service-div.form ,.forth-grouped-div{
+    background: var(--Gray-Main, #e0e0e0);
+    color: black;
+}
+body, .fifth-groupd-div, .cs-div, .faq, .first-div-contact, .first-service-container {
+    background: var(--white-Main, #ffffff);
+    color: #000;
+}
+/* Light Theme - when dark-mode class is not active */
+body {
+    background-color: white;
+    color: black;
+}
+
+.second-container {
+    background: var(--white-Main, #ffffff);
+    color: black;
+}
+
+.third-container {
+    background: var(--white-Main, #ffffff);
+}
+
+.quickly-div {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.start-div, .flex-div, .person, .second-grouped-div {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.sixth-grouped-div, .comment-container {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.msg-div {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.quickly-look-div {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.grps-div {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.event-div {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.giving-div, .help-container div, .help-container div a {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+.quickly-look-div p {
+    color: #000;
+}
+
+/* about */
+.first-container {
+    background: var(--white-Main, #ffffff);
+    color: black;
+}
+
+.our-story, .service-div.form {
+    background: var(--gray-Main, #F4F4F4);
+    color: black;
+}
+
+body, .fifth-groupd-div, .cs-div, .faq, 
+.first-div-contact, .first-service-container {
+    background: var(--white-Main, #ffffff);
+    color: #000;
+}

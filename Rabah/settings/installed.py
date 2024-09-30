@@ -24,7 +24,6 @@ LOCAL_INSTALLED_APPS = [
     "rabah_subscriptions",
     "rabah_organisations",
     "rabah_members",
-    "rabah_home_pages",
     "rabah_events",
     "rabah_dashboard",
     "rabah_contributions",
