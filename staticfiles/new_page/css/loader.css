@@ -1,4 +1,4 @@
-#loader {
+/* #loader {
     position: fixed;
     top: 0;
     left: 0;
@@ -43,4 +43,4 @@
   @keyframes l17-1 {
     0%      {transform: perspective(80px) rotate3d(-1,1,0, 0)}
     80%,100%{transform: perspective(80px) rotate3d(-1,1,0,-360deg)}
-  }
+  } */

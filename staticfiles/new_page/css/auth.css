@@ -1,4 +1,4 @@
-body{
+body {
     display: flex;
     width: 100vw;
     height: 100vh;
@@ -10,72 +10,133 @@ body{
     align-items: center;
     background: var(--White-Main, #FFF);
 }
-#dark-theme{
-    background: var(--Brand-Black, #000);
-    color: var(--White-Main, #FFF);
+
+.auth-nav {
+    display: none;
 }
-.container{
-    position: relative;
-    border-radius: 8px;
-    background: var(--Brand-Purple, #7D61F2);
+
+.auth-container {
     display: flex;
-    width: 500px;
-    padding: 20px;
+    width: 100vw;
+    min-height: 100vh;
+    flex-direction: column;
+    overflow-x: hidden;
+    scrollbar-color: blue;
+    justify-content: center;
+    align-items: center;
+    /* background: var(--White-Main, #FFF); */
+}
+
+.auth {
+    display: flex;
     flex-direction: column;
     align-items: center;
+    /* gap: 10px; */
+    margin-top: 100px;
 }
-h1{
+
+.container-auth {
+    position: relative;
+    border-radius: 8px;
+    padding: 20px 0px;
+    background: var(--Brand-Purple, #7D61F2);
+    display: flex;
+    width: 90%; /* Use percentage for flexibility */
+    max-width: 500px; /* Limit the width for larger screens */
+    height: auto;
+    /* Adding padding for inner content spacing */
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    margin: 0 auto; /* Center the container horizontally */
+}
+
+/* Media query for larger screens */
+@media (min-width: 768px) {
+    .container-auth {
+        width: 80%;
+    }
+}
+
+/* Media query for even larger screens (desktops) */
+@media (min-width: 1024px) {
+    .container-auth {
+        width: 70%;
+        max-width: 600px; /* Increase the maximum width on larger screens */
+    }
+}
+
+.auth-img {
+    width: 40%;
+    height: 40%;
+}
+
+.auth-img img {
+    width: 100%;
+    height: auto;
+    object-fit: fill;
+}
+
+h1 {
     color: var(--Brand-Black, #000);
     text-align: center;
-  
+    margin: 0;
     font-size: 30px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
     align-self: stretch;
 }
-p{
+
+p {
     color: var(--Black, #090302);
-  
+
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: 22px; /* 137.5% */ 
+    line-height: 22px; /* 137.5% */
 }
-p span{
+
+p span {
     color: var(--Brand-Lemon, #D0EF4C);
-  
+
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: 22px;
     text-decoration-line: underline;
 }
-form{
+
+form {
     display: flex;
-    padding: 40px 60px;
+    padding: 0px 40px 60px 40px;
     flex-direction: column;
-    align-items: center;    
+    align-items: center;
+    gap: 16px;
     align-self: stretch;
-    border-radius: 16px;    
+    border-radius: 16px;
 }
-.form-container{
+
+.form-container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
+    margin-bottom: 10px;
     align-self: stretch;
 }
-.form-container label{
+
+.form-container label {
     color: var(--Brand-Black, #000);
-  
+
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
-    line-height: 22px; 
-    align-self: stretch;    
+    line-height: 22px;
+    align-self: stretch;
 }
-.form-container input{
+
+.form-container input {
     display: flex;
     height: 50px;
     padding: 8px 16px;
@@ -86,17 +147,21 @@ form{
     border: 1px solid var(--White-Main, #FFF);
     background: var(--White-Main, #FFF);
     color: var(--Black-500, #1C1C1C);
-  
+
     font-size: 16px;
     flex: 1 0 0;
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
 }
-#submit-btn{
+
+.auth-nav {
+    margin-bottom: 20px;
+}
+
+#submit-btn {
     color: var(--Brand-Black, #000);
     text-align: center;
-    font-family: "DM Sans";
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
@@ -112,51 +177,63 @@ form{
     align-self: stretch;
     line-height: normal;
 }
-.check{
+
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.check {
     display: flex;
     gap: 9px;
     justify-content: center;
+    margin-bottom: 10px;
     align-items: center;
 }
-.f{
+
+.f {
     justify-content: flex-start;
     align-items: flex-start;
     display: flex;
     width: 100%;
     color: var(--Brand-Black, #000);
-  
+
     font-size: 24px;
     font-style: normal;
     font-weight: 600;
     line-height: 30px; /* 125% */
 }
-.check input{
+
+.check input {
     width: 21.345px;
     height: 21.345px;
     border-radius: 4px;
     border: 1px solid var(--Brand-Black, #000);
 }
-.check label{
+
+.check label {
     color: var(--Brand-Black, #000);
-text-align: center;
-font-family: Nunito;
-font-size: 14px;
-font-style: normal;
-font-weight: 400;
-line-height: 20px; /* 142.857% */
+    text-align: center;
+    font-family: Nunito;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+
 }
-.check label span{
+
+.check label span {
     color: var(--Brand-Black, #000);
-  
+
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
     text-decoration-line: underline;
 }
-.fg{
+
+.fg {
     color: var(--Brand-Black, #000);
-  
+
     font-size: 14px;
     font-style: normal;
     text-decoration: none;
@@ -165,14 +242,43 @@ line-height: 20px; /* 142.857% */
     align-self: stretch;
 }
 
-.loader {
-    width: 40px;
-    aspect-ratio: 1;
-    background: #7D61F2;
-    animation: l1 1s infinite;
-  }
-  @keyframes l1 {
-    0%   {transform: perspective(150px) rotateX(  0deg)}
-    100% {transform: perspective(150px) rotateX(180deg)}
-  }
-  
+.authlogo {
+    width: 100px;
+    height: 50px;
+}
+
+
+.form-group {
+    width: 100%;
+    div {
+        width: 100%;
+        input{
+            width: 100%;
+        }
+       select {
+            width: 100%;
+           height: 50px;
+        }
+
+    }
+}
+
+
+input {
+    display: flex;
+    height: 50px;
+    padding: 8px 16px;
+    align-items: center;
+    gap: 4px;
+    align-self: stretch;
+    border-radius: 8px;
+    border: 1px solid var(--White-Main, #FFF);
+    background: var(--White-Main, #FFF);
+    color: var(--Black-500, #1C1C1C);
+
+    font-size: 16px;
+    flex: 1 0 0;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 137.5% */
+}

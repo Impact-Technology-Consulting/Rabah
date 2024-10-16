@@ -60,6 +60,11 @@ class RabahContactUsPageView(View):
         return redirect("rabah_dashboard:contact_us")
 
 
+class RabahContactSupportPageView(View):
+    def get(self, request):
+        return render(request, "new_page/contactsupport.html")
+
+
 class RabahAboutUsPageView(View):
     def get(self, request):
         return render(request, "new_page/about.html")

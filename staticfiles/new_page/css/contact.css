@@ -3,6 +3,7 @@
     padding: 120px;
     flex-direction: column;
     align-items: center;
+    justify-content: center;    
     gap: 80px;
     align-self: stretch;
 /*  */
@@ -15,6 +16,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin: 9px;
     gap: 8px;
     align-self: stretch;
 }
@@ -28,21 +30,22 @@
     line-height: normal;
     align-self: stretch;
 }
-.input{
+.input {
     width: 100%;
+    height: auto;
     position: relative;
-    display: flex;
+    display: flex;    
     gap: 5px;
 }
 
-.input input{
+.input input {
     display: flex;
     height: 50px;
-    padding: 0px 40px;
+    padding: 0px 50px;
     align-items: center;
     gap: 4px;
-    color: var(--Black-500, #1C1C1C);
-  
+    border: none;
+    color: var(--Black-500, #1C1C1C);  
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -50,30 +53,56 @@
     flex: 1 0 0;
     border-radius: 8px;    
 }
-.icon{
+
+.icon {
     position: absolute;
     top: 50%;
     left: 16px;
     transform: translateY(-50%);
-  
     font-size: 24px;
     font-weight: 400;
     line-height: 24px; /* 100% */
 }
-.input button{
+
+.input button {
     border-radius: 8px;
     background: var(--Brand-Purple, #7D61F2);
     display: flex;
     width: 150px;
     height: 50px;
     padding: 8px 16px;
+    font-family: Nunito;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 21.82px;
+    text-align: center;
     justify-content: center;
     align-items: center;
     gap: 8px;  
 }
+
+#btns{
+
+    border-radius: 8px;
+    background: var(--Brand-Purple, #7D61F2);
+    display: none;
+    width: 100%;
+    height: 50px;
+    padding: 8px 16px;
+    font-family: Nunito;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 21.82px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;  
+}
+
 .help-container{
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
+    /* flex-wrap: wrap; */
     justify-content: center;
     gap:12px;
 }
@@ -83,6 +112,7 @@
     padding: 40px;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 16px;
     flex: 1 0 0;
     border-radius: 8px;
@@ -98,7 +128,7 @@
 .help-container div a{
   
     text-align: center;
-  
+    color: #000;
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
@@ -112,14 +142,24 @@
     padding: 120px;
     flex-direction: column;
     align-items: center;
-    gap: 80px;
+    width: 50%;
+    justify-content: center;
+    gap: 40px;
     align-self: stretch;    
+}
+.cs-conatainer{    
+    min-width: 100vw;
+    display: flex;  
+    /* padding:  20px 80px;   */
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    align-self: stretch;
 }
 
 .cs-div h1{
-  
+    margin: 0;
     text-align: center;
-  
     font-size: 40px;
     font-style: normal;
     font-weight: 700;
@@ -131,7 +171,7 @@ form{
     padding: 40px 60px;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    gap: 16px;
     align-self: stretch;
     border-radius: 16px;
     background: #F4F4F4;
@@ -140,7 +180,7 @@ form{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    gap: 8px;
     align-self: stretch;
 }
 .form-container label{
@@ -172,8 +212,9 @@ form{
 .form-container textarea{
     display: flex;
     border: none;
-width: 95%;
+width: 100%;
 height: 134px;
+resize: none;
 padding: 8px 8px;
 flex-direction: column;
 border-radius: 8px;
@@ -186,10 +227,10 @@ font-style: normal;
 font-weight: 400;
 line-height: 22px; /* 137.5% */
 }
+
 .form-container #submit-btn{
   
     text-align: center;
-    font-family: "DM Sans";
     font-size: 16px;
     font-style: normal;
     font-weight: 500;

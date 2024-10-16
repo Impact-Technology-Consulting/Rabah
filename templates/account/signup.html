@@ -7,72 +7,62 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-    <div class="card border-0">
-        <div class="card-header">
-            <div class="edit-profile__title">
-                <h6>Join Rabah360: Simplify Event Management. Sign Up Now! </h6>
+
+    <div class="auth-container">
+        <div class="container-auth">
+            <div class="auth-img">
+                <img src="{% static 'new_page/images/Group 1.png' %}" alt="" onclick="window.location.href='{% url 'rabah_dashboard:home_page' %}'">
             </div>
-        </div>
-        <div class="card-body">
             <form method="post" action=".">
                 {% csrf_token %}
-                <div class="edit-profile__body">
-                    <div class="edit-profile__body">
-                        <input type="hidden" name="{{ redirect_field_name }}" value="/"/>
-                        {{ form.first_name|as_crispy_field }}
-                        {{ form.last_name|as_crispy_field }}
-                        {{ form.email|as_crispy_field }}
-                        {{ form.organisation_name|as_crispy_field }}
-                        {{ form.password1|as_crispy_field }}
-                        {{ form.password2|as_crispy_field }}
+                <div>
+                    <h1 style="margin: 0;">Create Account</h1>
+                    <p style="text-align: center; margin: 0;">Existing user? <a id="myLink"
+                                                                                href="{% url 'account_login' %}"><span>Login</span></a>
+                    </p>
+                </div>
 
-                        <!-- Promo code input -->
-                        <div class="form-group">
-                            <label for="id_promo_code">Promo Code </label>
-                            <input type="text" class="form-control" id="id_promo_code" name="promo_code"
-                                   value="{{ request.GET.promo_code }}"
-                                   placeholder="Enter promo code if you have one">
-                            <small id="promoCodeHelp" class="form-text text-muted">Enjoy a 14-day trial! Enter a promo
-                                code if you have one.</small>
-                        </div>   <!-- Invitation ID input -->
-                        
-                        <div class="form-group" style="display: none">
-                            <label for="id_invitation_id">Invitation ID</label>
-                            <input type="text" class="form-control" id="id_invitation_id" name="invitation_id"
-                                   value="{{ request.GET.invitation_id }}"
-                                   placeholder="Enter your invitation ID">
-                            <small id="invitationIdHelp" class="form-text text-muted">Enter the invitation ID you received in the email to proceed with the registration.</small>
-                        </div>
+                <div class="form-container">
+                    <input type="hidden" name="{{ redirect_field_name }}" value="/"/>
+                    {{ form.first_name|as_crispy_field }}
+                    {{ form.last_name|as_crispy_field }}
+                    {{ form.email|as_crispy_field }}
+                    {{ form.organisation_name|as_crispy_field }}
+                    {{ form.password1|as_crispy_field }}
+                    {{ form.password2|as_crispy_field }}
 
-                        <div class="admin-condition">
-                            <div class="checkbox-theme-default custom-checkbox ">
-                                <input class="checkbox" type="checkbox" id="admin-1">
-                                <label for="admin-1">
-                    <span class="checkbox-text">Creating an account means you’re okay
-                    with our <a href="#" class="color-primary">Terms of
-                    Service</a> and <a href="#" class="color-primary">Privacy
-                    Policy</a>
-                    my preference</span>
-                                </label>
-                            </div>
+                    <!-- Promo code input -->
+                    <div class="form-group">
+                        <label for="id_promo_code">Promo Code </label>
+                        <div class=""><input type="text" class="form-control" id="id_promo_code" name="promo_code"
+                                             value="{{ request.GET.promo_code }}"
+                                             placeholder="Enter promo code if you have one">
                         </div>
-                        <div class="admin__button-group button-group d-flex pt-1 justify-content-md-start justify-content-center">
-                            <button class="btn btn-primary btn-default w-100 btn-squared text-capitalize lh-normal px-50 signIn-createBtn ">
-                                Create Account
-                            </button>
-                        </div>
+                        <small id="promoCodeHelp" class="form-text text-muted">Enjoy a 14-day trial! Enter a promo
+                            code if you have one.</small>
+                    </div>   <!-- Invitation ID input -->
+
+                    <div class="form-group" style="display: none">
+                        <label for="id_invitation_id">Invitation ID</label>
+                        <input type="text" class="form-control" id="id_invitation_id" name="invitation_id"
+                               value="{{ request.GET.invitation_id }}"
+                               placeholder="Enter your invitation ID">
+                        <small id="invitationIdHelp" class="form-text text-muted">Enter the invitation ID you
+                            received in the email to proceed with the registration.</small>
                     </div>
+
+
+                    <div class="check">
+                        <input type="checkbox" id="remember-me" name="remember-me">
+                        <label for="remember-me">I accept Rabah360 <span>Terms</span> and <span>Conditions</span>
+                        </label>
+                    </div>
+                    <div class="form-container">
+                        <input type="submit" value="Create Account" id="submit-btn">
+                    </div>
+
                 </div>
             </form>
-        </div>
-
-        <div class="admin-topbar">
-            <p class="mb-0">
-                Don't have an account?
-                <a href="{% url 'account_login' %}" class="color-primary">
-                    Sign In
-                </a>
-            </p>
         </div>
     </div>
 

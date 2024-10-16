@@ -1,14 +1,24 @@
 {% extends "account/base.html" %}
+{% load static %}
 
 {% load i18n %}
 
 {% block head_title %}{% trans "Account Inactive" %}{% endblock %}
 
 {% block content %}
-    <div class="user-form-card">
-        <div class="user-form-title">
-            <h2>{% trans "Account Inactive" %}</h2>
+
+
+    <div class="auth-container">
+        <div class="container-auth">
+            <div class="auth-img">
+                <img src="{% static 'new_page/images/Group 1.png' %}" alt="" onclick="window.location.href='{% url 'rabah_dashboard:home_page' %}'">
+
+            </div>
+            {% csrf_token %}
+            <p><b class="f"> {% trans "Account Inactive" %}</b><br>
+
+            <p style="padding:10px">{% trans "This account is inactive." %}</p>
+            </p>
         </div>
-        <p>{% trans "This account is inactive." %}</p>
     </div>
 {% endblock %}

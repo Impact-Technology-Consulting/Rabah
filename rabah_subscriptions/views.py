@@ -1,7 +1,7 @@
 import stripe
 from django.conf import settings
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
@@ -99,7 +99,7 @@ class AddBillingCardView(AuthAndAdminOrganizationNotSubscribedMixin, View):
         stripeToken = self.request.POST.get("stripeToken")
         if not stripeToken:
             messages.warning(request, "stripe card not provided or invalid token")
-            return redirect("rabah_subscriptions:billing_card")
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
         coupon = self.request.POST.get("coupon")
 

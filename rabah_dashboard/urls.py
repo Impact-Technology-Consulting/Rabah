@@ -5,13 +5,14 @@ from .views import (
     UserOrganisationsView,
     RabahHomePageView,
     RabahContactUsPageView,
-    RabahAboutUsPageView, RabahServicesPageView,
+    RabahAboutUsPageView, RabahServicesPageView, RabahContactSupportPageView,
 )
 
 app_name = "rabah_dashboard"
 urlpatterns = [
     path("", RabahHomePageView.as_view(), name="home_page"),
     path("contact_us/", RabahContactUsPageView.as_view(), name="contact_us"),
+    path("contact_support/", RabahContactSupportPageView.as_view(), name="contact_support"),
     path("about_us/", RabahAboutUsPageView.as_view(), name="about_us"),
     path("services/", RabahServicesPageView.as_view(), name="services"),
     path("dashbaord/", DashBoardView.as_view(), name="dashboard"),

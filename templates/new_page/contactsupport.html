@@ -1,34 +1,45 @@
 {% extends "new_page/base.html" %}
+{% load static %}
 
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "new_page/css/contact.css" %}">
+{% endblock %}
 
 {% block title %}
 
 {% endblock %}
 
 {% block content %}
-    <div class="cs-div">
-        <h1>Contact Support</h1>
-        <form class="form" action="post" method="post">
-            <div class="form-container">
-                <label for="name">Name</label>
-                <input type="text" name="name" placeholder="Iboytech" id="">
-            </div>
-            <div class="form-container">
-                <label for="email">Email</label>
-                <input type="text" name="email" placeholder="Enter your mail" id="">
-            </div>
-            <div class="form-container">
-                <label for="mobile">Mobile (Optional)</label>
-                <input type="text" name="mobile" placeholder="Enter your number (Optional)" id="">
-            </div>
-            <div class="form-container">
-                <label for="msg">Message</label>
-                <textarea name="msg" placeholder="How can we help you?" id=""></textarea>
-                <img src="./images/captcha.png" alt="captcha" id="captcha">
-                <input type="text" name="captcha" placeholder="Enter the captcha" id="captcha-input">
-                <input type="submit" value="    Send Message" id="submit-btn">
-            </div>
-        </form>
+    <div class="cs-conatainer">
+        <div class="cs-div">
+            <h1>Contact Support</h1>
+            <form class="form" action="{% url 'rabah_dashboard:contact_us' %}" method="post" >
+                {% csrf_token %}
+                <div class="form-container">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" placeholder="Full Name" id="">
+                </div>
+                <div class="form-container">
+                    <label for="email">Email</label>
+                    <input type="text" name="email" placeholder="Enter your mail" id="">
+                </div>
+                <div class="form-container">
+                    <label for="mobile">Mobile (Optional)</label>
+                    <input type="text" name="mobile" placeholder="0813XXXXXXX04" id="">
+                </div>
+                <div class="form-container">
+                    <label for="msg">Message</label>
+                    <textarea name="message" placeholder="How can we help you?" id=""></textarea>
+                    <br>
 
+                    <!-- <img src="./images/captcha.png" alt="captcha" id="captcha">
+                    <input type="text" name="captcha" placeholder="Enter the captcha" id="captcha-input">
+                    br -->
+                    <button id="submit-btn">Send Message</button>
+                </div>
+            </form>
+
+        </div>
     </div>
 {% endblock %}

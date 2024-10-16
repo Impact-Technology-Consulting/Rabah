@@ -1,76 +1,50 @@
-/* Dark Theme - when dark-mode class is active */
 body.dark-mode {
     background-color: black;
     color: white;
 }
 
-.second-container.dark-mode {
+
+.third-container.dark-mode {
     background: var(--black-Main, #000000);
     color: azure;
 }
 
-.third-container.dark-mode {
-    background: var(--black-Main, #000000);
-}
-
-.quickly-div.dark-mode {
+.quickly-div.dark-mode,
+.start-div.dark-mode,
+.flex-div.dark-mode,
+.person.dark-mode,
+.second-grouped-div.dark-mode,
+.sixth-grouped-div.dark-mode,
+.comment-container.dark-mode,
+.msg-div.dark-mode,
+.forth-grouped-div.dark-mode,
+.quickly-look-div.dark-mode,
+.grps-div.dark-mode,
+.event-div.dark-mode,
+.giving-div.dark-mode,
+.help-container div.dark-mode,
+.longdiv.dark-mode,
+.longdiv-mobile.dark-mode,
+.second-container.dark-mode,
+.help-container div a.dark-mode,
+.our-story.dark-mode,
+.cs-div.dark-mode,
+.form.dark-mode,
+.service-div.form.dark-mode {
     background: var(--White-Main, #424242);
     color: white;
 }
-
-.start-div.dark-mode, .flex-div.dark-mode, .person.dark-mode, .second-grouped-div.dark-mode {
-    background: var(--White-Main, #424242);
-    color: white;
-}
-
-.sixth-grouped-div.dark-mode, .comment-container.dark-mode {
-    background: var(--White-Main, #424242);
-    color: white;
-}
-
-.msg-div.dark-mode,.forth-grouped-div.dark-mode{
-    background: var(--White-Main, #424242);
-    color: white;
-}
-
-.quickly-look-div.dark-mode {
-    background: var(--White-Main, #424242);
-    color: white;
-}
-
-.grps-div.dark-mode {
-    background: var(--White-Main, #424242);
-    color: white;
-}
-
-.event-div.dark-mode {
-    background: var(--White-Main, #424242);
-    color: white;
-}
-
-.giving-div.dark-mode,.sixth-grouped-div .person.dark-mode , .help-container div.dark-mode, .help-container div a.dark-mode {
-    background: var(--White-Main, #424242);
-    color: white;
-}
-
 .quickly-look-div.dark-mode p {
     color: #fff;
 }
-
-/* about */
-.first-container.dark-mode {
-    background: var(--White-Main, #000000);
-    color: white;
-}
-
-.our-story.dark-mode,.cs-div.dark-mode, .form.dark-mode, .service-div.form.dark-mode {
-    background: var(--White-Main, #424242);
-    color: white;
-}
-
-body.dark-mode, .fifth-groupd-div.dark-mode, .cs-div.dark-mode, .faq.dark-mode, 
-.first-div-contact.dark-mode,.form input.dark-mode,.form textarea.dark-mode, .first-service-container.dark-mode {
+body.dark-mode,.first-container.dark-mode,
+.fifth-groupd-div.dark-mode,
+.cs-div.dark-mode,
+.faq.dark-mode,
+.first-div-contact.dark-mode,
+.form input.dark-mode,.first-container-abt.dark-mode,
+.form textarea.dark-mode,
+.first-service-container.dark-mode {
     background: var(--White-Main, #000000);
     color: #fff;
-    
 }

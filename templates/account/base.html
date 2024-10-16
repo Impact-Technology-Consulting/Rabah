@@ -1,4 +1,88 @@
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'new_page/css/auth.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'new_page/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'new_page/css/loader.css' %}">
+    <link rel="stylesheet" href="{% static 'new_page/css/darktheme.css' %}">
+    <link rel="stylesheet" href="{% static 'new_page/css/lightthemes.css' %}">
+    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}" type="image/x-icon">
+
+    {% block css %}
+
+    {% endblock %}
+    {% block head_title %}
+        <title>login || Rabah360</title>
+    {% endblock %}
+</head>
+<body id="auth">
+<nav class="auth-nav">
+    <!-- navbar image -->
+    <a id="myLink" href="./" rel="noopener noreferrer">
+        <div class="company-logo">
+            <img src="./public/images/RABAH360 white.png" alt="company-logo">
+        </div>
+    </a>
+    <!-- navbar lists -->
+    <div class="menu-icon" id="menuIcon" onclick="toggleMenu()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M3.00146 4.5H21.0015" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+            <path d="M3.00146 9.5H21.0015" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+            <path d="M3.00146 14.5H21.0015" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+            <path d="M3.00146 19.5H21.0015" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <!-- Navbar lists -->
+    <div class="mobile-navbar" id="mobileNavbar">
+        <div class="close-icon" id="closeIcon" onclick="toggleMenu()">
+            <i class="fa-solid fa-xmark fa-2x"></i>
+        </div>
+        <ul>
+            <li>
+                <a id="myLink" href="./about.html" rel="noopener noreferrer">About</a>
+            </li>
+            <li>
+                <a id="myLink" href="./service.html" rel="noopener noreferrer">Services</a>
+            </li>
+
+            <li>
+                <a id="myLink" href="./contact.html" rel="noopener noreferrer">Contact</a>
+            </li>
+
+        </ul>
+    </div>
+    <!-- navbar buttons -->
+    <div class="navbar-btn-container">
+        <!--  <button id="myButton" onclick="toggleMenu()">Toggle Menu</button> -->
+        <button id="myButton" class="free-trial-btn">Free Trial</button>
+        <a id="myLink" href="./login.html">
+            <button id="myButton" class="login-btn">Login</button>
+        </a>
+    </div>
+</nav>
+{% block content %}
+
+{% endblock content %}
+
+<script src="./index.js"></script>
+<script>
+    function deleteCookie(cookieName) {
+        document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+</script>
+</body>
+</html>
+
+{% comment %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -175,4 +259,4 @@
 
 </body>
 
-</html>
+</html>{% endcomment %}

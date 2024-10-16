@@ -6,7 +6,6 @@
     align-items: center;
     gap: 40px;
     align-self: stretch;
-    /* background: var(--White-Main, #FFF); */
 }
 .our-service-label{
     display: flex;
@@ -17,45 +16,67 @@
     border-radius: 40px;
     border: 2px solid var(--Brand-Lemon, #D0EF4C);
     background: var(--Brand-Black, #000);
-}
-.our-service-label h1{
     color: var(--Brand-Lemon, #D0EF4C);
-  
+    padding: 8px 24px 8px 24px;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    margin: 0;
     text-transform: uppercase;
 }
+
 .whyrabah{
-   
+    /* font-family: Nunito;
+font-size: 40px;
+font-weight: 700;
+
+text-align: center;
+ */
+ margin: 0;
     text-align: center;
-  
     font-size: 40px;
     font-style: normal;
     font-weight: 700;
-    line-height: normal;
+    line-height: 54.56px;
 }
 .servicefirtground{
     display: flex;
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: center;
+    min-width: 100vw;
+    flex-wrap: wrap;    
     align-items: center;
+    justify-content: center;
     gap: 40px;
 }
-.service-div{
-    display: flex;
-    width: 500px;
+.service-div {
+    display: flex;    
+    width: 35vw;
     height: auto;
+    min-height: 400px;
     padding: 24px;
-    justify-content: flex-start;
+    justify-content: center;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
     border-radius: 16px;
-
+    box-sizing: border-box;
+    align-self: stretch;
 }
+
+@media (max-width: 768px) {
+    .service-div {
+        padding: 16px;
+        width: 80vw;
+        min-height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .service-div {
+        padding: 12px;
+        width: 80vw;
+    }
+}
+
 .service-img-div{
     width: 100%;
     align-self: stretch;
@@ -65,17 +86,14 @@
     width: 100%;
 }
 .service-div h1{
-   
-  
-    font-size: 30px;
+    font-size: 24px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
     align-self: stretch;
 }
 .service-div p{
-   
-  
+    margin: 0;
     font-size: 16px;
     font-style: normal;
     font-weight: 300;
@@ -83,12 +101,13 @@
     align-self: stretch;
 }
 .faq{
-
     display: flex;
-    gap: 10px;
-    padding: 20px 20px;
+    gap: 40px;
+    min-width: 100vw;
+    padding: 80px 0px ;
+    color: #000;    
     flex-direction: column; 
-    justify-content: center;   
+    /* justify-content: center;    */
     align-items: center;    
     align-self: stretch;
 }
@@ -101,15 +120,15 @@
     border-radius: 40px;
     border: 2px solid var(--Brand-Lemon, #D0EF4C);
     background: var(--Brand-Black, #000);
-}
-.faq-label h1{
     color: var(--Brand-Lemon, #D0EF4C);
-  
+    padding: 8px 24px 8px 24px;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     text-transform: uppercase;
+}
+.faq-label h1{
 }
 .faq-details{
     display: flex;
@@ -126,7 +145,6 @@
     border-bottom: 2px solid var(--Black, #090302);
     background: var(--Brand-Lemon, #D0EF4C);
     display: flex;
-
     justify-content: space-between;
     align-items: center;
     padding: 32px 48px 24px 48px;
@@ -135,7 +153,6 @@
 }
 .faq-details-third{
     display: flex;
-
     padding: 32px 48px 22px 48px;
     align-items: flex-start;
     align-self: stretch;

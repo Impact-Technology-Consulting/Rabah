@@ -24,7 +24,7 @@
 
 
 {% block content %}
-    <div class="card border-0">
+ {% comment %}   <div class="card border-0">
         <div class="card-header">
             <div class="edit-profile__title">
                 <h6>Add Card</h6>
@@ -46,13 +46,13 @@
                             <span id="coupon_message" style="font-size: 12px;font-weight: 400;"></span>
                         </div>
                     </div>
-                      <div class=" col-12  ">
+                    <div class=" col-12  ">
                         <div class="form-group">
                             {{ billing_address_form.address|as_crispy_field }}
 
                         </div>
                     </div>
-                    
+
                     <div class=" col-lg-6 ">
                         <div class="form-group">
                             {{ billing_address_form.country|as_crispy_field }}
@@ -86,7 +86,41 @@
         </div>
 
     </div>
+{% endcomment %}
+    <div class="auth-container">
+        <div class="container-auth">
+            <div class="auth-img">
+                <img src="{% static 'new_page/images/Group 1.png' %}" alt=""
+                     onclick="window.location.href='{% url 'rabah_dashboard:home_page' %}'">
+            </div>
+            <form id="payment-form" method="POST" action="{% url "rabah_subscriptions:billing_card" subscription_id %}">
+                {% csrf_token %}
+                <div>
+                    <h1>Add Card</h1>
+                    <p>add new card for processing payment</p>
+                </div>
 
+
+                <div class="form-container">
+                    <label>Card</label>
+                    <div id="card-element">
+                        <!--Stripe.js injects the Payment Element-->
+                    </div>
+                    <!-- Used to display form errors. -->
+                    <div id="card-errors" role="alert"></div>
+                    {{ billing_address_form|crispy }}
+
+                    <div class="form-container">
+                        <input type="submit" value="send message" id="submit-btn">
+                    </div>
+                </div>
+                <div id="loader">
+                    <div class="loader"></div>
+                </div>
+            </form>
+        </div>
+
+    </div>
 {% endblock %}
 
 
@@ -125,5 +159,5 @@
             });
         });
     </script>
-    
+
 {% endblock %}

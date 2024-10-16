@@ -1,14 +1,23 @@
 {% extends "account/base.html" %}
+{% load static %}
 
 {% load i18n %}
 
 {% block head_title %}{% trans "Sign Up Closed" %}{% endblock %}
 
 {% block content %}
-    <div class="user-form-card">
-        <div class="user-form-title">
-            <h2>{% trans "Sign Up Closed" %}</h2>
+
+
+
+    <div class="auth-container">
+        <div class="container-auth">
+            <div class="auth-img">
+                <img src="{% static 'new_page/images/Group 1.png' %}" alt="" onclick="window.location.href='{% url 'rabah_dashboard:home_page' %}'">
+            </div>
+            <p><b class="f">{% trans "Sign Up Closed" %}</b><br>
+
+            <p style="padding:10px">{% trans "We are sorry, but the sign up is currently closed." %}</p>
+            </p>
         </div>
-        <p>{% trans "We are sorry, but the sign up is currently closed." %}</p>
     </div>
 {% endblock %}
