@@ -1,29 +1,37 @@
 {% load static %}
+{% load crispy_forms_filters %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'new_page/css/auth.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'new_page/css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'new_page/css/loader.css' %}">
-    <link rel="stylesheet" href="{% static 'new_page/css/darktheme.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel=" stylesheet
+    " href="{% static 'new_page/css/loader.css' %}">
     <link rel="stylesheet" href="{% static 'new_page/css/lightthemes.css' %}">
-    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}" type="image/x-icon">
-
+    <link rel="stylesheet" href="{% static 'new_page/css/darktheme.css' %}">
     {% block css %}
 
     {% endblock %}
-    {% block head_title %}
-        <title>login || Rabah360</title>
-    {% endblock %}
+    <link rel="stylesheet" href="{% static 'new_page/css/mediaqueries.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}" type="image/x-icon">
+
+    <title>
+        {% block head_title %}
+            login || Rabah360
+        {% endblock %}
+    </title>
 </head>
 <body id="auth">
 <nav class="auth-nav">
     <!-- navbar image -->
-    <a id="myLink" href="./" rel="noopener noreferrer">
+    <a id="myLink" href="{% url 'rabah_dashboard:home_page' %}" rel="noopener noreferrer">
         <div class="company-logo">
-            <img src="./public/images/RABAH360 white.png" alt="company-logo">
+            <img src="{% static 'new_page/images/RABAH360 white.png' %}" alt="company-logo">
         </div>
     </a>
     <!-- navbar lists -->
@@ -47,32 +55,46 @@
         </div>
         <ul>
             <li>
-                <a id="myLink" href="./about.html" rel="noopener noreferrer">About</a>
+                <a id="myLink" href="{% url 'rabah_dashboard:about_us' %}" rel="noopener noreferrer">About</a>
             </li>
             <li>
-                <a id="myLink" href="./service.html" rel="noopener noreferrer">Services</a>
+                <a id="myLink" href="{% url 'rabah_dashboard:services' %}" rel="noopener noreferrer">Services</a>
             </li>
-
+            <!-- <li>
+         <a id="myLink" href="./pricing.html" rel="noopener noreferrer">Pricing</a>
+     </li> -->
             <li>
-                <a id="myLink" href="./contact.html" rel="noopener noreferrer">Contact</a>
+                <a id="myLink" href="{% url 'rabah_dashboard:contact_us' %}" rel="noopener noreferrer">Contact</a>
             </li>
-
+            <!-- <li>
+                <svg onclick="themes()" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19Z" fill="#292D32"/>
+                    <path d="M12 22.96C11.45 22.96 11 22.55 11 22V21.92C11 21.37 11.45 20.92 12 20.92C12.55 20.92 13 21.37 13 21.92C13 22.47 12.55 22.96 12 22.96ZM19.14 20.14C18.88 20.14 18.63 20.04 18.43 19.85L18.3 19.72C17.91 19.33 17.91 18.7 18.3 18.31C18.69 17.92 19.32 17.92 19.71 18.31L19.84 18.44C20.23 18.83 20.23 19.46 19.84 19.85C19.65 20.04 19.4 20.14 19.14 20.14ZM4.86 20.14C4.6 20.14 4.35 20.04 4.15 19.85C3.76 19.46 3.76 18.83 4.15 18.44L4.28 18.31C4.67 17.92 5.3 17.92 5.69 18.31C6.08 18.7 6.08 19.33 5.69 19.72L5.56 19.85C5.37 20.04 5.11 20.14 4.86 20.14ZM22 13H21.92C21.37 13 20.92 12.55 20.92 12C20.92 11.45 21.37 11 21.92 11C22.47 11 22.96 11.45 22.96 12C22.96 12.55 22.55 13 22 13ZM2.08 13H2C1.45 13 1 12.55 1 12C1 11.45 1.45 11 2 11C2.55 11 3.04 11.45 3.04 12C3.04 12.55 2.63 13 2.08 13ZM19.01 5.99C18.75 5.99 18.5 5.89 18.3 5.7C17.91 5.31 17.91 4.68 18.3 4.29L18.43 4.16C18.82 3.77 19.45 3.77 19.84 4.16C20.23 4.55 20.23 5.18 19.84 5.57L19.71 5.7C19.52 5.89 19.27 5.99 19.01 5.99ZM4.99 5.99C4.73 5.99 4.48 5.89 4.28 5.7L4.15 5.56C3.76 5.17 3.76 4.54 4.15 4.15C4.54 3.76 5.17 3.76 5.56 4.15L5.69 4.28C6.08 4.67 6.08 5.3 5.69 5.69C5.5 5.89 5.24 5.99 4.99 5.99ZM12 3.04C11.45 3.04 11 2.63 11 2.08V2C11 1.45 11.45 1 12 1C12.55 1 13 1.45 13 2C13 2.55 12.55 3.04 12 3.04Z" fill="#292D32"/>
+                    </svg>
+            </li> -->
         </ul>
     </div>
     <!-- navbar buttons -->
     <div class="navbar-btn-container">
         <!--  <button id="myButton" onclick="toggleMenu()">Toggle Menu</button> -->
-        <button id="myButton" class="free-trial-btn">Free Trial</button>
-        <a id="myLink" href="./login.html">
-            <button id="myButton" class="login-btn">Login</button>
-        </a>
+        <button id="myButton" class="free-trial-btn"
+                onclick="window.location.href='{% url 'account_signup' %}?promo_code=14_DAYS_TRIAL'">Free Trial
+        </button>
+
+        {% if not request.user.is_authenticated %}
+            <a id="myLink" href="{% url "account_login" %}">
+                <button id="myButton" class="login-btn">Login</button>
+            </a>
+        {% endif %}
     </div>
 </nav>
 {% block content %}
 
-{% endblock content %}
+{% endblock %}
 
-<script src="./index.js"></script>
+<script src="{% static 'new_page/js/index.js' %}"></script>
+
+
 <script>
     function deleteCookie(cookieName) {
         document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -80,183 +102,3 @@
 </script>
 </body>
 </html>
-
-{% comment %}
-{% load static %}
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block head_title %}{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="{% static "css/plugin.min.css" %}">
-    <link rel="stylesheet" href="{% static "style.css" %}">
-
-    <link rel="shortcut icon" href="{% static "img/favicon.ico" %}" type="image/x-icon"/>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.0/css/line.css">
-
-    <style>
-        body {
-            font-family: 'Hind Siliguri', sans-serif;
-            font-weight: normal;
-            font-size: 15px !important;
-        }
-
-        b, strong {
-            font-weight: normal;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: normal;
-            font-family: "Cairo", sans-serif;
-        }
-
-        .bold {
-            font-weight: normal;
-        }
-
-        td {
-            max-height: 50px !important; /* Adjust the value as needed */
-            overflow: hidden;
-        }
-
-        .edit-profile {
-            overflow-y: auto; /* Make this column scrollable */
-            max-height: 100vh; /* Set max height to viewport height */
-        }
-        /* Hide scrollbar */
-        .edit-profile::-webkit-scrollbar {
-            width: 0; /* Set scrollbar width to 0 */
-        }
-
-
-        /* Added styles */
-        .side-image {
-            background: url('https://www.meetbreeze.com/app/assets/welcome-image.png') center center  no-repeat;
-
-
-        }
-        label {
-            font-weight: bold !important;
-            font-size: 15px !important;
-        }
-        .edit-profile__title h6{
-            font-size: 20px !important;
-            font-weight: bolder !important;
-        }
-
-        a,p,button,.checkbox-text  {
-            font-size: 15px !important;
-        }
-
-        .card-header {
-            background-color: #9c9c9f; /* Background color */
-            border-bottom: 1px solid #dee2e6; /* Bottom border */
-            padding: 10px 20px; /* Padding */
-        }
-
-        .edit-profile__title h6 {
-            margin: 0; /* Remove default margin */
-            font-size: 24px; /* Font size */
-            font-weight: bold; /* Font weight */
-            {#color: #8231D3; /* Text color */#}
-            text-transform: uppercase; /* Uppercase text */
-            letter-spacing: 2px; /* Letter spacing for emphasis */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Text shadow for depth */
-        }
-
-    </style>
-    {% block extra_head %}
-
-    {% endblock %}
-{% block css  %}
-{% endblock %}
-    <!-- Fonts -->
-
-
-</head>
-
-<body class="  ">
-
-
-<main class="main-content" style="overflow: hidden">
-    <div class="admin">
-        <div class="container-fluid">
-            <div class="row justify-content-center" style="height:100vh !important">
-                <div class="col-12 col-lg-6 p-lg-5" style="padding-top: 0px !important;" >
-                    <div class="edit-profile m-lg-25" style="margin-top: 0px !important;" >
-                        <div class="edit-profile__logos">
-                            <a href="#">
-                                <img class="" src="{% static "img/logo-dark.png" %}" alt="">
-                                <img class="" src="{% static "img/logo-white.png" %}" alt="">
-                            </a>
-                        </div>
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert {% if messages.tags == 'info' or message.tags == 'success' %}
-                                    alert-danger text-white {% else %} alert-{{ message.tags }}   {% endif %}
-                                    p-2 alert-dismissible fade show text-center text-capitalize shadow-sm" role="alert"
-                                     style="">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-
-                        {% block content %}
-
-                        {% endblock %}
-
-                    </div>
-                </div>
-                  <!-- Image -->
-                <div class="col-12 col-lg-6 d-none d-lg-block side-image"></div>
-            </div>
-        </div>
-    </div>
-
-</main>
-<div id="overlayer">
-    <div class="loader-overlay">
-        <div class="dm-spin-dots spin-lg">
-            <span class="spin-dot badge-dot dot-primary"></span>
-            <span class="spin-dot badge-dot dot-primary"></span>
-            <span class="spin-dot badge-dot dot-primary"></span>
-            <span class="spin-dot badge-dot dot-primary"></span>
-        </div>
-    </div>
-</div>
-<div class="enable-dark-mode dark-trigger">
-    <ul>
-        <li>
-            <a href="#">
-                <i class="uil uil-moon"></i>
-            </a>
-        </li>
-    </ul>
-</div>
-
-
-<script src="{% static "js/plugins.min.js" %}"></script>
-<script src="{% static "js/script.min.js" %}"></script>
-<script>
-    function deleteCookie(cookieName) {
-        document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    }
-</script>
-{% block script %}
-
-{% endblock %}
-
-</body>
-
-</html>{% endcomment %}

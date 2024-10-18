@@ -9,10 +9,11 @@
     <link rel="stylesheet" href="{% static 'new_page/css/loader.css' %}">
     <link rel="stylesheet" href="{% static 'new_page/css/darktheme.css' %}">
     <link rel="stylesheet" href="{% static 'new_page/css/lightthemes.css' %}">
-    <link rel="stylesheet" href="{% static 'new_page/css/mediaqueries.css' %}">
-    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}" type="image/x-icon">
     {% block css %}
     {% endblock css %}
+    <link rel="stylesheet" href="{% static 'new_page/css/mediaqueries.css' %}">
+    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}" type="image/x-icon">
+
     <title>Rabah360</title>
 </head>
 <body>
@@ -64,8 +65,10 @@
     </div>
 
     <div id="mobile-btn">
-        <button id="myButton" class="free-trial-btn"  onclick="window.location.href='{% url 'account_signup' %}?promo_code=14_DAYS_TRIAL'">
-            Free Trial</button>
+        <button id="myButton" class="free-trial-btn"
+                onclick="window.location.href='{% url 'account_signup' %}?promo_code=14_DAYS_TRIAL'">
+            Free Trial
+        </button>
         <a id="myLink" href="{% url "account_login" %}">
             <button id="myButton" class="login-btn">Login</button>
         </a>
@@ -73,7 +76,9 @@
 
 
     <div class="navbar-btn-container">
-        <button id="myButton" class="free-trial-btn"  onclick="window.location.href='{% url 'account_signup' %}?promo_code=14_DAYS_TRIAL'">Free Trial</button>
+        <button id="myButton" class="free-trial-btn"
+                onclick="window.location.href='{% url 'account_signup' %}?promo_code=14_DAYS_TRIAL'">Free Trial
+        </button>
         <a id="myLink" href="{% url "account_login" %}">
             <button id="myButton" class="login-btn">Login</button>
         </a>

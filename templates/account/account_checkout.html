@@ -1,9 +1,11 @@
 {% extends "account/base.html" %}
+{% load i18n %}
 {% load crispy_forms_filters %}
 {% load crispy_forms_filters %}
 
 {% load static %}
 
+{% block head_title %}{% trans "Add Card" %} || Rabah360 {% endblock %}
 
 
 {% block css %}
@@ -24,69 +26,7 @@
 
 
 {% block content %}
- {% comment %}   <div class="card border-0">
-        <div class="card-header">
-            <div class="edit-profile__title">
-                <h6>Add Card</h6>
-            </div>
-        </div>
-        <div class="card-body">
-            <form id="payment-form" method="post" action="{% url "rabah_subscriptions:billing_card" subscription_id %}">
-                {% csrf_token %}
-                <label>Card</label>
-                <div id="card-element">
-                    <!--Stripe.js injects the Payment Element-->
-                </div>
-                <!-- Used to display form errors. -->
-                <div id="card-errors" role="alert"></div>
-                <div class="row">
-                    <div class=" col-12  ">
-                        <div class="form-group">
-                            {{ billing_address_form.coupon|as_crispy_field }}
-                            <span id="coupon_message" style="font-size: 12px;font-weight: 400;"></span>
-                        </div>
-                    </div>
-                    <div class=" col-12  ">
-                        <div class="form-group">
-                            {{ billing_address_form.address|as_crispy_field }}
 
-                        </div>
-                    </div>
-
-                    <div class=" col-lg-6 ">
-                        <div class="form-group">
-                            {{ billing_address_form.country|as_crispy_field }}
-                        </div>
-                    </div>
-                    <div class=" col-lg-6 ">
-                        <div class="form-group">
-                            {{ billing_address_form.city|as_crispy_field }}
-                        </div>
-                    </div>
-                    <div class=" col-lg-6 ">
-                        <div class="form-group">
-                            {{ billing_address_form.state|as_crispy_field }}
-                        </div>
-                    </div>
-                    <div class=" col-lg-6 ">
-                        <div class="form-group">
-                            {{ billing_address_form.zip_code|as_crispy_field }}
-                        </div>
-                    </div>
-                </div>
-
-
-                <button id="submit" type="submit">
-                    <div class="spinner hidden" id="spinner"></div>
-                    <span id="button-text">Add Card</span>
-                </button>
-                <div id="payment-message" class="hidden"></div>
-            </form>
-
-        </div>
-
-    </div>
-{% endcomment %}
     <div class="auth-container">
         <div class="container-auth">
             <div class="auth-img">

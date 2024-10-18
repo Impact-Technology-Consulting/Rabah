@@ -1,4 +1,5 @@
 {% extends "account/base.html" %}
+{% load i18n %}
 {% load crispy_forms_filters %}
 {% load socialaccount %}
 {% load crispy_forms_filters %}
@@ -12,12 +13,15 @@
     </style>
 {% endblock %}
 
+{% block head_title %}{% trans "Login" %} || Rabah360 {% endblock %}
+
 {% load static %}
 {% block content %}
     <div class="auth-container">
         <div class="container-auth">
             <div class="auth-img">
-                <img src="{% static 'new_page/images/Group 1.png' %}" alt="" onclick="window.location.href='{% url 'rabah_dashboard:home_page' %}'">
+                <img src="{% static 'new_page/images/Group 1.png' %}" alt=""
+                     onclick="window.location.href='{% url 'rabah_dashboard:home_page' %}'">
             </div>
             <form method="POST" action="{% url 'account_login' %}">
                 {% csrf_token %}
@@ -29,7 +33,7 @@
 
                 <div class="form-container">
                     {{ form|crispy }}
-                    
+
                     <a id="myLink" href="{% url 'account_reset_password' %}" class="fg">Forgot password?</a>
                     <div class="form-container">
                         <input type="submit" value="Login" id="submit-btn">
@@ -42,7 +46,6 @@
         </div>
 
     </div>
-
 {% endblock %}
 
 
