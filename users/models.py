@@ -81,7 +81,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     ]
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
-    email = models.EmailField(_("email address"), unique=True,blank=True, null=True)
+    email = models.EmailField(_("email address"), unique=True, blank=True, null=True)
     mobile = models.BigIntegerField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -105,10 +105,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
             return User.objects.get(id=user_id)
         except (
-            Exception
+                Exception
         ) as a:  # (BadSignature, SignatureExpired, ValueError, User.DoesNotExist):
             print(a)
             return None
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.email}"
 
 
 # Create your models here.
