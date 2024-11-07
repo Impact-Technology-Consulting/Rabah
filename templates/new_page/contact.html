@@ -46,7 +46,7 @@
                         </g>
                     </g>
                 </svg>
-                <a id="myLink" href="./login.html" rel="noopener noreferrer">New to Rahah360?</a>
+                <a id="myLink" href="{% url 'account_login' %}" rel="noopener noreferrer">New to Rahah360?</a>
             </div>
             <div>
                 <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -59,7 +59,7 @@
                     </g>
                 </svg>
 
-                <a id="myLink" href="./contactsupport.html">Contact Support</a>
+                <a id="myLink" href="{% url 'rabah_dashboard:contact_support' %}">Contact Support</a>
             </div>
             <div>
                 <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -75,7 +75,7 @@
                     </g>
                 </svg>
 
-                <a id="myLink" href="./index.html" rel="noopener noreferrer">Join our Community</a>
+                <a id="myLink" href="{% url 'rabah_dashboard:home_page' %}" rel="noopener noreferrer">Join our Community</a>
             </div>
         </div>
     </div>
